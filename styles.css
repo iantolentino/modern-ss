@@ -272,13 +272,23 @@ table { border-collapse: collapse; width: 100%; }
 .btn--ink { --btn-bg: var(--ink); }
 .btn--ink:hover { background: var(--ink-lift); }
 
+/* The secondary action, and the site's ordinary "go and read this" link. It is
+   set in sentence case deliberately.
+
+   It used to be uppercase, which made a control label of it — but its text is
+   not a label, it is a sentence: "See all ten roles and both service lines" runs
+   to 40 characters. Worse, `.btn2` also carries the solutions email address, and
+   uppercase rendered that as SOLUTIONS@STRATASTAFFGLOBAL.COM, which is both
+   hard to read and wrong for an address a reader may copy. Long strings are now
+   sentence case; the primary `.btn` stays uppercase because its text really is a
+   short operative label ("Talk to us"). */
 .btn2 {
   display: inline-flex; align-items: center; gap: .55em;
   padding: .95rem .2rem .92rem;
   background: none; border: 0; cursor: pointer;
   color: var(--teal); text-decoration: none;
-  font-family: var(--sans); font-weight: 650; font-size: .93rem;
-  text-transform: uppercase; letter-spacing: .045em; line-height: 1;
+  font-family: var(--sans); font-weight: 650; font-size: .96rem;
+  letter-spacing: -.005em; line-height: 1;
   border-bottom: 1px solid var(--rule-mid);
   transition: color .18s var(--ease), border-color .18s var(--ease);
 }

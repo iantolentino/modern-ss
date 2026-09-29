@@ -370,16 +370,46 @@ and the honest measure is that the palette no longer needs a footnote.
 
 The home page was then re-laid out to follow the incumbent's own section order
 with plain headings (§11), and the detector was run again over all 40 pages.
-Total once more: **285 findings** — 121 `numbered-section-labels`, 117
-`all-caps-body`, 40 `gpt-thin-border-wide-shadow`, 4 `cramped-padding`, 2
-`marketing-buzzword`, 1 `em-dash-overuse`.
+Total: **242 findings** — 121 `numbered-section-labels`, 74 `all-caps-body`, 40
+`gpt-thin-border-wide-shadow`, 4 `cramped-padding`, 2 `marketing-buzzword`, 1
+`em-dash-overuse`.
 
 The home page's seven invented "Motion"/"Schedule" labels are gone, which is why
 `numbered-section-labels` fell by six. It stays high because the other 39 pages
 keep their item numbers deliberately, for the reason in §8.
 
-`all-caps-body` rose by two: the new figures band labels its three numbers in
-mono uppercase, which is the pack's record-label treatment, not body copy.
+#### `all-caps-body`: 117 → 74, because the previous exception was not true
+
+§8 previously excused this rule as "button and control labels". Auditing the
+findings instead of trusting that sentence showed it was wrong. Dumping every
+uppercase text node on the home page gave the real distribution, and the longest
+strings were not labels at all:
+
+| Text | Chars | Where |
+| --- | --- | --- |
+| `See all ten roles and both service lines` | 40 | `.btn2` link |
+| `See the platforms and the ten roles` | 35 | `.btn2` link |
+| `solutions@stratastaffglobal.com` | 31 | `.btn2` link |
+| `Read all nine statements` | 24 | `.btn2` link |
+
+`.btn2` was uppercased, so the site's ordinary "go and read this" link was set as
+a shouted control label, and — worse — the solutions **email address** rendered as
+`SOLUTIONS@STRATASTAFFGLOBAL.COM`. That is both hard to read and wrong for an
+address a reader may copy.
+
+`.btn2` is now sentence case and the primary `.btn` stays uppercase. The hierarchy
+gained from this rather than losing: primary and secondary actions are now
+distinguished by case as well as by fill, instead of only by fill.
+
+The remaining 74 are genuine labels — the tallest uppercase string on the site is
+now the 32-character primary CTA `Schedule the free discovery call`, followed by
+form field labels (≤21), footer column headings (≤17), stamps, address labels and
+the skip link. Every one is a control, a field name or a record label; no
+sentence is uppercased anywhere. That is now a claim that was measured, not
+assumed.
+
+`all-caps-body` also rose by two in this round: the new figures band labels its
+three numbers in mono uppercase, which is the pack's record-label treatment.
 
 #### Four `cramped-padding` findings that were measured and are not real
 
@@ -409,13 +439,18 @@ the limit. The measured values above are the rendered ones.
 These are known detector warnings that were considered and **kept**. Each has a
 reason; none is an oversight.
 
-1. **`all-caps-body` (117) — button and control labels.** `.btn` sets
-   "Schedule the free discovery call" (32 chars) in uppercase; the figures band's
-   labels, the footer legal line, the masthead tagline's neighbours and the record
-   labels follow the same convention. These are *controls and record labels*, not
-   body text, and an uppercase, letter-spaced, stamped label is this world's own
-   convention for an operative action. Body copy is never uppercase, and every
-   instance of uppercase on a full sentence was removed (§7).
+1. **`all-caps-body` (74) — control labels, field names and record labels.** The
+   tallest uppercase string on the site is the primary CTA "Schedule the free
+   discovery call" (32 characters); the rest are form field labels (≤21), footer
+   column headings (≤17), stamps, address labels and the skip link. These are
+   *controls and record labels*, not body text, and an uppercase, letter-spaced,
+   stamped label is this world's own convention for an operative action.
+
+   This exception was previously overstated and is now narrowed by measurement.
+   It used to excuse `.btn2` as well, and `.btn2` was carrying 40-character
+   sentences and the solutions email address in uppercase. Both were fixed (§7);
+   `.btn2` is sentence case, and uppercase is left to the primary action. The
+   test applied is now: **no sentence is uppercased anywhere on the site.**
 
 2. **`numbered-section-labels` (121) — the agenda numbers.** The `01`–`08`
    in the punch gutter are the notice pack's own item numbering, and the sequence

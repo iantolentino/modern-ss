@@ -5,7 +5,8 @@
 param(
   [string]$Viewports = '1440x900',
   [string]$Page = 'index.html',
-  [string]$Selector = ''
+  [string]$Selector = '',
+  [switch]$Upper
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -30,6 +31,7 @@ foreach ($v in $Viewports.Split(',')) {
   Remove-Item $sink -Force -ErrorAction SilentlyContinue
   $url = "http://127.0.0.1:4173/tools/measure-blocks.html?v=$v" + "&p=$Page"
   if ($Selector) { $url = $url + "&s=" + [uri]::EscapeDataString($Selector) }
+  if ($Upper) { $url = $url + "&upper=1" }
   & $chrome --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --user-data-dir="$prof" --virtual-time-budget=9000 --window-size="$w,$h" "$url" 2>&1 | Out-Null
   Start-Sleep -Seconds 3
   if (Test-Path $sink) { Get-Content $sink } else { Write-Output "### $v - no probe result" }

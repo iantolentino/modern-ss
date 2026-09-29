@@ -38,6 +38,31 @@ f.onload = () => {
 
   // drill-down: the children of whatever selector was passed, so a block that is
   // taller than it should be can be attributed rather than guessed at
+  // ?upper=1 - every element the stylesheet uppercases, with its rendered text,
+  // so an all-caps-body finding can be attributed rather than assumed.
+  if (q.get('upper')) {
+    L.length = 0;
+    L.push(`### uppercase text on ${PAGE} at ${W}x${H}`, '');
+    const rows = [];
+    for (const el of d.querySelectorAll('*')) {
+      const cs = win.getComputedStyle(el);
+      if (cs.textTransform !== 'uppercase') continue;
+      // only the innermost element carrying the text
+      let txt = '';
+      for (const n of el.childNodes) if (n.nodeType === 3) txt += n.textContent;
+      txt = txt.replace(/\s+/g, ' ').trim();
+      if (!txt) continue;
+      rows.push({ tag: el.tagName.toLowerCase(), cls: (el.className || '').toString().slice(0, 26), len: txt.length, txt, font: cs.fontSize });
+    }
+    rows.sort((a, b) => b.len - a.len);
+    L.push('   len  font     where                            text');
+    for (const r of rows) L.push(`  ${String(r.len).padStart(4)}  ${r.font.padEnd(7)}  ${(r.tag + '.' + r.cls).slice(0, 30).padEnd(30)}  ${r.txt.slice(0, 60)}`);
+    L.push('', `  ${rows.length} uppercase text nodes; longest ${rows[0] ? rows[0].len : 0} chars`);
+    document.getElementById('out').textContent = L.join('\n');
+    fetch('/__probe', { method: 'POST', body: L.join('\n') }).catch(() => {});
+    return;
+  }
+
   const sel = q.get('s');
   if (sel) {
     L.push('', `  --- children of ${sel} ---`);

@@ -131,12 +131,19 @@ are recorded in `DESIGN.md` and `.impeccable/design.json`.
 
 ## Detector
 
-`impeccable detect` runs over all 40 pages and reports **285 findings, down from
-1109**. Seven rule classes were eliminated outright. Of the 285, **281 are
+`impeccable detect` runs over all 40 pages and reports **242 findings, down from
+1109**. Seven rule classes were eliminated outright. Of the 242, **238 are
 deliberate** and reasoned in `DESIGN.md` §8; the remaining 4 are `cramped-padding`
 findings on the home page that were measured in the browser and are artefacts of
 the detector's CSS cascade handling — it reports a border with no inset where the
 rendered insets are 19–82px. The measurements are in `DESIGN.md` §7.
+
+The 242 is 43 lower than the previous run because one of §8's exceptions turned
+out to be false. `all-caps-body` had been excused as "button and control labels";
+dumping every uppercase text node showed that `.btn2` was uppercasing
+40-character sentences and rendering the solutions email address as
+`SOLUTIONS@STRATASTAFFGLOBAL.COM`. `.btn2` is now sentence case and the site's
+uppercase is reserved for the primary action and for short labels.
 
 `strata-scan/detect-all.mjs` re-runs the sweep and summarises by rule;
 `strata-scan/detect-show.mjs <rule>` prints the detail for one rule, which is how
