@@ -32,20 +32,36 @@ function measure(p, w, h) {
     const done = () => {
       try {
         const d = f.contentDocument, win = f.contentWindow, de = d.documentElement;
-        let over = 0, offender = '';
+        let over = 0, offender = '', detail = '';
         for (const el of d.querySelectorAll('*')) {
           const r = el.getBoundingClientRect();
           if (r.width === 0) continue;
           const right = r.right + win.scrollX;
           if (right > w + 1 && right - w > over) {
             over = Math.round(right - w);
-            const cn = el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/)[0] : '';
-            offender = el.tagName.toLowerCase() + cn;
+            const cn = el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).first : '';
+            offender = el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/)[0] : '');
+            // the widest descendant explains what set the floor, and the text
+            // shows whether the cause is wording or box model
+            let worst = el, ww = r.width;
+            for (const kid of el.querySelectorAll('*')) {
+              const kr = kid.getBoundingClientRect();
+              if (kr.width > ww) { ww = kr.width; worst = kid; }
+            }
+            const cs = win.getComputedStyle(worst);
+            detail = `${Math.round(r.width)}px wide (right edge +${over}) > widest child ${worst.tagName.toLowerCase()}`
+              + `${worst.className && typeof worst.className === 'string' ? '.' + worst.className.trim().split(/\s+/)[0] : ''}`
+              + ` = ${Math.round(ww)}px, pad ${cs.paddingLeft}/${cs.paddingRight}, text "${(worst.textContent || '').trim().slice(0, 46)}"`;
           }
         }
         const words = (d.body.innerText || '').trim().split(/\s+/).filter(Boolean).length;
         const imgs = d.images.length;
-        rows.push({ p, words, imgs, docH: Math.round(de.scrollHeight), over, offender });
+        const sheet = d.querySelector('.sheet');
+        const sheetW = sheet ? Math.round(sheet.getBoundingClientRect().width) : 0;
+        // how much of the viewport is bare ground either side of the sheet
+        const bare = w - sheetW;
+        rows.push({ p, words, imgs, docH: Math.round(de.scrollHeight), over, offender, detail, sheetW, bare,
+                    fill: +((100 * sheetW) / w).toFixed(1) });
       } catch (e) { rows.push({ p, err: e.message }); }
       f.remove(); res();
     };
@@ -57,16 +73,25 @@ function measure(p, w, h) {
 
 (async () => {
   for (const p of PAGES) await measure(p, W, H);
-  const L = [`### viewport ${W}x${H}`, '  overflow  screens  words  imgs  page'];
+  const L = [`### viewport ${W}x${H}`, '  overflow  screens  words  fill%  bare  page'];
+  const seenCause = new Set();
   for (const r of rows.slice().sort((a, b) => b.docH - a.docH)) {
     if (r.err) { L.push(`  ERR ${r.err} ${r.p}`); continue; }
-    L.push(`  ${String(r.over + 'px').padStart(8)}  ${String((r.docH / H).toFixed(1)).padStart(6)}  ${String(r.words).padStart(5)}  ${String(r.imgs).padStart(4)}  ${r.p}${r.offender ? '  <- ' + r.offender : ''}`);
+    L.push(`  ${String(r.over + 'px').padStart(8)}  ${String((r.docH / H).toFixed(1)).padStart(6)}  ${String(r.words).padStart(5)}  ${String(r.fill + '%').padStart(5)}  ${String(r.bare + 'px').padStart(6)}  ${r.p}${r.offender ? '  <- ' + r.offender : ''}`);
+  }
+  // one worked example per distinct cause, so a repeated bug is explained once
+  for (const r of rows) {
+    if (!r.over || !r.detail || seenCause.has(r.offender)) continue;
+    seenCause.add(r.offender);
+    L.push(`  CAUSE (${r.p}): ${r.detail}`);
   }
   const ok = rows.filter(r => !r.err);
   const heights = ok.map(r => r.docH).sort((a, b) => a - b);
   const med = heights[Math.floor(heights.length / 2)];
   L.push(`  --> median page ${med}px = ${(med / H).toFixed(1)} screens; tallest ${heights[heights.length - 1]}px = ${(heights[heights.length - 1] / H).toFixed(1)} screens`);
   L.push(`  --> ${ok.reduce((a, r) => a + r.words, 0)} words total across ${ok.length} pages; pages with horizontal overflow: ${ok.filter(r => r.over > 1).length}`);
+  const fills = ok.map(r => r.fill);
+  L.push(`  --> sheet covers ${Math.min(...fills)}%-${Math.max(...fills)}% of the viewport width (mean ${(fills.reduce((a, b) => a + b, 0) / fills.length).toFixed(1)}%)`);
   document.getElementById('out').textContent = L.join('\n');
   await fetch('/__probe', { method: 'POST', body: L.join('\n') }).catch(() => {});
 })();

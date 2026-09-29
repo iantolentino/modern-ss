@@ -383,7 +383,7 @@ function head({ title, desc, page, depth = 0, bodyClass = '' }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(t)}</title>
 <meta name="description" content="${esc(desc)}">
-<meta name="theme-color" content="#00102E">
+<meta name="theme-color" content="#00544E">
 <meta property="og:title" content="${esc(t)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">

@@ -7,37 +7,48 @@
    numbers in the punch gutter, real rubber stamps, one highlighter sweep per
    sheet, index tabs cut into the sheet edge, a perforated proxy at the back.
 
-   Colour strategy: committed. The highlighter owns the operative band; navy
-   owns the resolution and the back cover; vermilion is reserved for stamps and
-   the single primary action; teal marks the Strata Staff Plus line; gold marks
-   accreditation only.
+   Colour strategy: the brand is two colours and nothing else. The logo itself
+   is 54% #094BC1 blue and 46% #00544E teal, so every accent here is one of
+   those two — blue drives the live controls and the stamps, teal carries the
+   second voice, the highlighter and the accreditation seals. The grounds and
+   greys are the values the incumbent site actually ships. There is no third
+   accent colour in the build.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- tokens -- */
 :root {
-  /* ground and ink (navy is the incumbent brand ink, kept as the ink) */
-  --desk:        #EDEBE6;   /* the desk the sheets sit on */
+  /* ground and ink — the incumbent's own values, read off its stylesheet:
+     #00102E navy, #233452 secondary navy, #69727D body grey, #F4F5F7 light
+     ground, #D5D8DC border grey. The desk is that same cool grey family taken
+     a step deeper, so a white sheet still lifts off it. */
+  --desk:        #E4E8ED;   /* the desk the sheets sit on */
   --sheet:       #FFFFFF;   /* an office-white sheet */
-  --sheet-2:     #FAF9F6;   /* a second sheet / recessed print area */
+  --sheet-2:     #F4F5F7;   /* a second sheet / recessed print area */
   --ink:         #00102E;   /* primary ink */
-  --ink-2:       #2C3A56;   /* secondary text, tinted from ink, never grey */
-  --ink-3:       #5A6880;   /* tertiary / annotation */
+  --ink-2:       #233452;   /* secondary text */
+  --ink-3:       #666F7A;   /* tertiary / annotation — the site's #69727D, one
+                               step down so it also clears AA on --sheet-2 */
+  --grey:        #D5D8DC;   /* the site's border grey */
   --rule:        rgba(0, 16, 46, .18);
   --rule-mid:    rgba(0, 16, 46, .38);
   --rule-ink:    rgba(0, 16, 46, .82);
 
-  /* reserved roles */
-  --strata:      #094BC1;   /* links, focus, the live control */
-  --strata-ink:  #063A96;   /* pressed / deeper */
-  --stamp:       #C8341F;   /* rubber stamps and the one primary action */
-  --stamp-ink:   #A32715;
-  --marker:      #F2E14C;   /* the highlighter, one sweep per sheet */
-  --plus:        #00544E;   /* the Strata Staff Plus line */
-  --gold:        #BE894A;   /* accreditation seals only */
+  /* the brand, read off the logo: blue 54%, teal 46%, nothing else */
+  --blue:        #094BC1;   /* links, focus, the live control, the stamps */
+  --blue-ink:    #063A96;   /* pressed / deeper */
+  --teal:        #00544E;   /* the second voice, seals, the Plus line */
+  --teal-ink:    #003B36;   /* pressed / deeper */
+  --teal-soft:   #324B4A;   /* the site's own subdued teal */
+  --marker:      #B7DAD3;   /* the highlighter, in brand teal */
 
   /* structure */
   --gutter:      78px;      /* the punched margin */
-  --pad-x:       58px;
+  --pad-x:       clamp(20px, 3.2vw, 96px);   /* the sheet's right-hand inset; fluid so the pack fills a wide desk */
+  /* The twelve-column grids are held together by eleven gaps. At a fixed 30px
+     those gaps alone are 330px wide, which is wider than a 320px phone — the
+     grid would overflow its own sheet. One token, scaling with the viewport,
+     keeps every grid valid at every width. */
+  --col-gap:     clamp(13px, 2.1vw, 30px);
   --bar-h:       64px;
 
   /* type */
@@ -99,6 +110,15 @@ body {
 }
 
 img, svg, video { max-width: 100%; }
+
+/* An address is the widest unbreakable thing on the site: at 320px
+   "solutions@stratastaffglobal.com" is wider than the page, and because it sits
+   in a grid it would otherwise set the floor for every column beside it.
+   `anywhere` (not `break-word`) also shrinks the min-content size, so no
+   ancestor can be stretched by it in the first place. */
+a[href^='mailto:'], a[href^='http'], .foot__addr dd, .doc-body a, .link {
+  overflow-wrap: anywhere;
+}
 h1, h2, h3, h4, p, ul, ol, dl, figure, blockquote, table { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -106,7 +126,7 @@ table { border-collapse: collapse; width: 100%; }
 
 /* browser surfaces belong to the design too */
 ::selection { background: var(--marker); color: var(--ink); }
-:root { caret-color: var(--strata); accent-color: var(--strata); }
+:root { caret-color: var(--blue); accent-color: var(--blue); }
 * { scrollbar-color: var(--rule-mid) transparent; scrollbar-width: thin; }
 ::-webkit-scrollbar { width: 11px; height: 11px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -114,7 +134,7 @@ table { border-collapse: collapse; width: 100%; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
 
 :focus-visible {
-  outline: 2px solid var(--strata);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
   border-radius: 1px;
 }
@@ -135,7 +155,7 @@ table { border-collapse: collapse; width: 100%; }
 /* ============================================================== the sheet == */
 .sheet {
   position: relative;
-  width: min(1440px, calc(100% - 34px));
+  width: calc(100% - 26px);
   margin: 0 auto;
   background: var(--sheet);
   box-shadow: var(--lift);
@@ -201,7 +221,13 @@ table { border-collapse: collapse; width: 100%; }
   transition: color .18s var(--ease), border-color .18s var(--ease);
 }
 .bar__nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
-.bar__nav a[aria-current='page'] { color: var(--ink); border-bottom-color: var(--stamp); }
+.bar__nav a[aria-current='page'] { color: var(--ink); border-bottom-color: var(--blue); }
+/* the bar holds together down to a 320px screen: nothing in it is allowed to
+   set a floor on the sheet's width, and the record line ellipses rather than
+   pushing the menu button off the edge */
+.bar { min-width: 0; }
+.bar__brand { min-width: 0; }
+.bar__folio { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bar__cta { flex: none; }
 .bar__menu {
   display: none; margin-left: auto;
@@ -214,7 +240,7 @@ table { border-collapse: collapse; width: 100%; }
 
 /* ================================================================= buttons = */
 .btn {
-  --btn-bg: var(--stamp);
+  --btn-bg: var(--blue);
   --btn-fg: #fff;
   position: relative; overflow: hidden;
   display: inline-flex; align-items: center; justify-content: center; gap: .6em;
@@ -235,7 +261,7 @@ table { border-collapse: collapse; width: 100%; }
   content: ''; position: absolute; inset: 3px; border: 1px solid rgba(255, 255, 255, .42);
   border-radius: 1px; pointer-events: none;
 }
-.btn:hover { background: var(--stamp-ink); }
+.btn:hover { background: var(--blue-ink); }
 .btn:active { transform: translateY(1px); }
 .btn--lg { padding: 1.15rem 1.9rem 1.12rem; font-size: 1.02rem; }
 .btn--ink { --btn-bg: var(--ink); }
@@ -245,29 +271,28 @@ table { border-collapse: collapse; width: 100%; }
   display: inline-flex; align-items: center; gap: .55em;
   padding: .95rem .2rem .92rem;
   background: none; border: 0; cursor: pointer;
-  color: var(--strata); text-decoration: none;
+  color: var(--teal); text-decoration: none;
   font-family: var(--sans); font-weight: 650; font-size: .93rem;
   text-transform: uppercase; letter-spacing: .045em; line-height: 1;
   border-bottom: 1px solid var(--rule-mid);
   transition: color .18s var(--ease), border-color .18s var(--ease);
 }
-.btn2:hover { color: var(--strata-ink); border-bottom-color: var(--strata); }
+.btn2:hover { color: var(--teal-ink); border-bottom-color: var(--teal); }
 .btn2 svg { width: 1.05em; height: 1.05em; flex: none; }
 
 .link {
-  color: var(--strata); text-decoration: underline;
+  color: var(--blue); text-decoration: underline;
   text-decoration-thickness: 1px; text-underline-offset: .18em;
   text-decoration-color: var(--rule-mid);
   transition: text-decoration-color .18s var(--ease), color .18s var(--ease);
 }
-.link:hover { text-decoration-color: currentColor; color: var(--strata-ink); }
+.link:hover { text-decoration-color: currentColor; color: var(--blue-ink); }
 
 /* ================================================================= layout = */
 .wrap {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 30px; row-gap: 0;
+  column-gap: var(--col-gap); row-gap: 0;
   padding: 0 var(--pad-x) 0 30px;
-  max-width: 1240px;
 }
 .bleed { padding: 0; }
 
@@ -285,7 +310,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .prose { max-width: var(--measure); color: var(--ink-2); }
 .prose + .prose { margin-top: .95em; }
 .prose strong { color: var(--ink); font-weight: 650; }
-.prose a { color: var(--strata); }
+.prose a { color: var(--blue); }
 
 .note {
   font-family: var(--mono); font-size: .8rem; line-height: 1.55;
@@ -364,6 +389,10 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   text-align: left; padding: .78rem .55rem;
   border-bottom: 1px solid var(--rule);
   vertical-align: baseline;
+  /* a schedule cell holds the longest prose on the site; letting it break
+     anywhere keeps the table inside its column at every width instead of
+     pushing the sheet sideways */
+  overflow-wrap: anywhere;
 }
 .sched th:first-child, .sched td:first-child { padding-left: 0; }
 .sched th:last-child, .sched td:last-child { padding-right: 0; }
@@ -374,13 +403,13 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding: .55rem .55rem;
 }
 .sched tbody tr:last-child td { border-bottom: 1px solid var(--rule-ink); }
-.sched td.n, .sched th.n { text-align: right; font-family: var(--mono); white-space: nowrap; }
+.sched td.n, .sched th.n { text-align: right; font-family: var(--mono); white-space: nowrap; color: var(--teal); }
 .sched td.k { color: var(--ink-2); }
 .sched td.v { font-family: var(--mono); font-weight: 600; font-size: 1.02rem; color: var(--ink); }
 .sched--particulars td { padding: .62rem .55rem; }
 .sched--particulars td.v { font-size: 1.16rem; }
 .sched a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule-mid); }
-.sched a:hover { border-bottom-color: var(--strata); color: var(--strata); }
+.sched a:hover { border-bottom-color: var(--blue); color: var(--blue); }
 .sched tr.is-link:hover { background: var(--sheet-2); }
 .sched .role { font-weight: 650; font-stretch: 103%; }
 
@@ -390,7 +419,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 /* the inset lives on the wrapper, which is the only child of the section */
 .item__wrap {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 30px; max-width: 1240px;
+  column-gap: var(--col-gap);
   padding: 3.4rem var(--pad-x) 3.4rem 30px;
 }
 @media (min-width: 940px) {
@@ -402,7 +431,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .item__no {
   grid-column: 1 / span 1;
   font-family: var(--mono); font-size: .8rem; font-weight: 600;
-  letter-spacing: .06em; color: var(--stamp); padding-top: .5rem;
+  letter-spacing: .06em; color: var(--blue); padding-top: .5rem;
 }
 .item__head { grid-column: 2 / span 6; }
 .item__body { grid-column: 2 / span 10; margin-top: 2.4rem; }
@@ -422,7 +451,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 .clause:hover { background: var(--sheet-2); }
 .clause:last-child { border-bottom: 1px solid var(--rule-ink); }
-.clause__no { font-family: var(--mono); font-size: .86rem; font-weight: 600; color: var(--ink-3); }
+.clause__no { font-family: var(--mono); font-size: .86rem; font-weight: 600; color: var(--teal); }
 .clause h3 { font-size: 1.24rem; }
 .clause p { color: var(--ink-2); max-width: 62ch; }
 
@@ -452,8 +481,8 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding-top: .95rem; padding-bottom: .8rem;
   box-shadow: var(--lift-tab);
 }
-.tabs__list input:focus-visible + label { outline: 2px solid var(--strata); outline-offset: 2px; }
-.tabs__list label .tick { color: var(--stamp); }
+.tabs__list input:focus-visible + label { outline: 2px solid var(--blue); outline-offset: 2px; }
+.tabs__list label .tick { color: var(--blue); }
 .tabs__panel { order: 2; flex: 1 0 100%; display: none; padding-top: 2.1rem; }
 .tabs__panel h3 { margin-bottom: .5rem; }
 .tabs__panel > ul { margin-top: .9rem; }
@@ -466,7 +495,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .stamp {
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
   gap: .12em; padding: .68em 1.05em .74em;
-  color: var(--stamp); background: transparent;
+  color: var(--blue); background: transparent;
   border: 2px solid currentColor; border-radius: 3px;
   box-shadow: inset 0 0 0 3px var(--sheet), inset 0 0 0 4px currentColor;
   font-family: var(--sans); font-weight: 800; font-stretch: 84%;
@@ -501,7 +530,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   font-variant-numeric: tabular-nums;
 }
 .reg-out__lab { font-family: var(--mono); font-size: .76rem; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
-.reg-out__note { font-family: var(--mono); font-size: .76rem; letter-spacing: .012em; line-height: 1.45; color: var(--stamp); text-align: right; max-width: 24ch; }
+.reg-out__note { font-family: var(--mono); font-size: .76rem; letter-spacing: .012em; line-height: 1.45; color: var(--blue); text-align: right; max-width: 24ch; }
 
 /* the printed scale: a real range input on a ruled rule */
 .scale { position: relative; padding: 2.6rem .55rem 1.9rem; border-bottom: 1px solid var(--rule); }
@@ -519,15 +548,15 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .scale input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
   width: 15px; height: 26px; border-radius: 1px;
-  background: var(--strata); border: 0;
+  background: var(--blue); border: 0;
   box-shadow: 0 1px 3px rgba(0, 16, 46, .34);
   cursor: ew-resize;
 }
 .scale input[type='range']::-moz-range-thumb {
-  width: 15px; height: 26px; border-radius: 1px; background: var(--strata); border: 0;
+  width: 15px; height: 26px; border-radius: 1px; background: var(--blue); border: 0;
   box-shadow: 0 1px 3px rgba(0, 16, 46, .34); cursor: ew-resize;
 }
-.scale input[type='range']:focus-visible { outline: 2px solid var(--strata); outline-offset: 6px; }
+.scale input[type='range']:focus-visible { outline: 2px solid var(--blue); outline-offset: 6px; }
 .scale input[type='range']::-moz-range-track { background: none; border: 0; height: 34px; }
 .scale__legend { display: flex; justify-content: space-between; }
 
@@ -579,14 +608,14 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .opt__name { font-weight: 650; font-stretch: 104%; font-size: 1.1rem; }
 .opt__desc { color: var(--ink-2); font-size: .95rem; }
 .opt__go { justify-self: end; color: var(--ink-3); transition: transform .2s var(--ease), color .2s var(--ease); }
-.opt:hover .opt__go { transform: translateX(4px); color: var(--stamp); }
-.opt--plus .opt__no { color: var(--plus); }
+.opt:hover .opt__go { transform: translateX(4px); color: var(--blue); }
+.opt--plus .opt__no { color: var(--teal); }
 
 /* ================================================================= seals == */
 .seals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px; }
 .seal { text-align: center; }
 .seal__disc { position: relative; display: grid; place-items: center; aspect-ratio: 1; }
-.seal__guilloche { position: absolute; inset: 0; color: var(--gold); }
+.seal__guilloche { position: absolute; inset: 0; color: var(--teal); }
 .seal__guilloche svg { width: 100%; height: 100%; }
 .seal__disc img {
   position: relative; z-index: 1;
@@ -616,7 +645,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 
 /* The photographic register on the team sheet: a wall of plates rather than a
    logo grid, so the 5-column logo rules above do not apply to it. */
-.platwall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.platwall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--grey); border: 1px solid var(--grey); }
 .platwall figure { margin: 0; background: var(--sheet); padding: .65rem; }
 .platwall img { width: 100%; height: auto; aspect-ratio: 163 / 300; object-fit: cover; object-position: top; display: block; filter: saturate(.82) contrast(1.02); }
 .platwall figcaption { font-family: var(--mono); font-size: .73rem; letter-spacing: .07em; color: var(--ink-3); padding-top: .55rem; text-align: center; }
@@ -630,7 +659,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding: .34rem .62rem; border: 1px solid var(--rule); border-radius: 2px;
   color: var(--ink-2); background: var(--sheet-2);
 }
-.tasks li::after { content: '·'; color: var(--stamp); margin-left: .45rem; }
+.tasks li::after { content: '·'; color: var(--blue); margin-left: .45rem; }
 .tasks li:last-child::after { content: ''; }
 
 /* ============================================================ the resolution */
@@ -646,7 +675,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .resolution__wrap {
   position: relative; z-index: 1;
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 30px; max-width: 1240px;
+  column-gap: var(--col-gap);
 }
 .resolution h2 { grid-column: 1 / span 7; color: #fff; margin-bottom: 1.2rem; }
 .resolution .prose { grid-column: 1 / span 6; color: rgba(255, 255, 255, .82); }
@@ -654,7 +683,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .resolution .btn2 { color: var(--marker); border-bottom-color: rgba(255, 255, 255, .3); }
 .resolution .btn2:hover { color: #fff; border-bottom-color: var(--marker); }
 .resolution__stamp { grid-column: 9 / span 4; align-self: start; justify-self: end; }
-.resolution .btn { --btn-bg: var(--stamp); }
+.resolution .btn { --btn-bg: var(--blue); }
 .resolution__ref { grid-column: 1 / span 7; margin-top: 2rem; padding-top: 1.1rem; border-top: 1px solid rgba(255, 255, 255, .22); }
 .resolution__ref .note, .resolution__ref .ref { color: rgba(255, 255, 255, .62); }
 .resolution__ref a { color: #fff; }
@@ -672,7 +701,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .perf::after { right: -6px; }
 
 .foot { padding: clamp(2.8rem, 5vw, 4.2rem) var(--pad-x) 2.4rem; background: var(--sheet); }
-.foot__wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 30px; max-width: 1240px; row-gap: 2.4rem; }
+.foot__wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); row-gap: 2.4rem; }
 .foot__brand { grid-column: 1 / span 4; }
 .foot__brand img { height: 30px; width: auto; }
 .foot__col { grid-column: span 2; }
@@ -683,13 +712,13 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 .foot__col li { padding: .26rem 0; }
 .foot__col a { color: var(--ink-2); text-decoration: none; font-size: .9rem; }
-.foot__col a:hover { color: var(--strata); text-decoration: underline; text-underline-offset: .18em; }
+.foot__col a:hover { color: var(--blue); text-decoration: underline; text-underline-offset: .18em; }
 .foot__addr { grid-column: 1 / span 7; }
 .foot__addr dl { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: .7rem 1.2rem; }
 .foot__addr dt { font-family: var(--mono); font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); padding-top: .18rem; }
 .foot__addr dd { margin: 0; color: var(--ink-2); font-size: .93rem; }
 .foot__addr a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; text-decoration-color: var(--rule-mid); }
-.foot__addr a:hover { text-decoration-color: var(--strata); color: var(--strata); }
+.foot__addr a:hover { text-decoration-color: var(--blue); color: var(--blue); }
 .foot__social { grid-column: 9 / span 4; }
 .foot__social ul { display: flex; gap: 1rem; }
 .foot__social a {
@@ -698,11 +727,10 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   color: var(--ink-2); text-decoration: none;
   border-bottom: 1px solid var(--rule-mid); padding-bottom: .2rem;
 }
-.foot__social a:hover { color: var(--strata); border-bottom-color: var(--strata); }
+.foot__social a:hover { color: var(--blue); border-bottom-color: var(--blue); }
 .foot__legal {
   margin-top: 2.4rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);
   display: flex; flex-wrap: wrap; gap: .6rem 1.8rem; align-items: baseline;
-  max-width: 1240px;
 }
 .foot__legal p { font-family: var(--mono); font-size: .72rem; letter-spacing: .05em; color: var(--ink-3); }
 
@@ -730,14 +758,14 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .phead h1 { margin-bottom: 1rem; }
 .crumbs { display: flex; flex-wrap: wrap; gap: .5rem; font-family: var(--mono); font-size: .78rem; letter-spacing: .05em; color: var(--ink-3); text-transform: uppercase; }
 .crumbs a { color: var(--ink-2); text-decoration: none; }
-.crumbs a:hover { color: var(--strata); text-decoration: underline; text-underline-offset: .18em; }
+.crumbs a:hover { color: var(--blue); text-decoration: underline; text-underline-offset: .18em; }
 .crumbs span[aria-hidden] { color: var(--rule-mid); }
 /* the current page is the end of the trail, not a label: a long title in the
    last position stays in sentence case so it remains readable */
 .crumbs [aria-current='page'] { text-transform: none; letter-spacing: 0; }
 
 /* ================================================================= blocks = */
-.duo { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 30px; row-gap: 2.4rem; padding: 0 var(--pad-x) 0 30px; max-width: 1240px; }
+.duo { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); row-gap: 2.4rem; padding: 0 var(--pad-x) 0 30px; }
 .duo__a { grid-column: 1 / span 6; }
 .duo__b { grid-column: 8 / span 5; }
 .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding-top: .4rem; }
@@ -746,14 +774,14 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .trio > *:nth-child(3n) { border-right: 0; }
 .trio h3 { margin-bottom: .6rem; }
 .trio p { color: var(--ink-2); font-size: .96rem; }
-.trio__n { font-family: var(--mono); font-size: .78rem; color: var(--stamp); display: block; margin-bottom: .7rem; }
+.trio__n { font-family: var(--mono); font-size: .78rem; color: var(--blue); display: block; margin-bottom: .7rem; }
 
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); padding-top: .4rem; }
 .fact { padding: 1.5rem 1.4rem 1.6rem 1.4rem; border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule); }
 .fact:first-child { padding-left: 0; }
 .fact:last-child { border-right: 0; }
 .fact__v { font-family: var(--mono); font-size: 1.9rem; font-weight: 600; line-height: 1; }
-.fact__k { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-top: .7rem; }
+.fact__k { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-soft); margin-top: .7rem; }
 .fact__s { font-size: .9rem; color: var(--ink-2); margin-top: .4rem; }
 
 /* ================================================================= forms == */
@@ -763,7 +791,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .field label, .field legend { font-family: var(--mono); font-size: .735rem; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); }
 .field legend { padding: 0; }
 fieldset.field { border: 0; padding: 0; margin: 0; }
-.field label .req { color: var(--stamp); }
+.field label .req { color: var(--blue); }
 .field input[type='text'], .field input[type='email'], .field input[type='tel'],
 .field input[type='date'], .field input[type='file'], .field select, .field textarea {
   background: var(--sheet-2); border: 1px solid var(--rule-mid); border-radius: 2px;
@@ -780,11 +808,11 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .field textarea { min-height: 7.5rem; resize: vertical; line-height: 1.55; }
 .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--ink-3); }
 .field input:focus, .field select:focus, .field textarea:focus {
-  outline: none; border-color: var(--strata); background: var(--sheet);
+  outline: none; border-color: var(--blue); background: var(--sheet);
   box-shadow: 0 0 0 3px rgba(9, 75, 193, .16);
 }
-.field[data-invalid] input, .field[data-invalid] select, .field[data-invalid] textarea { border-color: var(--stamp); background: #FDF4F2; }
-.field__err { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--stamp); text-transform: uppercase; }
+.field[data-invalid] input, .field[data-invalid] select, .field[data-invalid] textarea { border-color: var(--blue); background: #FDF4F2; }
+.field__err { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--blue); text-transform: uppercase; }
 .field__err[hidden] { display: none; }
 .field__hint { font-size: .84rem; color: var(--ink-3); }
 .choice { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
@@ -793,7 +821,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   font-family: var(--sans); font-size: .95rem; letter-spacing: 0;
   text-transform: none; color: var(--ink-2); cursor: pointer;
 }
-.choice input { accent-color: var(--strata); width: 16px; height: 16px; }
+.choice input { accent-color: var(--blue); width: 16px; height: 16px; }
 .form__acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem; margin-top: .6rem; }
 .form__status { grid-column: 1 / -1; border: 1px solid var(--rule-ink); border-radius: 2px; padding: 1.1rem 1.2rem; background: var(--sheet-2); }
 .form__status[hidden] { display: none; }
@@ -806,7 +834,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .doc-body p + p { margin-top: .9rem; }
 .doc-body ul, .doc-body ol { margin: 1rem 0; }
 .doc-body ul li { position: relative; padding-left: 1.3rem; margin-bottom: .5rem; }
-.doc-body ul li::before { content: ''; position: absolute; left: 0; top: .72em; width: 7px; height: 1px; background: var(--stamp); }
+.doc-body ul li::before { content: ''; position: absolute; left: 0; top: .72em; width: 7px; height: 1px; background: var(--blue); }
 .doc-body ol { counter-reset: n; }
 .doc-body ol li { position: relative; padding-left: 2.1rem; margin-bottom: .6rem; counter-increment: n; }
 .doc-body ol li::before {
@@ -844,11 +872,14 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .bar { padding-inline: var(--pad-x); }
   .bar__tag { display: none; }
   .bar__nav { display: none; }
+  /* the bar's copy of the primary action goes; the same action is the first
+     thing in the drawer and sits in the body of every page */
+  .bar__cta { display: none; }
   .bar__menu { display: block; }
   .bar__folio { display: block; margin-left: auto; }
   .wrap, .item__wrap, .duo, .foot__wrap, .resolution__wrap { padding-inline: var(--pad-x); }
   .cover__main, .cover__aside, .phead__main, .phead__aside { grid-column: 1 / -1; }
-  .item__no { grid-column: 1 / -1; color: var(--stamp); }
+  .item__no { grid-column: 1 / -1; color: var(--blue); }
   .item__head, .item__body, .item__aside, .item__body--wide { grid-column: 1 / -1; }
   .phead__ref { grid-column: 1 / -1; }
   .duo__a, .duo__b { grid-column: 1 / -1; }
@@ -873,6 +904,13 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 }
 @media (max-width: 640px) {
   :root { --pad-x: 20px; --body: 1rem; }
+  /* A four-column schedule cannot hold its columns on a phone. Rather than let
+     the sheet scroll sideways, the table is laid out to a fixed width and the
+     cells wrap — the row still reads left to right, it just gets taller. */
+  .sched { table-layout: fixed; }
+  .sched th, .sched td { padding: .6rem .4rem; overflow-wrap: anywhere; }
+  .sched td.n, .sched th.n { white-space: normal; overflow-wrap: normal; }
+  .sched thead th { font-size: .66rem; letter-spacing: .06em; }
   .cover__acts { gap: 1rem; }
   .btn, .btn--lg { width: 100%; }
   .cover__acts .btn2 { width: 100%; text-align: center; justify-content: center; }
@@ -927,7 +965,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 }
 .drawer ol li a span { font-weight: 600; font-stretch: 103%; }
 .drawer ol li a em { display: block; font-style: normal; font-weight: 400; font-size: .87rem; color: var(--ink-2); }
-.drawer ol li a:hover span { color: var(--strata); }
+.drawer ol li a:hover span { color: var(--blue); }
 .drawer__cta { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
 
 /* ------------------------------------------------------------- reduced --- */
