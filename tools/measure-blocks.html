@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>home blocks</title></head>
+<body>
+<pre id="out">measuring…</pre>
+<script>
+/* Which blocks make the home page as tall as it is. Loads one page, walks its
+   top-level blocks in document order and reports each one's rendered height in
+   screens. Used to decide what to cut, rather than guessing. */
+const q = new URLSearchParams(location.search);
+const [W, H] = (q.get('v') || '1440x900').split('x').map(Number);
+const PAGE = q.get('p') || 'index.html';
+
+const f = document.createElement('iframe');
+f.style.cssText = `width:${W}px;height:${H}px;position:absolute;left:-99999px;top:0;border:0`;
+f.src = '../' + PAGE;
+f.onload = () => {
+  const d = f.contentDocument, win = f.contentWindow;
+  const L = [`### ${PAGE} at ${W}x${H}`, `docH ${d.documentElement.scrollHeight}px = ${(d.documentElement.scrollHeight / H).toFixed(1)} screens`, ''];
+  L.push('  screens   height  block');
+  const blocks = d.querySelectorAll('main > section, main > div, body > footer, .cover, .band, .resolution, footer.foot, .foot');
+  const seen = new Set();
+  let total = 0;
+  for (const el of d.querySelectorAll('main > *, body > footer, footer.foot')) {
+    if (seen.has(el)) continue;
+    seen.add(el);
+    const r = el.getBoundingClientRect();
+    if (!r.height) continue;
+    total += r.height;
+    const label = (el.id ? '#' + el.id : '') + ' ' + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).join('.') : el.tagName.toLowerCase());
+    const h2 = el.querySelector('h1, h2');
+    const txt = h2 ? ' — ' + h2.textContent.replace(/\s+/g, ' ').trim().slice(0, 46) : '';
+    L.push(`  ${String((r.height / H).toFixed(2)).padStart(7)}  ${String(Math.round(r.height)).padStart(6)}px  ${label.slice(0, 58)}${txt}`);
+  }
+  L.push('');
+  L.push(`  main blocks total ${Math.round(total)}px = ${(total / H).toFixed(1)} screens`);
+  const foot = d.querySelector('.foot');
+  if (foot) L.push(`  footer alone     ${Math.round(foot.getBoundingClientRect().height)}px = ${(foot.getBoundingClientRect().height / H).toFixed(1)} screens`);
+
+  // drill-down: the children of whatever selector was passed, so a block that is
+  // taller than it should be can be attributed rather than guessed at
+  const sel = q.get('s');
+  if (sel) {
+    L.push('', `  --- children of ${sel} ---`);
+    for (const host of d.querySelectorAll(sel)) {
+      const hs = win.getComputedStyle(host);
+      L.push(`  [${host.className || host.tagName}] ${Math.round(host.getBoundingClientRect().height)}px`
+        + `  pad L${hs.paddingLeft} R${hs.paddingRight} T${hs.paddingTop} B${hs.paddingBottom}`
+        + `  border L${hs.borderLeftWidth} R${hs.borderRightWidth} T${hs.borderTopWidth} B${hs.borderBottomWidth}`);
+      for (const kid of host.children) {
+        const kr = kid.getBoundingClientRect();
+        const cs = win.getComputedStyle(kid);
+        L.push(`      ${String(Math.round(kr.height)).padStart(5)}px  ${(kid.className || kid.tagName).toString().slice(0, 34)}`
+          + `  pad L${cs.paddingLeft} R${cs.paddingRight} T${cs.paddingTop} B${cs.paddingBottom}`
+          + `  bord L${cs.borderLeftWidth} T${cs.borderTopWidth}`);
+      }
+    }
+  }
+  document.getElementById('out').textContent = L.join('\n');
+  fetch('/__probe', { method: 'POST', body: L.join('\n') }).catch(() => {});
+};
+document.body.appendChild(f);
+</script>
+</body></html>

@@ -47,7 +47,8 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `serve.mjs` | The preview server. |
 | `assets/` | Fonts, the logo and favicon, client portraits, platform marks, membership seals, flags, the authored highlighter SVG. |
 | `content/` | Posts and job listings as JSON. |
-| `tools/measure-fit.html` | Measures every page for horizontal overflow and height in screens at a given viewport. |
+| `tools/measure-fit.html` | Measures every page for horizontal overflow, height in screens, word count and how much of the viewport the sheet covers — and names the widest element behind any overflow. |
+| `tools/measure-fit.ps1` | The runner for the above. Boots the preview server if needed and drives Chrome headless. |
 | `DESIGN.md` | The design system, the accessibility decisions, and the detector findings. |
 | `PRODUCT.md` | The product truth every claim on the site traces back to. |
 | `.impeccable/` | The direction contract, the machine-readable design record, and rendered plates. |
@@ -58,6 +59,50 @@ Two self-hosted variable faces, subset to latin + latin-ext, declared in
 `assets/fonts/fonts.css`: **Archivo** (weight 100–900, width 62–125) and
 **Spline Sans Mono** (weight 300–700). There are no remote requests anywhere on
 the site — no CDN, no font service, no analytics.
+
+## Colour
+
+The brand is **two colours and nothing else**. `assets/logo-full.png` was decoded
+pixel by pixel with a hand-written PNG parser and contains exactly two colours:
+`#094BC1` blue (54.1% of pixels) and `#00544E` teal (45.7%). Every accent on the
+site is one of those two; every ground is a value the incumbent site ships in its
+own stylesheet. Blue is the official voice — links, focus, the primary action,
+the stamps. Teal is the record voice — clause and schedule numbers, the secondary
+action, the seals, and the highlighter wash (`#B7DAD3`).
+
+An earlier revision invented a vermilion stamp, a yellow highlighter and a gold
+seal. All three were replaced. `node ../strata-scan/contrast.mjs` recomputes the
+contrast ratios from the tokens; the lowest in the palette is **5.10:1** against
+an AA floor of 4.5:1.
+
+## Fit
+
+`tools/measure-fit.html` loads all 40 pages in iframes, sequentially, and reports
+horizontal overflow, the height of each page in screens, its word count, and how
+much of the viewport the sheet actually covers. It also names the widest
+contributing element behind any overflow.
+
+Current result: **zero horizontal overflow at 320, 390, 768, 1024, 1099, 1180,
+1280, 1440, 1920 and 2560px**, and the sheet covers **96.5%–98.7%** of the
+viewport at every one of them. An earlier revision overflowed on all 40 pages
+below 670px and left up to 560px of dead desk either side on a wide monitor.
+
+`tools/measure-blocks.ps1` measures a single page block by block — how tall each
+section is, and the computed padding and border of any selector's children. It
+was written to find out *which* section was making the home page long instead of
+guessing, and it is how three defects were located: role rows rendering at
+220–270px instead of 72px, the figures band stacking into one column, and the
+home page's true height. Both tools are development-only and ship nothing.
+
+The home page is now an overview, on the incumbent's own order (**7.0 screens at
+1440×900, 5.4 at 1920×1080**, down from 11.3; 986 visible words, down from 1,783).
+The other 39 pages are unchanged in structure. See `DESIGN.md` §11.
+
+Run it with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\measure-fit.ps1 -Viewports "390x844,1440x900,2560x1400"
+```
 
 ## Accessibility
 
@@ -87,6 +132,12 @@ are recorded in `DESIGN.md` and `.impeccable/design.json`.
 ## Detector
 
 `impeccable detect` runs over all 40 pages and reports **285 findings, down from
-1109**. Seven rule classes were eliminated outright. Every one of the 285
-remaining findings is a documented, reasoned exception — see `DESIGN.md` §8 and
-`.impeccable/design.json`.
+1109**. Seven rule classes were eliminated outright. Of the 285, **281 are
+deliberate** and reasoned in `DESIGN.md` §8; the remaining 4 are `cramped-padding`
+findings on the home page that were measured in the browser and are artefacts of
+the detector's CSS cascade handling — it reports a border with no inset where the
+rendered insets are 19–82px. The measurements are in `DESIGN.md` §7.
+
+`strata-scan/detect-all.mjs` re-runs the sweep and summarises by rule;
+`strata-scan/detect-show.mjs <rule>` prints the detail for one rule, which is how
+each finding was located rather than guessed at.

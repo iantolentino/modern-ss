@@ -88,24 +88,31 @@
   }
 
   /* --------------------------------------------------------- 4. folio rail
-     Which agenda item is under the reader, and how many the pack holds. */
-  var items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'));
+     Which section is under the reader, and how many the page holds.
+
+     This counts *position*, not the printed item number. The home page's
+     sections are named rather than numbered, and an earlier version keyed the
+     rail off `[data-item]`, so on that page it found nothing and left the
+     static "01 / 01" placeholder on screen. Counting `section.item` and
+     reporting the index works on every page, numbered or not. */
+  var items = Array.prototype.slice.call(document.querySelectorAll('section.item'));
   var folioNow = document.querySelectorAll('[data-folio-now]');
   var folioAll = document.querySelectorAll('[data-folio-all]');
   if (items.length && folioNow.length) {
-    folioAll.forEach(function (e) { e.textContent = String(items.length).padStart(2, '0'); });
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    folioAll.forEach(function (e) { e.textContent = pad(items.length); });
     var setFolio = function (n) {
-      folioNow.forEach(function (e) { e.textContent = n; });
+      folioNow.forEach(function (e) { e.textContent = pad(n); });
     };
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          if (en.isIntersecting) setFolio(en.target.getAttribute('data-item'));
+          if (en.isIntersecting) setFolio(items.indexOf(en.target) + 1);
         });
       }, { rootMargin: '-45% 0px -50% 0px' });
       items.forEach(function (i) { io.observe(i); });
     } else {
-      setFolio(items[0].getAttribute('data-item'));
+      setFolio(1);
     }
   }
 
@@ -178,13 +185,31 @@
     var status = form.querySelector('.form__status');
     form.setAttribute('novalidate', '');
 
+    /* Wire each error to the control it describes, so a screen reader hears the
+       message as part of the field rather than as loose text. Done here rather
+       than in the markup because this is enhancement, not content. */
+    form.querySelectorAll('.field').forEach(function (field, i) {
+      var ctl = field.querySelector('input, select, textarea');
+      var err = field.querySelector('.field__err');
+      if (!ctl || !err) return;
+      if (!err.id) err.id = (form.id || 'form') + '-err-' + i;
+      err.setAttribute('role', 'alert');
+      var described = (ctl.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+      if (described.indexOf(err.id) === -1) described.push(err.id);
+      ctl.setAttribute('aria-describedby', described.join(' '));
+    });
+
     function clear(field) {
       field.removeAttribute('data-invalid');
+      var ctl = field.querySelector('input, select, textarea');
+      if (ctl) ctl.removeAttribute('aria-invalid');
       var err = field.querySelector('.field__err');
       if (err) { err.hidden = true; err.textContent = ''; }
     }
     function fail(field, msg) {
       field.setAttribute('data-invalid', '');
+      var ctl = field.querySelector('input, select, textarea');
+      if (ctl) ctl.setAttribute('aria-invalid', 'true');
       var err = field.querySelector('.field__err');
       if (err) { err.hidden = false; err.textContent = msg; }
     }

@@ -21,28 +21,92 @@
   },
   "tokens": {
     "color": {
-      "desk": { "value": "#EDEBE6", "role": "the desk the sheets sit on; page background only" },
-      "sheet": { "value": "#FFFFFF", "role": "an office-white sheet" },
-      "sheet2": { "value": "#FAF9F6", "role": "second sheet / recessed print area (inputs, hover rows)" },
-      "ink": { "value": "#00102E", "role": "primary ink; the incumbent brand navy, kept as the ink" },
-      "ink2": { "value": "#2C3A56", "role": "secondary text; tinted from the ink, never a grey" },
-      "ink3": { "value": "#5A6880", "role": "tertiary text and annotations" },
-      "rule": { "value": "rgba(0,16,46,.18)", "role": "hairline rules inside schedules" },
-      "ruleMid": { "value": "rgba(0,16,46,.38)", "role": "input borders, table header underline" },
-      "ruleInk": { "value": "rgba(0,16,46,.82)", "role": "the document's own rules" },
-      "strata": { "value": "#094BC1", "role": "links, focus rings, the live control" },
-      "strataInk": { "value": "#063A96", "role": "pressed / deeper blue" },
-      "stamp": { "value": "#C8341F", "role": "rubber stamps and the single primary action. Nothing else." },
-      "stampInk": { "value": "#A32715", "role": "the primary action's pressed state" },
-      "marker": { "value": "#F2E14C", "role": "the highlighter. One sweep per sheet, one field band per site." },
-      "plus": { "value": "#00544E", "role": "the Strata Staff Plus service line" },
-      "gold": { "value": "#BE894A", "role": "accreditation seals only" }
+      "_note": "The brand is two colours and nothing else. logo-full.png was decoded pixel by pixel and contains exactly #094BC1 blue (54.1%) and #00544E teal (45.7%). Every accent below is one of those two; every ground is a value the incumbent site actually ships.",
+      "desk": {
+        "value": "#E4E8ED",
+        "role": "the desk the sheets sit on; page background only"
+      },
+      "sheet": {
+        "value": "#FFFFFF",
+        "role": "an office-white sheet"
+      },
+      "sheet2": {
+        "value": "#F4F5F7",
+        "role": "second sheet / recessed print area (inputs, hover rows)"
+      },
+      "ink": {
+        "value": "#00102E",
+        "role": "primary ink"
+      },
+      "ink2": {
+        "value": "#233452",
+        "role": "secondary text; the site's own value"
+      },
+      "ink3": {
+        "value": "#666F7A",
+        "role": "tertiary text and annotations; the site's #69727D one step down so it also clears AA on --sheet-2"
+      },
+      "grey": {
+        "value": "#D5D8DC",
+        "role": "the photographic register's grid rules"
+      },
+      "rule": {
+        "value": "rgba(0,16,46,.18)",
+        "role": "hairline rules inside schedules"
+      },
+      "ruleMid": {
+        "value": "rgba(0,16,46,.38)",
+        "role": "input borders, table header underline"
+      },
+      "ruleInk": {
+        "value": "rgba(0,16,46,.82)",
+        "role": "the document's own rules"
+      },
+      "blue": {
+        "value": "#094BC1",
+        "role": "the logo, 54%. Links, focus rings, the live control, the stamps, the single primary action."
+      },
+      "blueInk": {
+        "value": "#063A96",
+        "role": "pressed / deeper blue"
+      },
+      "teal": {
+        "value": "#00544E",
+        "role": "the logo, 46%. The record voice: secondary action, clause and record numbers, the Plus line, the accreditation seals."
+      },
+      "tealSoft": {
+        "value": "#324B4A",
+        "role": "form labels and fact keys; the site's own accent"
+      },
+      "tealInk": {
+        "value": "#003B36",
+        "role": "pressed / deeper teal"
+      },
+      "marker": {
+        "value": "#B7DAD3",
+        "role": "the highlighter; brand teal lifted into a wash. One sweep per sheet."
+      }
+    },
+    "_retired": {
+      "_note": "An earlier revision invented a vermilion #C8341F for stamps and the primary action, a yellow #F2E14C highlighter and a gold #BE894A for the seals. None of the three appears in the logo or in the incumbent's stylesheet. All were replaced with the brand's own blue and teal, and assets/marker.svg was recoloured to match.",
+      "removed": [
+        "#C8341F",
+        "#A32715",
+        "#F2E14C",
+        "#BE894A",
+        "#EDEBE6",
+        "#FAF9F6",
+        "#2C3A56",
+        "#5A6880"
+      ]
     },
     "structure": {
       "gutter": "78px",
-      "padX": "58px",
+      "padX": "clamp(20px, 3.2vw, 96px)",
+      "colGap": "clamp(13px, 2.1vw, 30px)",
       "barH": "64px",
-      "ruleHead": "3px double var(--rule-ink)"
+      "ruleHead": "3px double var(--rule-ink)",
+      "_note": "The sheet is calc(100% - 26px): a 13px reveal either side, and nothing more. No content block inside it is capped — rules, bands, schedules and the footer run the full width while prose keeps its 68ch measure. Measured fill of the viewport: 96.5% at 1024px, 97.5% at 1440px, 98.1% at 1920px, 98.6% at 2560px."
     },
     "type": {
       "sans": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
@@ -55,21 +119,105 @@
         "body": "1.0625rem",
         "measure": "68ch"
       },
-      "floors": { "functionalText": "11px", "annotation": "12.5px" }
+      "floors": {
+        "functionalText": "11px",
+        "annotation": "12.5px"
+      }
     },
     "motion": {
       "ease": "cubic-bezier(.16, 1, .3, 1)",
       "duration": ".62s",
-      "authoredMotions": ["highlighter sweep (once per sheet)", "stamp settle (resolution band)"],
+      "authoredMotions": [
+        "highlighter sweep (once per sheet)",
+        "stamp settle (resolution band)"
+      ],
       "reducedMotion": "all durations .001ms; highlighter pinned drawn"
     }
   },
-  "breakpoints": [1240, 980, 640],
+  "breakpoints": [
+    1240,
+    980,
+    640
+  ],
+  "fit": {
+    "method": "tools/measure-fit.html measures all 40 pages in iframes, sequentially, one viewport per Chrome invocation (?v=WxH). It reports horizontal overflow plus the widest contributing element, document height in screens, word count, and how much of the viewport the sheet covers.",
+    "verifiedWidths": [
+      320,
+      390,
+      768,
+      1024,
+      1099,
+      1180,
+      1280,
+      1440,
+      1920,
+      2560
+    ],
+    "horizontalOverflowPx": 0,
+    "bugsFixed": [
+      ".bar__cta was flex:none and no media query removed it, so all 40 pages overflowed by 281px at 390px; it is now hidden below 980px, where the drawer carries the same action",
+      "the twelve-column grids have eleven 30px gaps = 330px of gap alone, wider than a 320px phone; replaced by one --col-gap token that scales with the viewport",
+      "a single mailto: address, unbreakable and sitting in a grid, set the floor for the entire footer; addresses and URLs now use overflow-wrap:anywhere, which also shrinks min-content size",
+      "wide schedules are laid out to a fixed width below 640px so cells wrap rather than pushing the sheet sideways",
+      "the asset pruner unlinked anything no page referenced, so moving the platform wall off the home page deleted all twelve platform logos from disk; it now reports \"present but unreferenced\" and leaves the files alone"
+    ],
+    "homeRelayout": {
+      "method": "tools/measure-blocks.ps1 loads one page and reports each top-level block's height in screens, plus the computed padding and border of any selector's children. Written to locate which section was making the home page long instead of guessing.",
+      "before": {
+        "screens1440": 11.3,
+        "visibleWords": 1783,
+        "numberedSectionLabels": 8
+      },
+      "after": {
+        "screens1440": 7,
+        "screens1920": 5.4,
+        "screens390": 12.8,
+        "visibleWords": 986,
+        "numberedSectionLabels": 0
+      },
+      "note": "The page is an overview: the hero, eight short sections on the incumbent's own order, and a 0.7-screen footer. It does not reach four screens without dropping sections the incumbent's own site carries, so the reported figure is 7.0 rather than a claim of 4.",
+      "defectsExposed": [
+        "The .resolution navy closing band and its whole style block existed, app.js was listening for .stamp--settle, and the home page emitted an empty <section> in its place: the signature interaction had never rendered.",
+        "The folio rail counted [data-item], the printed item number, so on an unnumbered page it found nothing and left the static \"01 / 01\" placeholder on screen. It now counts section.item and reports the index.",
+        "optionsList emitted an empty .opt__no span for rows without a number, so four children went into a three-column plain grid and the arrow wrapped to an implicit second row: role rows rendered at 220-270px instead of 72px.",
+        "The figures band was placed in .wrap, itself a twelve-column grid, without grid-column: 1 / -1, so it resolved to a single minmax(190px,1fr) track and stacked its three figures vertically."
+      ]
+    }
+  },
   "components": [
-    "sheet", "bar", "body-grid", "punch", "cover", "phead",
-    "item", "clauses", "clause", "tabs", "sched", "register", "scale", "reg-table",
-    "stamp", "mark", "field-marker", "seal", "plats", "platwall", "stmt", "opts", "opt",
-    "form", "field", "foot", "perf", "cookies", "drawer", "resolution", "facts", "trio", "duo"
+    "sheet",
+    "bar",
+    "body-grid",
+    "punch",
+    "cover",
+    "phead",
+    "item",
+    "clauses",
+    "clause",
+    "tabs",
+    "sched",
+    "register",
+    "scale",
+    "reg-table",
+    "stamp",
+    "mark",
+    "field-marker",
+    "seal",
+    "plats",
+    "platwall",
+    "stmt",
+    "opts",
+    "opt",
+    "form",
+    "field",
+    "foot",
+    "perf",
+    "cookies",
+    "drawer",
+    "resolution",
+    "facts",
+    "trio",
+    "duo"
   ],
   "signatureInteraction": {
     "id": "capacity",
@@ -84,8 +232,12 @@
     "focus": "visible :focus-visible rings on strata blue; drawer restores focus on close",
     "drawer": "inert while closed, aria-expanded toggled, Escape to close",
     "contrast": {
-      "inkOnSheet": 18.4, "ink2OnSheet": 11.4, "ink3OnSheet": 5.6,
-      "stampOnSheet": 5.3, "strataOnSheet": 7.5, "inkOnMarker": 14.0,
+      "inkOnSheet": 18.4,
+      "ink2OnSheet": 11.4,
+      "ink3OnSheet": 5.6,
+      "stampOnSheet": 5.3,
+      "strataOnSheet": 7.5,
+      "inkOnMarker": 14,
       "bodyOnResolution": 12.7
     },
     "forms": "front-end only, inline field errors with role=alert, success in role=status; demo notice shown"
@@ -96,15 +248,44 @@
     "findingsBefore": 1109,
     "findingsAfter": 285,
     "clearedRules": [
-      "low-contrast", "side-tab", "cramped-padding", "undersized-ui-text",
-      "tiny-text", "dark-glow", "tight-leading"
+      "low-contrast",
+      "side-tab",
+      "undersized-ui-text",
+      "tiny-text",
+      "dark-glow",
+      "tight-leading"
     ],
     "remainingByRule": {
-      "numbered-section-labels": { "count": 127, "severity": "advisory", "disposition": "deliberate" },
-      "all-caps-body": { "count": 115, "severity": "warning", "disposition": "deliberate" },
-      "gpt-thin-border-wide-shadow": { "count": 40, "severity": "advisory", "disposition": "deliberate" },
-      "marketing-buzzword": { "count": 2, "severity": "warning", "disposition": "deliberate" },
-      "em-dash-overuse": { "count": 1, "severity": "advisory", "disposition": "deliberate" }
+      "numbered-section-labels": {
+        "count": 121,
+        "severity": "advisory",
+        "disposition": "deliberate"
+      },
+      "all-caps-body": {
+        "count": 117,
+        "severity": "warning",
+        "disposition": "deliberate"
+      },
+      "gpt-thin-border-wide-shadow": {
+        "count": 40,
+        "severity": "advisory",
+        "disposition": "deliberate"
+      },
+      "cramped-padding": {
+        "count": 4,
+        "severity": "warning",
+        "disposition": "false-positive"
+      },
+      "marketing-buzzword": {
+        "count": 2,
+        "severity": "warning",
+        "disposition": "deliberate"
+      },
+      "em-dash-overuse": {
+        "count": 1,
+        "severity": "advisory",
+        "disposition": "deliberate"
+      }
     },
     "reasons": {
       "numbered-section-labels": "The agenda numbers are the notice pack's own item numbering and the sequence is referenced by the proxy form and the folio rail. Numbers that carried no information were removed from two lists.",
@@ -112,12 +293,37 @@
       "gpt-thin-border-wide-shadow": "A 1px-bordered sheet of paper lifted off a desk. The shadow is offset with a large negative spread and is neutral black.",
       "marketing-buzzword": "The phrase occurs inside a client's verbatim testimonial. Editing a client's language to satisfy a lint rule would make the evidence less true.",
       "em-dash-overuse": "The privacy annexure is a restatement of the incumbent's policy and uses parenthetical dashes as the source does."
-    }
+    },
+    "reRunAfterHomeRelayout": {
+      "when": "after the home page was re-laid out to the incumbent site's own section order with plain headings",
+      "findings": 285,
+      "note": "numbered-section-labels falls by six because the home page's seven invented Motion/Schedule labels are gone; the other 39 pages keep their item numbers deliberately. all-caps-body rises by two for the figures band's mono uppercase labels."
+    },
+    "falsePositives": [
+      {
+        "rule": "cramped-padding",
+        "file": "index.html",
+        "reported": [
+          ".band__cell: children flush against border-left on left (no inset)",
+          ".band__cell: children flush against border-top/left on left (no inset) x2",
+          ".resolution: children flush against bg on top/bottom (no inset)"
+        ],
+        "measured": "At 1280px wide, .band__cell after the first renders padding-left: 32px inside a 1px hairline; at 390px the hairline is horizontal and the inset is padding-top: 19.2px; .resolution renders padding-top and padding-bottom of 81.92px.",
+        "why": "The detector applies narrow-width media-query rules regardless of viewport and does not consistently resolve a later override, so it sees a border with no inset where the browser sees 19-82px. Three attempts to rule out a real defect did not change the finding: the band was given its own cell classes instead of reusing .fact, the cell borders were removed outright, and the clamp() in both bands' padding was moved into root custom properties. Verified with tools/measure-blocks.ps1 reading getComputedStyle."
+      }
+    ],
+    "remainingTotal": 285
   },
   "knownContentGaps": [
     "Team portraits are not paired with names: 19 plates against 20 names, and filenames do not map reliably. The page shows an unnamed photographic register plus a named register of officers, and states why.",
     "Strata Executive Assistant has no page in the live sitemap but is listed in the navigation; the role page is built only from real published phrases and its real five training modules.",
     "platform-mri-2.webp returned 404 from the incumbent host; not shipped.",
     "All forms are front-end only and say so on the page."
-  ]
+  ],
+  "tools": {
+    "measureFit": "tools/measure-fit.ps1 -Viewports \"390x844,1440x900\" - all 40 pages: overflow, height in screens, words, sheet fill",
+    "measureBlocks": "tools/measure-blocks.ps1 -Page index.html -Selector \".band__grid\" - one page block by block, with computed padding and border",
+    "detectAll": "strata-scan/detect-all.mjs - re-run the detector over all 40 pages, summarised by rule",
+    "detectShow": "strata-scan/detect-show.mjs <rule> - the detail behind one rule's findings"
+  }
 }

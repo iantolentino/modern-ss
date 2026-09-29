@@ -17,8 +17,6 @@
 #tab-p-p-cc:checked ~ .tabs__panel[data-tab="tab-p-p-cc"] { display: block; }
 #tab-p-p-ea:checked ~ .tabs__panel[data-tab="tab-p-p-ea"] { display: block; }
 #tab-pc:checked ~ .tabs__panel[data-tab="tab-pc"] { display: block; }
-#tab-plus:checked ~ .tabs__panel[data-tab="tab-plus"] { display: block; }
 #tab-sb:checked ~ .tabs__panel[data-tab="tab-sb"] { display: block; }
 #tab-sm:checked ~ .tabs__panel[data-tab="tab-sm"] { display: block; }
-#tab-strata:checked ~ .tabs__panel[data-tab="tab-strata"] { display: block; }
 #tab-td:checked ~ .tabs__panel[data-tab="tab-td"] { display: block; }

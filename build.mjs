@@ -6,7 +6,7 @@
    script exists so the notice-pack shell is authored once instead of forty
    times. Content lives here and in ./content/*.json.
    ========================================================================= */
-import { readFile, writeFile, readdir, unlink } from 'node:fs/promises';
+import { readFile, writeFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = process.cwd();
@@ -271,10 +271,16 @@ const stamp = (lines, cls = '', rot = '-3.4deg') => {
     '</span>';
 };
 
-const item = ({ no, id, title, lede, body = '', aside = '', wide = false }) => `
-      <section class="item" id="${id}" data-item="${no}">
+/* A section of the pack. `no` is the printed item number; a section that does
+   not carry one is `item--plain`, which collapses the gutter column so the
+   heading starts at the sheet's own left edge. The home page's sections are
+   named, not numbered — a first-time visitor is not reading an agenda. */
+const item = ({ no, id, title, lede, body = '', aside = '', wide = false }) => {
+  const plain = !no;
+  return `
+      <section class="item${plain ? ' item--plain' : ''}"${id ? ` id="${id}"` : ''}${no ? ` data-item="${no}"` : ''}>
         <div class="item__wrap">
-          <p class="item__no"><span class="sr">Item </span>${no}</p>
+          ${no ? `<p class="item__no"><span class="sr">Item </span>${no}</p>` : ''}
           <div class="item__head">
             <h2 class="display">${title}</h2>
             ${lede ? `<p class="item__lede">${lede}</p>` : ''}
@@ -283,6 +289,7 @@ const item = ({ no, id, title, lede, body = '', aside = '', wide = false }) => `
           ${aside ? `<aside class="item__aside">${aside}</aside>` : ''}
         </div>
       </section>`;
+};
 
 const schRows = rows => rows.map(r =>
   `<tr><td class="k">${r[0]}</td><td class="v n">${r[1]}</td></tr>`).join('');
@@ -300,15 +307,22 @@ const roleTable = roles => `
         </tbody>
       </table>`;
 
-const optionsList = (rows, cls = '') => `
-      <div class="opts${cls}">
+/* A ruled list of links. Rows that carry a reference number get the leading
+   column; a list where no row has one drops the column *and* the empty span, so
+   three children go into three columns. Emitting the empty span anyway pushed
+   the arrow onto an implicit second grid row and doubled every row's height. */
+const optionsList = (rows, cls = '') => {
+  const anyNo = rows.some(r => r.no);
+  return `
+      <div class="opts${anyNo ? '' : ' opts--plain'}${cls}">
         ${rows.map(r => `<a class="opt" href="${r.href}">
-          <span class="opt__no">${r.no || ''}</span>
+          ${anyNo ? `<span class="opt__no">${r.no || ''}</span>` : ''}
           <span class="opt__name">${esc(r.name)}</span>
           <span class="opt__desc">${esc(r.desc)}</span>
           <span class="opt__go" aria-hidden="true">${arrow}</span>
         </a>`).join('\n        ')}
       </div>`;
+};
 
 /* Index tabs. CSS cannot compare a checked input's id to an attribute, so the
    visibility rules for every tab group are emitted into styles-tabs.css below.
@@ -414,7 +428,7 @@ function documentBar(page) {
       <a class="bar__brand" href="index.html">
         <img src="assets/logo-full.png" alt="Strata Staff Global" width="2049" height="447">
       </a>
-      <span class="bar__tag">Premium strata offshore capacity solutions</span>
+      <span class="bar__tag">Strata offshore capacity solutions</span>
       <nav class="bar__nav" aria-label="Agenda">
 ${NAV.map(n => `        <a href="${n.href}"${page === n.href ? ' aria-current="page"' : ''}>${esc(n.bar)}</a>`).join('\n')}
       </nav>
@@ -464,7 +478,7 @@ function footer() {
         <div class="foot__wrap">
           <div class="foot__brand">
             <img src="assets/logo-full.png" alt="Strata Staff Global" width="2049" height="447" loading="lazy">
-            <p class="prose" style="margin-top:1rem;max-width:34ch">Purpose-trained offshore specialists for strata and property management agencies across Australia and Canada. Operating since April 2019.</p>
+            <p class="prose" style="margin-top:1rem;max-width:34ch">Purpose-trained offshore specialists for strata and property management agencies in Australia and Canada since April 2019.</p>
           </div>
           <div class="foot__col">
             <h3>Company</h3>
@@ -523,7 +537,7 @@ ${SOCIAL.map(s => `              <li><a href="${s[0]}" rel="noopener">${esc(s[1]
         </div>
       </footer>
       <div class="cookies" id="cookies" hidden role="region" aria-label="Cookies">
-        <p><span class="note">Notice of cookies</span>We use cookies for analytics, security, forms and embedded services. You can accept or decline; declining still leaves the notice readable.</p>
+        <p><span class="note">Notice of cookies</span>Analytics, security, forms and embedded services use cookies. Accept or decline &mdash; the notice stays readable either way.</p>
         <span class="cookies__acts">
           <button class="btn" type="button" data-cookie="accepted">Accept</button>
           <button class="btn2" type="button" data-cookie="declined">Decline</button>
@@ -575,7 +589,7 @@ const ctaBlock = (heading = 'Schedule Free Discovery Call') => `
           <p class="item__no"><span class="sr">Item </span>09</p>
           <div class="item__head">
             <h2 class="display">${heading}</h2>
-            <p class="item__lede">We value your time in engaging with us. Your enquiry is a true reflection of your interest, so tell us more and we will come back to you with a tailored capacity plan.</p>
+            <p class="item__lede">Tell us what you need and we will come back to you with a tailored capacity plan.</p>
           </div>
           <div class="item__body item__body--wide">
             <div class="facts">
@@ -592,47 +606,107 @@ const ctaBlock = (heading = 'Schedule Free Discovery Call') => `
         </div>
       </section>`;
 
+/* The closing call, as the pack's one full-bleed navy band — a sheet turned
+   over, with the carried stamp settling onto it as the band comes into view.
+   The heading is the incumbent's own name for the section.
+
+   This markup was missing for most of the build's life: `.resolution` and its
+   whole style block existed, `app.js` was listening for `.stamp--settle`, and
+   the home page rendered an empty `<section>` in its place. The band now
+   renders, and the signature interaction has something to act on. */
+const resolutionBlock = (heading = 'Schedule Free Discovery Call') => `
+      <section class="resolution" id="book">
+        <div class="resolution__wrap">
+          <h2 class="display">${heading}</h2>
+          <p class="prose">Tell us what you need and we will come back with a tailored capacity plan &mdash; the roles, the platforms and the number of seats that fit your portfolio.</p>
+          <p class="resolution__acts">
+            <a class="btn btn--lg" href="contact.html#book">Schedule the free discovery call</a>
+            <a class="btn2" href="contact.html#capacity">Take the capacity test ${arrow}</a>
+          </p>
+          <div class="resolution__stamp">${stamp(['Strata-trained', 'Ready day one'], 'stamp--lg stamp--settle', '-3.4deg')}</div>
+          <p class="resolution__ref">
+            <span class="ref">30 minutes &middot; no obligation</span>
+            <span class="ref">AU <a class="link" href="tel:${TEL_AU_H}">${TEL_AU_D}</a></span>
+            <span class="ref">CA <a class="link" href="tel:${TEL_CA_H}">${TEL_CA_D}</a></span>
+            <span class="ref"><a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a></span>
+          </p>
+        </div>
+      </section>`;
+
 /* ============================================================== the pages == */
 const PAGES = {};
 
 /* ------------------------------------------------------------------ home -- */
+/* ------------------------------------------------------------------ home --
+   The order on this page is the incumbent's own, top to bottom: the hero, the
+   team behind your team, the three headline figures, the difference, the
+   capacity proposition, how it works, platform capability, what clients say,
+   and the closing call.
+
+   An earlier revision dressed all of that in invented AGM vocabulary — "Motion
+   01 — Your capacity plan", "Schedule 1 — Particulars", clauses 1.1 to 1.4.
+   None of it appears on the live site, and it told a first-time visitor nothing
+   about the company. The sections now say what they are.
+
+   The page is an overview and nothing more. The ten roles, the twelve
+   platforms, the capacity model, the membership seals, the twenty officers and
+   the remaining six statements all live on the pages that own them, and are
+   linked from here. */
 PAGES['index.html'] = () => {
+  // the four roles the incumbent leads with, in its own order
+  const HOME_ROLES = [
+    'role-executive-assistant.html', 'role-accountant.html',
+    'role-administrative-specialist.html', 'role-customer-care.html',
+  ].map(h => STRATA_ROLES.find(r => r.href === h)).filter(Boolean);
+
   const rows = [
-    ['Placements since April 2019', '500+'],
+    ['Operating since', 'April 2019'],
+    ['Placements', '500+'],
     ['Client retention rate', '98%'],
-    ['Individual strata tasks per month', '200,000+'],
-    ['Strata platforms staff are trained on', '13+'],
-    ['Purpose-trained specialists available', '10 roles'],
+    ['Specialist roles', '10'],
     ['Delivery locations', 'AU · CA · PH'],
   ];
+
+  const stats = [
+    ['500+', 'Placements', 'Since April 2019'],
+    ['98%', 'Retention rate', 'Across both countries'],
+    ['10+', 'Industries served', 'Strata and property management'],
+  ];
+
+  const steps = [
+    ['Book a discovery call', 'A free 30-minute call with our solutions team to share your staffing needs and goals.'],
+    ['We design your solution', 'A tailored offshore capacity plan &mdash; the right roles, skills and strata platforms for your business.'],
+    ['Meet your offshore team', 'We select, vet and purpose-train your staff on strata operations, so they are ready from day one.'],
+    ['Scale with confidence', 'Your team integrates into your workflows, lifting capacity without proportional overhead.'],
+  ];
+
   return page({
     page: 'index.html',
     head: {
       title: 'Build Your Strata Staff Global Offshore Team',
-      desc: 'Strata-trained professionals who expand your capacity, streamline daily operations, and help your agency grow with confidence. Servicing Australian and Canadian strata agencies since April 2019.',
+      desc: 'Strata-trained offshore specialists who expand your agency\u2019s capacity. Serving Australian and Canadian strata agencies since April 2019.',
     },
     main: `
     <main id="main">
       <section class="cover">
         <div class="wrap">
           <div class="cover__main">
-            <p class="opening">Notice is hereby given</p>
-            <h1 class="display">that your strata agency can carry ${mark('more lots')} <span class="ink-quiet">than it has hours</span>.</h1>
-            <p class="lede">Strata Staff Global places purpose-trained offshore specialists inside Australian and Canadian strata agencies &mdash; accountants, administrative specialists, executive assistants, compliance and insurance specialists, and customer care. They arrive trained on the platforms you already run and the legislation you already answer to.</p>
+            <h1 class="display">Build your Strata Staff Global ${mark('offshore')} team.</h1>
+            <p class="lede">Strata-trained professionals who expand your capacity, streamline daily operations and help your business grow with confidence. Serving Australian and Canadian strata agencies since April 2019.</p>
             <div class="cover__acts">
-              <a class="btn btn--lg" href="contact.html#book">Schedule the free discovery call</a>
-              <a class="btn2" href="contact.html#capacity">Take the capacity test ${arrow}</a>
+              <a class="btn btn--lg" href="contact.html#capacity">Take the capacity test ${arrow}</a>
+              <a class="btn2" href="contact.html#book">Talk to us</a>
             </div>
             <p class="cover__ref">
+              <span class="ref">No obligation &middot; see where your team can unlock capacity</span>
               <span class="ref">AU <a class="link" href="tel:${TEL_AU_H}">${TEL_AU_D}</a></span>
               <span class="ref">CA <a class="link" href="tel:${TEL_CA_H}">${TEL_CA_D}</a></span>
               <span class="ref"><a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a></span>
-              <span class="ref">No obligation &middot; 30 minutes</span>
             </p>
           </div>
           <aside class="cover__aside">
             <table class="sched sched--particulars">
-              <caption class="note">Schedule 1 &mdash; Particulars</caption>
+              <caption class="note">At a glance</caption>
               <tbody>${schRows(rows)}</tbody>
             </table>
             <div class="stamp-wrap">${stamp(['Strata-trained', 'Ready day one'], 'stamp--lg', '-3.2deg')}</div>
@@ -646,111 +720,83 @@ PAGES['index.html'] = () => {
       </section>
 
       <div class="field-marker">
-        <p>Every placement is trained on strata legislation and on more than thirteen strata platforms before they touch your portfolio. That is the whole difference between a strata specialist and a generalist offshore seat.</p>
+        <p>Every placement is trained on strata legislation and thirteen-plus strata platforms before they touch your portfolio.</p>
       </div>
 
 ${item({
-      no: '01', id: 'motion', title: 'Motion 01 &mdash; Your capacity plan',
-      lede: 'From first contact to a fully operational offshore desk in four clauses. Each one is resolved before the next is put.',
+      id: 'team', title: 'Meet the team behind your team',
+      lede: 'Skilled professionals, trained in strata workflows and ready to support your agency.',
       wide: true,
       body: `
-        <div class="clauses">
-          <div class="clause"><p class="clause__no">1.1</p><h3>Book a discovery call</h3><p>Schedule a free 30-minute call with our solutions team to share your staffing needs and goals.</p></div>
-          <div class="clause"><p class="clause__no">1.2</p><h3>We design your solution</h3><p>Our team creates a tailored offshore capacity plan &mdash; matching the right roles, skills and strata platforms to your business.</p></div>
-          <div class="clause"><p class="clause__no">1.3</p><h3>Meet your offshore team</h3><p>We select, vet and purpose-train your offshore staff on strata operations so they hit the ground running.</p></div>
-          <div class="clause"><p class="clause__no">1.4</p><h3>Scale with confidence</h3><p>Your offshore team integrates into your workflows, increasing capacity without proportional overhead costs.</p></div>
-        </div>`,
+        ${optionsList(HOME_ROLES.map(r => ({ href: r.href, name: r.name, desc: r.one })))}
+        <p style="margin-top:2rem"><a class="btn2" href="solutions.html">See all ten roles and both service lines ${arrow}</a></p>`,
     })}
 
-${item({
-      no: '02', id: 'specialists', title: 'Schedule 2 &mdash; The specialists',
-      lede: 'Ten roles, two service lines. Every one of them is filled by a specialist who understands your industry, not a generalist administrator.',
-      aside: `<div class="stamp-wrap" style="padding-top:0">${stamp(['Not a', 'generalist BPO'], 'stamp--sm', '4deg')}</div>
-        <p class="note" style="margin-top:2rem">Platforms in daily use</p>
-        <ul class="tasks">${TASK_LEDGER.slice(0, 8).map(t => `<li>${esc(t)}</li>`).join('')}</ul>`,
-      body: `
-${tabs('sched2', [
-        { id: 'tab-strata', label: 'Strata Services <span class="tick">A</span>', html: `<p class="prose">Our strata management team handles the full back office of your agency &mdash; from financial processing and compliance tracking to customer care and executive support. Fully trained on Australian strata platforms and processes.</p>${roleTable(STRATA_ROLES)}` },
-        { id: 'tab-plus', label: 'Strata Staff Plus <span class="tick">B</span>', html: `<p class="prose">Extend your property management team with purpose-trained Strata Staff Global specialists. We handle the operational load so your in-house managers can focus on relationships and growth.</p>${roleTable(PM_ROLES)}` },
-      ])}`,
-    })}
-
-${item({
-      no: '03', id: 'platforms', title: 'Schedule 3 &mdash; The platforms',
-      lede: 'Our familiarity with the strata platforms you already run works to your advantage. Minimal ramp-up time, maximum output from week one, because nobody has to be taught the software from scratch.',
-      wide: true,
-      body: `
-        <div class="plats">
-          ${PLATFORMS.map(p => `<div class="plat"><img src="assets/${p[0]}" alt="${esc(p[1])}" loading="lazy" decoding="async"><span class="plat__cap">${esc(p[1])}</span></div>`).join('\n          ')}
+      <section class="band">
+        <div class="wrap">
+          <div class="band__grid">
+            ${stats.map(s => `<div class="band__cell"><p class="band__v">${s[0]}</p><p class="band__k">${s[1]}</p><p class="band__s">${s[2]}</p></div>`).join('\n            ')}
+          </div>
         </div>
-        <p class="note" style="margin-top:1.4rem">Thirteen or more platforms in daily use, including the twelve above.</p>`,
-      aside: '',
-    })}
+      </section>
 
 ${item({
-      no: '04', id: 'register', title: 'Motion 02 &mdash; The register of posts',
-      lede: 'The company handles more than 200,000 individual strata tasks a month. Move the pointer to see that figure decompose into the posts it is actually made of, and to trace the growth path one client described in their own statement.',
+      id: 'difference', title: 'The Strata Staff Difference',
+      lede: 'High-performing global teams that are strata trained and ready, able to understand the dynamics and ever-changing requirements of strata agencies.',
       wide: true,
       body: `
-        <div class="register">
-          <div class="reg-out" aria-live="polite">
-            <p class="reg-out__n"><span data-reg-n>5</span></p>
-            <p><span class="reg-out__lab">Specialists on your offshore team</span><br><span class="note" data-reg-phase>Foundation squad</span></p>
-            <p class="reg-out__note">Illustrative model &mdash; your plan is built on the call</p>
-          </div>
-          <div class="scale">
-            <label class="note" for="capacity">Move the pointer &mdash; 5 to 21 specialists</label>
-            <div class="scale__ruler">
-              <span class="scale__ticks" aria-hidden="true">${Array.from({ length: 17 }, (_, i) => `<i class="${i % 5 === 0 ? 'maj' : ''}"></i>`).join('')}</span>
-              <input type="range" id="capacity" min="5" max="21" step="1" value="5" aria-describedby="cap-hint">
-            </div>
-            <p class="scale__legend note"><span>5 &middot; where Strata Choice started in 2023</span><span>21 &middot; where they are now</span></p>
-          </div>
-          <table class="sched reg-table">
-            <thead><tr><th scope="col" class="n">Post</th><th scope="col">Role</th><th scope="col">Task area</th><th scope="col" class="n">Ref</th></tr></thead>
-            <tbody id="reg-rows"></tbody>
-          </table>
-          <p class="reg-hint" id="cap-hint">Post count is illustrative of a typical blended desk. The monthly task volume beside it is the company&rsquo;s own reported figure, scaled to the size of desk you select. Nothing here is a quotation; a real plan is built on the call.</p>
+        <div class="trio">
+          <div><h3>Strata-trained, not generalist</h3><p>Trained in strata operations and in Australian and Canadian strata legislation, not in generic back-office work.</p></div>
+          <div><h3>Capacity without the overhead</h3><p>Seats added to the work that is growing, without a proportional increase in the cost of the business.</p></div>
+          <div><h3>Ready on the platforms you run</h3><p>Thirteen or more strata platforms, so ramp-up is measured in days rather than in months.</p></div>
         </div>`,
     })}
 
 ${item({
-      no: '05', id: 'statements', title: 'Schedule 4 &mdash; Statements received',
-      lede: 'Nine statements from agency principals and industry officeholders, reproduced in full. This is the evidence schedule the rest of the notice rests on.',
+      id: 'what-we-do', title: 'Tailored &amp; Strategic Offshore Capacity Solutions For The Strata Industry',
+      lede: 'Capacity solutions that offset rising staff and operating costs, so revenue moves up rather than sideways. The mix of roles is decided by your lot count, your portfolio and the work that is not getting done &mdash; then trained, then placed.',
+      body: `<p><a class="btn2" href="solutions.html">See the roles and what each covers ${arrow}</a></p>`,
+    })}
+
+${item({
+      id: 'how', title: 'How It Works',
+      lede: 'From first contact to a fully operational offshore team, in four steps.',
       wide: true,
       body: `
-        <div class="stmt">
-          ${TESTIMONIALS.map(t => `<div class="stmt__row">
+        <div class="clauses clauses--plain">
+          ${steps.map(s => `<div class="clause"><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('\n          ')}
+        </div>`,
+    })}
+
+${item({
+      id: 'technology', title: 'Strata Technology Capabilities',
+      lede: 'Our familiarity with the strata platforms you already run works to your advantage. Your staff know the software on day one, so ramp-up is measured in days rather than in months.',
+      wide: true,
+      body: `
+        <ul class="tasks">${TASK_LEDGER.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+        <p class="note" style="margin-top:1.6rem">Thirteen or more strata platforms in daily use, including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ and Smata. The platform wall and the role-by-role breakdown are on the solutions page.</p>
+        <p style="margin-top:1.4rem"><a class="btn2" href="solutions.html">See the platforms and the ten roles ${arrow}</a></p>`,
+    })}
+
+${item({
+      id: 'clients', title: 'Our Clients Have Spoken',
+      lede: 'Agency principals and industry officeholders, on what changed after they brought their teams offshore.',
+      wide: true,
+      body: `
+        <div class="stmt stmt--compact">
+          ${TESTIMONIALS.slice(0, 3).map(t => `<div class="stmt__row">
             <div class="stmt__sig"><img src="assets/${t.img}" alt="" width="150" height="150" loading="lazy" decoding="async"></div>
             <blockquote>${esc(t.q)}</blockquote>
             <div class="stmt__meta">
               <p class="stmt__name">${esc(t.n)}</p>
               <p class="stmt__role">${esc(t.r)}</p>
               <p class="stmt__org">${esc(t.o)}</p>
-              <div class="stmt__stamp">${stamp('Received', 'stamp--sm stamp--quiet', '-2.4deg')}</div>
             </div>
           </div>`).join('\n          ')}
-        </div>`,
+        </div>
+        <p style="margin-top:2rem"><a class="btn2" href="testimonials.html">Read all nine statements ${arrow}</a></p>`,
     })}
-
-${item({
-      no: '06', id: 'accreditation', title: 'Schedule 5 &mdash; Accreditation',
-      lede: 'Strata Staff Global holds corporate membership of the industry bodies its clients belong to, in both countries it serves.',
-      wide: true,
-      body: `<div class="seals">${MEMBERS.map(seal).join('')}</div>`,
-    })}
-
-${item({
-      no: '07', id: 'papers', title: 'Schedule 6 &mdash; Papers circulated',
-      lede: 'Announcements, newsletters and partnership notes, as published.',
-      wide: true,
-      body: `<div id="papers-list" data-papers></div>`,
-      aside: '',
-    })}
-
-${item({
-      no: '08', id: 'resolution', title: '', body: '', aside: '',
-    })}
+${resolutionBlock()}
     </main>`,
   });
 };
@@ -768,7 +814,7 @@ ${phead({
     crumb: [['solutions.html', 'Solutions']],
     ref: 'Schedule of specialists',
     title: 'Meet our offshore specialists',
-    lede: 'Experience efficiency and significant savings with Strata Staff&rsquo;s offshore capacity solutions &mdash; fully supporting your agency&rsquo;s needs from administrative tasks to specialised services, with top-tier talent, flexible scaling options and an unwavering commitment to quality.',
+    lede: 'Offshore capacity for your agency, from administrative tasks to specialised services, with flexible scaling and strata-trained talent.',
     aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp(['Ten roles', 'one standard'], 'stamp--sm', '-3deg')}</div>`,
   })}
       <section class="item" data-item="01">
@@ -776,7 +822,7 @@ ${phead({
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head">
             <h2 class="display">Strata management offshore solutions</h2>
-            <p class="item__lede">Our strata management team handles the full back office of your strata agency &mdash; from financial processing and compliance tracking to customer care and executive support. Fully trained on Australian strata platforms and processes.</p>
+            <p class="item__lede">The full back office of your strata agency: financial processing, compliance tracking, customer care and executive support. All trained on Australian strata platforms and processes.</p>
           </div>
           <div class="item__body item__body--wide">${roleTable(STRATA_ROLES)}</div>
         </div>
@@ -786,9 +832,26 @@ ${phead({
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head">
             <h2 class="display">Property management offshore solutions</h2>
-            <p class="item__lede">Extend your property management team with purpose-trained Strata Staff Global specialists. We handle the operational load so your in-house managers can focus on relationships and growth.</p>
+            <p class="item__lede">Extend your property management team with purpose-trained specialists. We carry the operational load so your managers can focus on relationships and growth.</p>
           </div>
           <div class="item__body item__body--wide">${roleTable(PM_ROLES)}</div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
+          <div class="item__head">
+            <h2 class="display">Strata platforms in daily use</h2>
+            <p class="item__lede">Our familiarity with the platforms you already run works to your advantage. Your staff know the software on day one, so ramp-up is measured in days rather than in months.</p>
+          </div>
+          <div class="item__body item__body--wide">
+            <div class="plats">
+              ${PLATFORMS.map(p => `<div class="plat"><img src="assets/${p[0]}" alt="${esc(p[1])}" loading="lazy" decoding="async"><span class="plat__cap">${esc(p[1])}</span></div>`).join('\n              ')}
+            </div>
+            <p class="note" style="margin-top:1.4rem">Thirteen or more platforms in daily use, including the twelve above.</p>
+            <p class="note" style="margin-top:1.6rem">Typical work carried on them</p>
+            <ul class="tasks">${TASK_LEDGER.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+          </div>
         </div>
       </section>
 ${ctaBlock()}
@@ -806,7 +869,7 @@ ${phead({
       crumb: [[roles === STRATA_ROLES ? 'strata-services.html' : 'strata-staff-plus.html', title]],
       ref,
       title: 'Build your Strata Staff Global offshore team',
-      lede: 'Maximise capacity. Optimise productivity. Increase the bottom line. ' + note,
+      lede: note,
     })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -820,9 +883,9 @@ ${ctaBlock()}
   });
 }
 PAGES['strata-services.html'] = () => serviceLine('Strata Services', 'Six strata specialists trained on Australian strata legislation and platforms.', 'Schedule A', STRATA_ROLES,
-  'Our strata specialists are trained specifically in strata operations and understand the dynamics and ever-changing requirements of strata agencies across Australia and Canada.');
+  'Our strata specialists are trained specifically in strata operations and understand the changing requirements of agencies across Australia and Canada.');
 PAGES['strata-staff-plus.html'] = () => serviceLine('Strata Staff Plus', 'Four property management specialists for agencies running both strata and rental portfolios.', 'Schedule B', PM_ROLES,
-  'Strata Staff Plus extends the same standard of training into property management: tenancy documentation, lease renewals, trust reconciliation, inspections and tenant care.');
+  'Strata Staff Plus extends the same training standard into property management: tenancy documentation, lease renewals, trust reconciliation, inspections and tenant care.');
 
 /* ----------------------------------------------------------- role pages --- */
 /* The two service lines, as descriptors a role page can name in its crumb. */
@@ -853,7 +916,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Expertise</h2>
-            <p class="item__lede">What this specialist is trained to own from day one.</p></div>
+            <p class="item__lede">What this specialist owns from day one.</p></div>
           <div class="item__body item__body--wide">
             <div class="trio">
               ${role.exp.map((e, i) => `<div><span class="trio__n">${role.no}.${i + 1}</span><h3>${esc(e)}</h3></div>`).join('\n              ')}
@@ -887,14 +950,14 @@ for (const r of PM_ROLES) PAGES[r.href] = () => rolePage(r, LINE_PLUS);
 /* ------------------------------------------------------------- learning --- */
 PAGES['learning.html'] = () => page({
   page: 'learning.html',
-  head: { title: 'Learning', desc: 'Structured training programs, certification tracks and a dedicated learning academy built for strata industry success.' },
+  head: { title: 'Learning', desc: 'Structured training programmes, certification tracks and a dedicated learning academy.' },
   main: `
     <main id="main">
 ${phead({
     crumb: [['learning.html', 'Learning']],
     ref: 'Education schedule',
     title: 'Our learning programs',
-    lede: 'Strata Staff invests in your offshore team from day one &mdash; with structured training programs, certification tracks and a dedicated learning academy built for strata industry success.',
+    lede: 'Structured training programmes, certification tracks and a dedicated learning academy, from day one.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -902,9 +965,9 @@ ${phead({
           <div class="item__head"><h2 class="display">The three programs</h2></div>
           <div class="item__body item__body--wide">
 ${optionsList([
-    { href: 'academy.html', no: 'E.1', name: 'Strata Staff Academy', desc: 'Our dedicated online learning hub where team members access training resources, certification tracks and professional development modules to stay strata-ready.' },
-    { href: 'foundation-training-program.html', no: 'E.2', name: 'Foundation Training Program', desc: 'Equips aspiring strata professionals with essential industry skills, preparing them for a successful placement with a strata agency partner from day one.' },
-    { href: 'course-outline.html', no: 'E.3', name: 'Course Outline Per Role', desc: 'Role-specific training outlines for every position, from Accountants and Executive Assistants to Compliance Specialists and Customer Care.' },
+    { href: 'academy.html', no: 'E.1', name: 'Strata Staff Academy', desc: 'The online learning hub where team members access training resources, certification tracks and professional development modules to stay strata-ready.' },
+    { href: 'foundation-training-program.html', no: 'E.2', name: 'Foundation Training Program', desc: 'Essential industry skills for aspiring strata professionals, preparing them for placement with a strata agency partner from day one.' },
+    { href: 'course-outline.html', no: 'E.3', name: 'Course Outline Per Role', desc: 'Role-specific training outlines for every position, from accountants and executive assistants to compliance specialists and customer care.' },
   ])}
           </div>
         </div>
@@ -913,17 +976,17 @@ ${optionsList([
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Foundation Training Program</h2>
-            <p class="item__lede">The FTP trains aspiring strata learners in basic foundation skills, which helps them be better prepared upon endorsement to a strata agency partner. It increases the industry readiness of professionals who want to start a career in the strata industry.</p></div>
+            <p class="item__lede">The FTP trains aspiring strata learners in foundation skills so they are better prepared on endorsement to a strata agency partner. It raises the industry readiness of professionals starting a strata career.</p></div>
           <div class="item__body item__body--wide">
             <div class="duo" style="padding:0">
               <div class="duo__a">
-                <h3>How our FTP adds value to our workforce</h3>
+                <h3>For our workforce</h3>
                 <ul class="tasks" style="margin-top:1rem">
                   ${['Building of Basic Foundational Knowledgebase', 'Monitored Competency Levels', 'Professional Growth and Career Advancement', 'Consistent Proficiency Intervention', 'Skill-Gaps Coaching and Management', 'Professional Representation of the Strata Industry'].map(x => `<li>${esc(x)}</li>`).join('')}
                 </ul>
               </div>
               <div class="duo__b">
-                <h3>How our FTP enhances value for client partners</h3>
+                <h3>For client partners</h3>
                 <ul class="tasks" style="margin-top:1rem">
                   ${['Aligned Process Execution with Internal Agency Metrics', 'Quality Assurance and Client Satisfaction', 'High Compliance Ratio', 'Tailored Task Management Solutions Per Agency'].map(x => `<li>${esc(x)}</li>`).join('')}
                 </ul>
@@ -945,13 +1008,13 @@ ${phead({
     crumb: [['learning.html', 'Learning'], ['academy.html', 'Strata Staff Academy']],
     ref: 'Education schedule &mdash; E.1',
     title: 'Learn and be strata ready',
-    lede: 'The Strata Staff Academy is the online learning hub where team members access training resources, certification tracks and professional development modules to stay strata-ready. Master strata management with our comprehensive learning platform.',
+    lede: 'The Strata Staff Academy is the online learning hub where team members access training resources, certification tracks and professional development modules to stay strata-ready.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">Enrolment particulars</h2>
-            <p class="item__lede">For more information and to enrol, contact the enrolment team. Existing students can sign in to continue a track.</p></div>
+            <p class="item__lede">To enrol, contact the enrolment team. Existing students can sign in to continue a track.</p></div>
           <div class="item__body item__body--wide">
             <div class="facts">
               <div class="fact"><p class="fact__v">Hub</p><p class="fact__k">Format</p><p class="fact__s">Online, self-paced modules with certification tracks.</p></div>
@@ -981,7 +1044,7 @@ ${phead({
               </div>
               <div class="form__status" hidden role="status">
                 <h3>Enrolment enquiry filed</h3>
-                <p class="prose">Thank you. The enrolment team receives this and replies from training@stratastaffglobal.com. In this rebuild nothing was actually sent, because no endpoint is wired up.</p>
+                <p class="prose">Thank you. The enrolment team receives this and replies from training@stratastaffglobal.com. In this rebuild nothing was sent, because no endpoint is wired up.</p>
               </div>
             </form>
           </div>
@@ -1000,7 +1063,7 @@ ${phead({
     crumb: [['learning.html', 'Learning'], ['foundation-training-program.html', 'Foundation Training Program']],
     ref: 'Education schedule &mdash; E.2',
     title: 'Excellence with our Foundation Training Program',
-    lede: 'The Foundation Training Program (FTP) aims to train aspiring strata learners in basic foundation skills, which will help them be better prepared upon endorsement to a strata agency partner. This program will help increase the industry readiness of professionals who want to start a career in the strata industry.',
+    lede: 'The Foundation Training Program (FTP) trains aspiring strata learners in foundation skills so they are better prepared on endorsement to a strata agency partner. It raises the industry readiness of professionals starting a strata career.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -1022,7 +1085,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Continuing education</h2>
-            <p class="item__lede">The learning delivery team also runs the externally published Strata Property Management 101 programme, a six-course series delivered face to face or by live stream.</p>
+            <p class="item__lede">The learning delivery team also runs the published Strata Property Management 101 programme, a six-course series delivered face to face or by live stream.</p>
             <p class="item__lede" style="margin-top:1rem">Contact the enrolment team for current dates and fees.</p>
             <p style="margin-top:1.6rem"><a class="btn2" href="mailto:${MAIL_TRN}">${MAIL_TRN} ${arrow}</a></p>
           </div>
@@ -1035,7 +1098,7 @@ ${phead({
                 <tr><td class="n">3</td><td class="role">After the first AGM: handover</td><td class="k">Delivery of documents; preparing the annual budget for approval; independent condition survey of common property; latent defects.</td></tr>
               </tbody>
             </table>
-            <p class="note" style="margin-top:1.4rem">Session format: three hours plus Q&amp;A and a networking session. Six modular courses in total; participants may select the courses they hold a vested interest in.</p>
+            <p class="note" style="margin-top:1.4rem">Session format: three hours plus Q&amp;A and networking. Six modular courses in total; participants may select the courses they are interested in.</p>
           </div>
         </div>
       </section>
@@ -1052,7 +1115,7 @@ ${phead({
     crumb: [['learning.html', 'Learning'], ['course-outline.html', 'Course Outline Per Role']],
     ref: 'Education schedule &mdash; E.3',
     title: 'Course outline per role',
-    lede: 'Browse the training outline for every Strata Staff Global position. Each role completes the strata foundation modules plus the modules specific to its work.',
+    lede: 'The training outline for every Strata Staff Global position. Each role completes the strata foundation modules plus those specific to its work.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -1086,14 +1149,14 @@ ${ctaBlock()}
 /* ---------------------------------------------------------------- about --- */
 PAGES['about.html'] = () => page({
   page: 'about.html',
-  head: { title: 'About Us', desc: 'Strata Staff Global is a premium offshore capacity solutions provider serving strata agencies across Australia and Canada.' },
+  head: { title: 'About Us', desc: 'Strata Staff Global provides offshore capacity solutions to strata agencies across Australia and Canada.' },
   main: `
     <main id="main">
 ${phead({
     crumb: [['about.html', 'About Us']],
     ref: 'Company particulars',
     title: 'About Strata Staff Global',
-    lede: 'A premium offshore capacity solutions provider serving strata agencies across Australia and Canada. We specialise in connecting strata businesses with high-performing, strata-trained global teams who are ready to work from day one.',
+    lede: 'An offshore capacity solutions provider serving strata agencies across Australia and Canada. We connect strata businesses with strata-trained teams ready to work from day one.',
     aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp(['Since', 'April 2019'], 'stamp--sm', '3deg')}</div>`,
   })}
       <section class="item" data-item="01">
@@ -1103,12 +1166,12 @@ ${phead({
           <div class="item__body item__body--wide">
             <div class="duo" style="padding:0">
               <div class="duo__a">
-                <p class="prose">Founded by strata industry professionals, Strata Staff Global was built with one purpose: to give strata agencies the offshore talent they need to scale without compromise. Our staff are not generalists &mdash; they are trained specifically in strata operations, fluent in the day-to-day realities of property management, and familiar with Australian and Canadian strata legislation.</p>
-                <p class="prose">We add value to strata agencies by providing offshore capacity solutions that augment rising staff and operating costs, driving revenue streams upward while maintaining the service quality your clients expect. Whether you need one specialist or an entire offshore team, we have the experience and infrastructure to make it seamless.</p>
+                <p class="prose">Founded by strata industry professionals, Strata Staff Global exists to give strata agencies the offshore talent to scale without compromise. Our staff are not generalists: they are trained in strata operations and familiar with Australian and Canadian strata legislation.</p>
+                <p class="prose">Our offshore capacity solutions offset rising staff and operating costs while maintaining the service quality your clients expect. Whether you need one specialist or a full team, we have the experience and infrastructure to deliver it.</p>
               </div>
               <div class="duo__b">
                 <table class="sched sched--particulars">
-                  <caption class="note">Schedule &mdash; The company</caption>
+                  <caption class="note">At a glance</caption>
                   <tbody>
                     <tr><td class="k">Operating since</td><td class="v n">April 2019</td></tr>
                     <tr><td class="k">Tasks handled per month</td><td class="v n">200,000+</td></tr>
@@ -1128,10 +1191,12 @@ ${phead({
           <div class="item__head"><h2 class="display">The Strata Staff difference</h2></div>
           <div class="item__body item__body--wide">
             <div class="trio">
-              <div><h3>Strata-trained and ready</h3><p>Our global teams are trained specifically in strata operations. They understand the dynamics and ever-changing requirements of strata agencies across Australia and Canada &mdash; not just general admin or back-office work. Your offshore staff hit the ground running.</p></div>
-              <div><h3>Tailored capacity solutions</h3><p>We provide strategic offshore capacity built around your agency&rsquo;s specific needs. Our solutions augment rising staff and operating costs, helping you scale headcount without proportionally increasing overheads, so your bottom line grows.</p></div>
-              <div><h3>Turn-key platform expertise</h3><p>Our staff are familiar with 13+ strata platforms including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ, Smata and more. Minimal ramp-up time. Maximum output from week one.</p></div>
+              <div><h3>Strata-trained and ready</h3><p>Our global teams are trained in strata operations and understand the changing requirements of agencies across Australia and Canada &mdash; not just general admin or back-office work. Your offshore staff hit the ground running.</p></div>
+              <div><h3>Tailored capacity solutions</h3><p>Offshore capacity built around your agency&rsquo;s needs, offsetting rising staff and operating costs so you can scale headcount without proportionally increasing overheads.</p></div>
+              <div><h3>Turn-key platform expertise</h3><p>Our staff know 13+ strata platforms including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ and Smata. Minimal ramp-up, output from week one.</p></div>
             </div>
+            <p class="note" style="margin-top:2.6rem">Corporate membership in both countries we serve</p>
+            <div class="seals" style="margin-top:1.2rem">${MEMBERS.map(seal).join('')}</div>
           </div>
         </div>
       </section>
@@ -1162,7 +1227,7 @@ ${phead({
     crumb: [['about.html', 'About Us'], ['journey.html', 'Enjoying The Journey']],
     ref: 'Minutes of the first meeting',
     title: 'Enjoying the journey',
-    lede: 'Guided by the utmost aim of helping strata agencies with specialised capacity solutions, Strata Staff embarked on its humble beginnings in a small office in Mabalacat, Pampanga, in 2019.',
+    lede: 'Strata Staff began in a small office in Mabalacat, Pampanga, in 2019, set on helping strata agencies with specialised capacity solutions.',
     aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp(['Humble', 'beginnings'], 'stamp--sm', '-3.2deg')}</div>`,
   })}
       <section class="item" data-item="01">
@@ -1171,12 +1236,12 @@ ${phead({
           <div class="item__head"><h2 class="display">How it all began</h2></div>
           <div class="item__body item__body--wide">
             <div class="clauses">
-              <div class="clause"><p class="clause__no">2015&ndash;16</p><h3>The first trips</h3><p>Trevor McGuinness made initial trips to the Philippines, thinking about a business concept that could provide employment opportunities. Upon returning to Australia he discussed the offshoring model with his friend Paul Miller.</p></div>
-              <div class="clause"><p class="clause__no">2019</p><h3>Hard launch in April</h3><p>Having shared values and a vision for the concept, Trevor and Paul beta-tested strata administration work in the Philippines. Seeing the potential for a specialist BPO helping strata companies with high-end business admin work offshore, they launched Strata Staff.</p></div>
+              <div class="clause"><p class="clause__no">2015&ndash;16</p><h3>The first trips</h3><p>Trevor McGuinness made initial trips to the Philippines, exploring a business concept that could create employment. Back in Australia he discussed the offshoring model with his friend Paul Miller.</p></div>
+              <div class="clause"><p class="clause__no">2019</p><h3>Hard launch in April</h3><p>Sharing values and a vision for the concept, Trevor and Paul beta-tested strata administration work in the Philippines. Seeing the potential for a specialist BPO doing high-end business admin offshore, they launched Strata Staff.</p></div>
               <div class="clause"><p class="clause__no">2020</p><h3>Operations scale</h3><p>Dan Fabros joined Strata Staff, helping Paul and Trevor with operations and business scalability.</p></div>
-              <div class="clause"><p class="clause__no">Today</p><h3>More than 200,000 tasks a month</h3><p>From processing basic strata administration tasks like archiving to complicated property and strata administration tasks like S184 and S22, handling levy queries, preparing financial bank statements, inbox management and drafting AGM agendas &mdash; Strata Staff now handles as many as 200,000+ individual business tasks per month.</p></div>
+              <div class="clause"><p class="clause__no">Today</p><h3>More than 200,000 tasks a month</h3><p>From basic strata administration like archiving to S184 and S22, levy queries, financial bank statements, inbox management and drafting AGM agendas &mdash; Strata Staff now handles as many as 200,000+ individual business tasks per month.</p></div>
             </div>
-            <p class="prose" style="margin-top:2rem">Roadblocks like earthquakes, lockdowns and the COVID-19 pandemic did not deter Strata Staff from pushing forward and responding to the challenge despite the adversity. Starting with three computers and a water dispenser did not prevent the team from dedicating hours after hours documenting every strata admin task, while servicing some agencies with just casual hours during that time.</p>
+            <p class="prose" style="margin-top:2rem">Earthquakes, lockdowns and the COVID-19 pandemic did not stop the team. Starting with three computers and a water dispenser, they spent long hours documenting every strata admin task while servicing some agencies on casual hours.</p>
           </div>
         </div>
       </section>
@@ -1184,7 +1249,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Core values and workplace culture</h2>
-            <p class="item__lede">At Strata Staff we have an inclusive and intentional work environment, guided by our values and culture. We continually aim to improve our service levels to ensure strategic partnerships are strengthened. Our people define and echo the quality of our engagements, which has been substantiated by client testimonials.</p></div>
+            <p class="item__lede">We keep an inclusive, intentional work environment guided by our values and culture. Our people define the quality of our engagements, as our client statements attest.</p></div>
           <div class="item__body item__body--wide">
             <div class="trio">
               <div><h3>Gratitude</h3><p>Thank-you culture.</p></div>
@@ -1201,14 +1266,14 @@ ${ctaBlock()}
 
 PAGES['executives.html'] = () => page({
   page: 'executives.html',
-  head: { title: 'Executives', desc: 'Strata Staff Global is led by executive management with diverse professional backgrounds in strata, corporate finance and business development.' },
+  head: { title: 'Executives', desc: 'Strata Staff Global is led by executives with backgrounds in strata, corporate finance and business development.' },
   main: `
     <main id="main">
 ${phead({
     crumb: [['about.html', 'About Us'], ['executives.html', 'Executives']],
     ref: 'Office bearers',
     title: 'Executives',
-    lede: 'Strata Staff&rsquo;s vision and growth are led by exceptional executive management with diverse professional backgrounds in strata, corporate finance and business development.',
+    lede: 'Strata Staff&rsquo;s vision and growth are led by executives with backgrounds in strata, corporate finance and business development.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -1258,7 +1323,7 @@ ${phead({
     crumb: [['about.html', 'About Us'], ['team.html', 'Our Awesome Team']],
     ref: 'Register of officers',
     title: 'Our awesome team',
-    lede: 'Strata Staff takes pride in having a capable management and leadership team able to support strata agency partners from task-specific detail through to capacity and performance reviews.',
+    lede: 'Our management and leadership team supports strata agency partners from task-level detail through to capacity and performance reviews.',
     aside: `<table class="sched sched--particulars"><caption class="note">Register summary</caption><tbody>
       <tr><td class="k">Named officers</td><td class="v n">20</td></tr>
       <tr><td class="k">Departments</td><td class="v n">10</td></tr>
@@ -1269,12 +1334,12 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">Photographic register</h2>
-            <p class="item__lede">Portraits from the company&rsquo;s own gallery. They are shown here without name pairings: this rebuild could not verify each portrait against each name, and mislabelling a colleague would be worse than leaving the pair apart.</p></div>
+            <p class="item__lede">Portraits from the company&rsquo;s own gallery, shown without name pairings: this rebuild could not verify each portrait against each name, and mislabelling a colleague would be worse than leaving them apart.</p></div>
           <div class="item__body item__body--wide">
             <div class="platwall">
               ${TEAM_PHOTOS.map((p, i) => `<figure><img src="assets/${p}" alt="" width="163" height="300" loading="lazy" decoding="async"><figcaption>Plate ${String(i + 1).padStart(2, '0')}</figcaption></figure>`).join('\n              ')}
             </div>
-            <p class="note" style="margin-top:1.2rem">Nineteen plates are held in the gallery against twenty names in the register, and the filenames do not map reliably on their own. The pairs are therefore left apart.</p>
+            <p class="note" style="margin-top:1.2rem">Nineteen plates stand against twenty names in the register, and the filenames do not map reliably on their own, so the pairs are left apart.</p>
           </div>
         </div>
       </section>
@@ -1295,7 +1360,7 @@ ${tabs('team', TEAM_FILTERS.map(([id, label]) => {
                 </table>`,
             };
           }))}
-            <p class="note" style="margin-top:1.4rem">The Systems &amp; Multimedia department carries no named officer in the published register, so its panel is shown empty rather than filled with a guess.</p>
+            <p class="note" style="margin-top:1.4rem">The Systems &amp; Multimedia department has no named officer in the register, so its panel is shown empty rather than filled with a guess.</p>
           </div>
         </div>
       </section>
@@ -1312,7 +1377,7 @@ ${phead({
     crumb: [['about.html', 'About Us'], ['testimonials.html', 'Our Clients Have Spoken']],
     ref: 'Statements received',
     title: 'Our clients have spoken',
-    lede: 'Every statement below is reproduced in full, attributed to the person who gave it. These are the agency principals and industry officeholders whose businesses run on Strata Staff desks.',
+    lede: 'Every statement below is reproduced in full, attributed to the person who gave it &mdash; the agency principals and industry officeholders whose businesses run on Strata Staff desks.',
   })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -1424,7 +1489,7 @@ ${phead({
     crumb: [['careers.html', 'Careers at Strata Staff']],
     ref: 'Notice of vacancies',
     title: 'Careers at Strata Staff',
-    lede: 'We are looking for results-oriented and outcome-focused people to enjoy the journey with us. Every role below is a real, open position with a full position description.',
+    lede: 'We are looking for results-oriented people to enjoy the journey with us. Every role below is a real, open position with a full position description.',
     aside: `<table class="sched sched--particulars"><caption class="note">Vacancies</caption><tbody>
       <tr><td class="k">Open positions</td><td class="v n">4</td></tr>
       <tr><td class="k">Work site</td><td class="v n">Angeles City</td></tr>
@@ -1435,7 +1500,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">Open positions</h2>
-            <p class="item__lede">Explore current opportunities below and select a role to read the full position description and apply.</p></div>
+            <p class="item__lede">Select a role to read the full position description and apply.</p></div>
           <div class="item__body item__body--wide">${optionsList(jobListRows())}</div>
         </div>
       </section>
@@ -1443,7 +1508,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Apply</h2>
-            <p class="item__lede">Tell us who you are and which role you are applying for. Applications are reviewed by the people and culture team.</p></div>
+            <p class="item__lede">Tell us who you are and which role you are applying for. The people and culture team reviews every application.</p></div>
           <div class="item__body item__body--wide">
             <form class="form" data-demo novalidate>
               <div class="form__fieldset" style="display:contents">
@@ -1483,7 +1548,7 @@ ${phead({
               </div>
               <div class="form__status" hidden role="status">
                 <h3>Application filed</h3>
-                <p class="prose">Thank you. The people and culture team reviews applications against the position description and replies by email. In this rebuild nothing was actually sent, because no endpoint is wired up.</p>
+                <p class="prose">Thank you. The people and culture team reviews applications against the position description and replies by email. In this rebuild nothing was sent, because no endpoint is wired up.</p>
               </div>
             </form>
           </div>
@@ -1596,13 +1661,13 @@ ${phead({
     crumb: [['contact.html', 'Talk To Us']],
     ref: 'Proxy form',
     title: 'Tell us what you need',
-    lede: 'We value your time in engaging with us. Your enquiry is a true reflection of your interest, so tell us more and we will come back with a capacity plan built around your agency.',
+    lede: 'Tell us what you need and we will come back with a capacity plan built around your agency.',
   })}
       <section class="item" id="book" data-item="01">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">Book the free discovery call</h2>
-            <p class="item__lede">Thirty minutes with the solutions team. Bring your lot count, your current headcount and the tasks that never get to the bottom of the pile.</p></div>
+            <p class="item__lede">Thirty minutes with the solutions team. Bring your lot count, your headcount and the tasks that never reach the bottom of the pile.</p></div>
           <div class="item__body item__body--wide">
             <form class="form" data-demo novalidate>
               <div class="form__fieldset" style="display:contents">
@@ -1624,7 +1689,7 @@ ${phead({
               </div>
               <div class="form__status" hidden role="status">
                 <h3>Request filed</h3>
-                <p class="prose">Thank you. The solutions team replies from solutions@stratastaffglobal.com to arrange a 30-minute call. If it is urgent, the Australian and Canadian numbers are below. In this rebuild nothing was actually sent, because no endpoint is wired up.</p>
+                <p class="prose">Thank you. The solutions team replies from solutions@stratastaffglobal.com to arrange a 30-minute call; the Australian and Canadian numbers are below if it is urgent. In this rebuild nothing was sent, because no endpoint is wired up.</p>
               </div>
             </form>
           </div>
@@ -1648,7 +1713,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
           <div class="item__head"><h2 class="display">Take the capacity test</h2>
-            <p class="item__lede">A short scorecard that shows where your team can unlock capacity: how many hours a week go to work that a trained offshore specialist could own, and which roles would recover them.</p></div>
+            <p class="item__lede">A short scorecard showing where your team can unlock capacity: how many hours a week go to work a trained offshore specialist could own, and which roles would recover them.</p></div>
           <div class="item__body item__body--wide">
             <div class="facts">
               <div class="fact"><p class="fact__v">12</p><p class="fact__k">Questions</p><p class="fact__s">About eight minutes.</p></div>
@@ -1682,37 +1747,37 @@ ${phead({
           <div class="item__body item__body--wide">
             <div class="doc-body">
               <h3>1. Personal information we collect</h3>
-              <p>We collect information you give us directly through the forms on this site and through our engagement with you, and information collected automatically when you use the site.</p>
+              <p>We collect information you give us through the forms on this site and through our engagement with you, plus information collected automatically when you use the site.</p>
               <h3>Enquiry, &ldquo;Talk To Us&rdquo; and consultation forms</h3>
               <p>Name, agency, role, email address, telephone number, country of operation, approximate lots under management and the content of your message.</p>
               <h3>Booking system</h3>
               <p>Name, email address, telephone number and the time slot you select when arranging a discovery call.</p>
               <h3>Strata capacity test and scorecard</h3>
-              <p>Your responses to the scorecard, together with the contact details you provide to receive the result.</p>
+              <p>Your scorecard responses, together with the contact details you provide to receive the result.</p>
               <h3>Careers and job applications</h3>
               <p>Name, contact details, work schedule and availability preferences, the position applied for, any note you provide, and the resume you attach.</p>
               <h3>Strata Staff Academy and training forms</h3>
               <p>Name, email address, telephone number and the training track of interest.</p>
               <h3>Other forms and embedded services</h3>
-              <p>Some pages embed third-party services such as scheduling, mapping or video, which may set their own cookies and collect information under their own policies.</p>
+              <p>Some pages embed third-party services such as scheduling, mapping or video, which may set their own cookies under their own policies.</p>
               <h3>Technical, analytics and security information</h3>
               <p>IP address, browser and device type, pages viewed, referring page and approximate location derived from IP, collected for analytics, security and to keep forms working.</p>
               <h3>2. Why we collect and use personal information</h3>
-              <p>To respond to enquiries and arrange consultations; to prepare a capacity plan; to assess job applications and manage recruitment; to administer training and enrolment; to operate, secure and improve the site; to meet legal and regulatory obligations in Australia and Canada; and to send communications you have asked for.</p>
+              <p>To respond to enquiries and arrange consultations; prepare capacity plans; assess job applications and manage recruitment; administer training and enrolment; operate, secure and improve the site; meet legal obligations in Australia and Canada; and send communications you have asked for.</p>
               <h3>3. Disclosure and third-party services</h3>
-              <p>We disclose personal information to service providers who help us operate &mdash; hosting, email, scheduling, analytics, applicant tracking and training platforms &mdash; and where required by law. We do not sell personal information.</p>
+              <p>We disclose personal information to service providers who help us operate &mdash; hosting, email, scheduling, analytics, applicant tracking and training platforms &mdash; and where the law requires it. We do not sell personal information.</p>
               <h3>4. Cookies and similar technologies</h3>
-              <p>We use cookies for analytics, security, forms and embedded services. You can accept or decline through the notice on this site, and you can block or delete cookies in your browser settings; some parts of the site may not work as intended if you do.</p>
+              <p>We use cookies for analytics, security, forms and embedded services. You can accept or decline through the notice on this site, or block and delete cookies in your browser; some parts of the site may not work as intended if you do.</p>
               <h3>5. Storage, security and retention</h3>
-              <p>Information is stored on systems operated by us and our providers, with access controls, encryption in transit and administrative safeguards. We retain personal information only as long as needed for the purposes above or as required by law.</p>
+              <p>Information is stored on systems we and our providers operate, with access controls, encryption in transit and administrative safeguards. We keep personal information only as long as needed for the purposes above or as the law requires.</p>
               <h3>6. Access, correction and deletion requests</h3>
-              <p>You may ask to access, correct or delete the personal information we hold about you. Contact us using the details below and we will respond within the time required by applicable law.</p>
+              <p>You may ask to access, correct or delete the personal information we hold about you. Contact us using the details below and we will respond within the time applicable law requires.</p>
               <h3>7. Complaints</h3>
-              <p>If you believe we have handled your personal information improperly, contact us first. If you are not satisfied with our response, you may complain to the relevant privacy regulator in your jurisdiction.</p>
+              <p>If you believe we have handled your personal information improperly, contact us first. If you are not satisfied with our response, you may complain to the privacy regulator in your jurisdiction.</p>
               <h3>8. Contact us</h3>
               <p>Privacy enquiries: <a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a>. Australia: ${esc(ADDR_AU)}, ${TEL_AU_D}. Canada: ${esc(ADDR_CA)}, ${TEL_CA_D}.</p>
               <h3>9. Changes to this policy</h3>
-              <p>We may update this policy from time to time. The current version is always published on this page.</p>
+              <p>We may update this policy from time to time; the current version is always published on this page.</p>
               <p class="note" style="margin-top:2rem">This text is a plain-language restatement of the incumbent site&rsquo;s privacy policy, rewritten for this rebuild. It is not legal advice and should be reviewed by the client before publication.</p>
             </div>
           </div>
@@ -1759,18 +1824,9 @@ const JOBS = RAW_JOBS.map(j => ({
 for (const p of POSTS) PAGES[`post-${p.file}.html`] = () => postPage(p);
 for (const j of JOBS) PAGES[`job-${j.slug}.html`] = () => jobPage(j);
 
-/* the home page's papers list is rendered by the same data */
-PAGES['index.html'] = (() => {
-  const base = PAGES['index.html'];
-  return () => {
-    const html = base();
-    const papers = optionsList(POSTS.map((p, i) => ({
-      href: `post-${p.file}.html`, no: String(i + 1).padStart(2, '0'), name: p.title,
-      desc: `${p.cat} · ${p.date} — ${p.summary}`,
-    })));
-    return html.replace('<div id="papers-list" data-papers></div>', papers);
-  };
-})();
+/* The home page's "papers circulated" list used to be injected here. It was a
+   second rendering of the same eight posts that `insights.html` already lists,
+   so it was removed with the home page re-layout and this wrapper with it. */
 
 /* ------------------------------------------------------------- the write -- */
 const written = [];
@@ -1829,15 +1885,24 @@ for (const cssFile of ['styles.css', 'styles-tabs.css', 'assets/fonts/fonts.css'
   }
 }
 let removed = 0, kept = 0;
+const unused = [];
 async function prune(dir, prefix = '') {
   for (const e of await readdir(path.join(ROOT, dir), { withFileTypes: true })) {
     const rel = prefix + e.name;
     if (e.isDirectory()) { await prune(path.join(dir, e.name), rel + '/'); continue; }
     if (shipped.has(rel)) { kept++; continue; }
-    await unlink(path.join(ROOT, dir, e.name));
-    console.log('pruned unused asset:', rel);
+    unused.push(rel);
     removed++;
   }
 }
 await prune('assets');
-console.log(`assets: ${kept} shipped, ${removed} pruned.`);
+/* This walk used to `unlink` anything no page referenced. That made dropping a
+   section silently destructive: removing the platform wall from the home page
+   deleted all twelve platform logos from disk, and the next build could not put
+   them back. It now reports, and leaves the files alone. Delete by hand, or from
+   version control, where the removal is visible and reversible. */
+console.log(`assets: ${kept} shipped, ${removed} present but unreferenced.`);
+if (unused.length) {
+  console.log('unreferenced (kept on disk, safe to delete by hand):');
+  for (const rel of unused) console.log('  assets/' + rel);
+}

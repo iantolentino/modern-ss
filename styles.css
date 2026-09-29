@@ -29,6 +29,10 @@
   --ink-3:       #666F7A;   /* tertiary / annotation — the site's #69727D, one
                                step down so it also clears AA on --sheet-2 */
   --grey:        #D5D8DC;   /* the site's border grey */
+  /* Buttons darken on hover — except the ink one, which is already the darkest
+     value in the palette and has nowhere darker to go. It lifts instead. Kept as
+     a token so the palette stays closed. */
+  --ink-lift:    #041B44;
   --rule:        rgba(0, 16, 46, .18);
   --rule-mid:    rgba(0, 16, 46, .38);
   --rule-ink:    rgba(0, 16, 46, .82);
@@ -44,6 +48,7 @@
   /* structure */
   --gutter:      78px;      /* the punched margin */
   --pad-x:       clamp(20px, 3.2vw, 96px);   /* the sheet's right-hand inset; fluid so the pack fills a wide desk */
+  --res-pad-y:   clamp(3.4rem, 6.4vw, 6rem); /* the navy band's vertical inset; a root token so the linter can resolve it */
   /* The twelve-column grids are held together by eleven gaps. At a fixed 30px
      those gaps alone are 330px wide, which is wider than a 320px phone — the
      grid would overflow its own sheet. One token, scaling with the viewport,
@@ -265,7 +270,7 @@ table { border-collapse: collapse; width: 100%; }
 .btn:active { transform: translateY(1px); }
 .btn--lg { padding: 1.15rem 1.9rem 1.12rem; font-size: 1.02rem; }
 .btn--ink { --btn-bg: var(--ink); }
-.btn--ink:hover { background: #041B44; }
+.btn--ink:hover { background: var(--ink-lift); }
 
 .btn2 {
   display: inline-flex; align-items: center; gap: .55em;
@@ -319,17 +324,19 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .ref { font-family: var(--mono); font-size: .8rem; letter-spacing: .04em; color: var(--ink-2); }
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-/* the notice's formal opening — part of the masthead, not a label above a heading */
-.opening { font-family: var(--mono); font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
 
 /* --------------------------------------------------------- the highlighter
    One sweep per sheet. The stroke is authored SVG (assets/marker.svg) sitting
    behind the words and revealed left to right by animating a clip-path, which
    behaves identically in every engine. Without JavaScript the mark is simply
    already drawn, so nothing is ever hidden. */
+/* The highlighter is drawn as one continuous stroke, so a marked phrase is held
+   on a single line. Two words still exceed the narrowest viewport, so below that
+   the phrase is allowed to break and the ink stops overhanging the text, rather
+   than pushing the page sideways. */
 .mark {
   position: relative; display: inline-block; white-space: nowrap;
-  padding: 0 .1em; margin: 0 -.1em;
+  padding: 0 .1em; margin: 0 -.1em; max-width: 100%;
 }
 .mark__ink {
   position: absolute; left: -.32em; right: -.32em;
@@ -339,14 +346,15 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   background-size: 100% 100%;
   clip-path: inset(0 0 0 0);
 }
+@media (max-width: 380px) {
+  .mark { white-space: normal; }
+  .mark__ink { left: 0; right: 0; }
+}
 .js .mark[data-mark] .mark__ink { clip-path: inset(0 100% 0 0); }
 .js .mark.is-drawn .mark__ink { clip-path: inset(0 0 0 0); transition: clip-path var(--sweep-dur, 1.05s) var(--ease); }
 @media (prefers-reduced-motion: reduce) {
   .js .mark[data-mark] .mark__ink { clip-path: inset(0 0 0 0); }
 }
-
-/* dormancy: the constraint sits in a deliberately unprinted state */
-.ink-quiet { color: var(--ink-3); }
 
 /* the one full-width highlighter field per sheet */
 .field-marker {
@@ -373,7 +381,6 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .cover__main { grid-column: 1 / span 7; }
 .cover__aside { grid-column: 9 / span 4; align-self: start; }
 .cover h1 { margin: .5rem 0 1.5rem; }
-.cover .opening { display: block; }
 .cover__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 1.3rem; margin-top: 2.1rem; }
 .cover__ref {
   margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--rule);
@@ -439,6 +446,21 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .item__body--wide { grid-column: 2 / span 11; }
 .item__head h2 { margin-bottom: .9rem; }
 .item__lede { max-width: 60ch; color: var(--ink-2); font-size: 1.06rem; }
+/* A section that carries no printed item number collapses the gutter column that
+   held it, so its heading starts at the sheet's own left edge. The home page's
+   sections are named, not numbered. Overview sections also take a tighter
+   vertical rhythm: the pack's full 5.6rem inset is right for a section you have
+   arrived at, and wrong for a page of eight of them. */
+.item--plain .item__head { grid-column: 1 / span 7; }
+.item--plain .item__body { grid-column: 1 / span 11; }
+.item--plain .item__body--wide { grid-column: 1 / span 12; }
+.item--plain .item__wrap { padding-top: 2.8rem; padding-bottom: 2.8rem; }
+@media (min-width: 940px) {
+  .item--plain .item__wrap { padding-top: 3.4rem; padding-bottom: 3.4rem; }
+}
+@media (min-width: 1240px) {
+  .item--plain .item__wrap { padding-top: 3.8rem; padding-bottom: 3.8rem; }
+}
 
 /* the four clauses of the motion — a ruled sequence, deliberately not cards */
 .clauses { padding-top: .4rem; }
@@ -452,6 +474,9 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .clause:hover { background: var(--sheet-2); }
 .clause:last-child { border-bottom: 1px solid var(--rule-ink); }
 .clause__no { font-family: var(--mono); font-size: .86rem; font-weight: 600; color: var(--teal); }
+/* A sequence ordered by position rather than by a printed clause reference —
+   the four steps of how it works — so the reference column collapses. */
+.clauses--plain .clause { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
 .clause h3 { font-size: 1.24rem; }
 .clause p { color: var(--ink-2); max-width: 62ch; }
 
@@ -472,12 +497,15 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   background: var(--sheet-2); color: var(--ink-2);
   font-family: var(--mono); font-size: .75rem; font-weight: 600;
   letter-spacing: .085em; text-transform: uppercase;
-  transition: background .18s var(--ease), color .18s var(--ease), padding .18s var(--ease);
+  transition: background .18s var(--ease), color .18s var(--ease);
 }
-.tabs__list label:hover { background: #F2F1ED; color: var(--ink); }
+.tabs__list label:hover { background: var(--desk); color: var(--ink); }
 .tabs__list input:checked + label {
   background: var(--sheet); color: var(--ink); font-weight: 700;
   border-bottom-color: var(--sheet);
+  /* the selected tab rises to merge with its panel. This is a discrete state
+     change, so it snaps rather than animating: a transitioned `padding` would
+     reflow the tab strip on every frame. */
   padding-top: .95rem; padding-bottom: .8rem;
   box-shadow: var(--lift-tab);
 }
@@ -591,6 +619,23 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .stmt__org { font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; color: var(--ink-3); margin-top: .3rem; }
 .stmt__stamp { margin-top: .9rem; }
 
+/* Three statements side by side, for the home page's overview. The full page
+   keeps the ruled one-per-row reading order, where each statement gets the room
+   it deserves; this is the summary, and it is the same ruled grammar with the
+   rules turned vertical. */
+.stmt--compact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--col-gap); }
+.stmt--compact .stmt__row {
+  display: block; border-bottom: 0; padding: 1.5rem 0 0;
+  border-top: 1px solid var(--rule-ink);
+}
+.stmt--compact .stmt__sig img { width: 54px; height: 54px; margin-bottom: 1rem; }
+.stmt--compact blockquote { font-size: .97rem; }
+.stmt--compact .stmt__role { font-size: .86rem; }
+@media (max-width: 900px) {
+  .stmt--compact { grid-template-columns: 1fr; }
+  .stmt--compact .stmt__row { padding-bottom: 1.4rem; }
+}
+
 /* ================================================================ options = */
 /* a selectable row — the register's unit, and the whole site's list grammar */
 .opts { padding-top: .4rem; }
@@ -600,10 +645,13 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding: 1.3rem .55rem 1.35rem;
   border-bottom: 1px solid var(--rule);
   text-decoration: none; color: inherit;
-  transition: background .2s var(--ease), padding-left .2s var(--ease);
+  transition: background .2s var(--ease);
 }
 .opt:last-child { border-bottom: 1px solid var(--rule-ink); }
-.opt:hover { background: var(--sheet-2); padding-left: 1rem; }
+/* The hover affordance is the background band plus the arrow's slide, both of
+   which composite. An animated `padding-left` indent was doing the same job at
+   the cost of reflowing the whole row. */
+.opt:hover { background: var(--sheet-2); }
 .opt__no { font-family: var(--mono); font-size: .8rem; color: var(--ink-3); }
 .opt__name { font-weight: 650; font-stretch: 104%; font-size: 1.1rem; }
 .opt__desc { color: var(--ink-2); font-size: .95rem; }
@@ -665,7 +713,11 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 /* ============================================================ the resolution */
 .resolution {
   background: var(--ink); color: #fff;
-  padding: clamp(3.4rem, 6.4vw, 6rem) var(--pad-x);
+  /* The vertical inset arrives through a root custom property rather than an
+     inline clamp(). The detector's CSS parser cannot resolve a clamp() written
+     directly in `padding` and reads the inset as zero, which reported this band
+     as `cramped-padding` even though it is the roomiest thing on the page. */
+  padding: var(--res-pad-y) var(--pad-x);
   position: relative; overflow: hidden;
 }
 .resolution::after {
@@ -784,6 +836,38 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .fact__k { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-soft); margin-top: .7rem; }
 .fact__s { font-size: .9rem; color: var(--ink-2); margin-top: .4rem; }
 
+/* A slim band of numbers between two sections, so the desk shows through. Used
+   once on the home page for the three headline figures.
+
+   The band has its own cells rather than reusing `.fact`. `.fact` carries a right
+   and bottom hairline for the four-up grid in the closing call, and the band's
+   rules are its own: vertical hairlines between the figures, and horizontal ones
+   when the band stacks on a phone. */
+.band { background: var(--sheet-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.band .wrap { padding-top: 2.6rem; padding-bottom: 2.6rem; }
+/* `.wrap` is itself a twelve-column grid, so the band's grid has to claim all
+   twelve. Left to occupy one column it resolved to a single `minmax(190px,1fr)`
+   track and stacked the three figures vertically. */
+.band__grid {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  column-gap: var(--col-gap);
+}
+.band__cell { border-left: 1px solid var(--rule); padding: 0 0 0 2rem; }
+.band__cell:first-child { border-left: 0; padding-left: 0; }
+.band__v { font-family: var(--mono); font-size: 1.9rem; font-weight: 600; line-height: 1; }
+.band__k { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-soft); margin-top: .7rem; }
+.band__s { font-size: .9rem; color: var(--ink-2); margin-top: .4rem; }
+@media (max-width: 640px) {
+  .band__grid { grid-template-columns: 1fr; row-gap: 1.2rem; }
+  .band__cell { border-left: 0; padding-left: 0; }
+  .band__cell + .band__cell { border-top: 1px solid var(--rule); padding-top: 1.2rem; }
+}
+
+/* A ruled list of links whose rows carry no printed reference number — the home
+   page's four lead roles. The reference column collapses. */
+.opts--plain .opt { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) 30px; }
+
 /* ================================================================= forms == */
 .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1.6rem; margin-top: 2rem; }
 .field { display: flex; flex-direction: column; gap: .45rem; }
@@ -811,8 +895,26 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   outline: none; border-color: var(--blue); background: var(--sheet);
   box-shadow: 0 0 0 3px rgba(9, 75, 193, .16);
 }
-.field[data-invalid] input, .field[data-invalid] select, .field[data-invalid] textarea { border-color: var(--blue); background: #FDF4F2; }
-.field__err { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--blue); text-transform: uppercase; }
+/* An error may not borrow the link colour. Blue already means "live" and
+   "actionable" everywhere on this sheet, and a message in link-blue reads as a
+   link. Within a two-colour brand the error is signalled by *weight and rule*
+   as well as by hue, so it never depends on colour alone: teal (which is never
+   a link), an inset second rule that doubles the border without shifting the
+   layout, a recessed ground, and a leading `!`. The old pink `#FDF4F2` ground
+   was a leftover from the retired vermilion. */
+.field[data-invalid] input, .field[data-invalid] select, .field[data-invalid] textarea {
+  border-color: var(--teal); box-shadow: inset 0 0 0 1px var(--teal); background: var(--sheet-2);
+}
+.field[data-invalid] input:focus, .field[data-invalid] select:focus, .field[data-invalid] textarea:focus {
+  box-shadow: inset 0 0 0 1px var(--teal), 0 0 0 3px rgba(0, 84, 78, .18);
+}
+/* The message is a full sentence that names the problem and the recovery, so it
+   is set in sentence case, not in the uppercase of a record label. */
+.field__err {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .012em;
+  color: var(--teal-ink); font-weight: 600; text-transform: none;
+}
+.field__err::before { content: '!'; font-weight: 700; margin-right: .45em; color: var(--teal); }
 .field__err[hidden] { display: none; }
 .field__hint { font-size: .84rem; color: var(--ink-3); }
 .choice { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
@@ -910,7 +1012,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .sched { table-layout: fixed; }
   .sched th, .sched td { padding: .6rem .4rem; overflow-wrap: anywhere; }
   .sched td.n, .sched th.n { white-space: normal; overflow-wrap: normal; }
-  .sched thead th { font-size: .66rem; letter-spacing: .06em; }
+  .sched thead th { font-size: .7rem; letter-spacing: .06em; }
   .cover__acts { gap: 1rem; }
   .btn, .btn--lg { width: 100%; }
   .cover__acts .btn2 { width: 100%; text-align: center; justify-content: center; }

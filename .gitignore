@@ -3,6 +3,9 @@ _probe-result.txt
 _probe*.html
 _p-*.html
 
+# detector scratch output
+_d*.json
+
 # OS noise
 Thumbs.db
 Desktop.ini
