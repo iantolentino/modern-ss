@@ -1,0 +1,18 @@
+# Normalise to LF in the repository so the committed bytes are the same on
+# every platform. Windows checkouts still get CRLF working-tree files.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff2 binary
+*.woff binary
+*.ttf binary
+
+# Built pages are generated; collapse them in diffs and reviews.
+*.html linguist-generated=true
+styles-tabs.css linguist-generated=true

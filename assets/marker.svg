@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+  <!-- An authored highlighter sweep: two overlapping passes of uneven pressure,
+       with the lift-off tail at the end. Colour is the reserved marker yellow. -->
+  <g fill="none" stroke="#F2E14C" stroke-linecap="butt">
+    <path d="M2 57 C 132 45, 266 68, 408 54 S 702 43, 986 55" stroke-width="66"/>
+    <path d="M8 68 C 158 61, 302 76, 474 64 S 786 56, 972 67" stroke-width="43" opacity=".68"/>
+  </g>
+  <path d="M954 46 L 1000 60 L 954 74 Z" fill="#F2E14C" opacity=".5"/>
+</svg>

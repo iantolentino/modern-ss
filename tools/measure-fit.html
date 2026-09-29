@@ -1,0 +1,74 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>fit</title></head>
+<body>
+<pre id="out">measuring…</pre>
+<script>
+const PAGES = ['index.html','404.html','about.html','academy.html','careers.html','contact.html',
+ 'course-outline.html','executives.html','foundation-training-program.html','insights.html',
+ 'journey.html','learning.html','privacy.html','solutions.html','strata-services.html',
+ 'strata-staff-plus.html','team.html','testimonials.html',
+ 'role-administrative-specialist.html','role-accountant.html','role-executive-assistant.html',
+ 'role-compliance-specialist.html','role-insurance-specialist.html','role-customer-care.html',
+ 'role-pm-administrative-specialist.html','role-pm-executive-assistant.html',
+ 'role-pm-accountant.html','role-pm-customer-care.html',
+ 'job-junior-accountant.html','job-mid-level-accountant.html','job-senior-accountant.html',
+ 'job-hr-assistant.html',
+ 'post-we-are-a-trusted-sca-member.html','post-strata-staff-joins-sca-south-australia.html',
+ 'post-strata-staff-joins-the-canadian-condominium-institute-cci-british-columbia-chapter.html',
+ 'post-strata-staff-connect-1st-2nd-quarter-2024.html','post-strata-staff-connect-3rd-quarter-2024.html',
+ 'post-as-we-enter-2025-a-new-symbol-will-lead-the-way.html',
+ 'post-strata-staff-unveils-its-upgraded-marisol-office.html',
+ 'post-premium-in-strategic-client-partnerships-and-engagement.html'];
+
+const q = new URLSearchParams(location.search);
+const [W, H] = (q.get('v') || '1440x900').split('x').map(Number);
+const rows = [];
+
+function measure(p, w, h) {
+  return new Promise(res => {
+    const f = document.createElement('iframe');
+    f.style.cssText = `width:${w}px;height:${h}px;position:absolute;left:-99999px;top:0;border:0`;
+    f.src = '../' + p;
+    const done = () => {
+      try {
+        const d = f.contentDocument, win = f.contentWindow, de = d.documentElement;
+        let over = 0, offender = '';
+        for (const el of d.querySelectorAll('*')) {
+          const r = el.getBoundingClientRect();
+          if (r.width === 0) continue;
+          const right = r.right + win.scrollX;
+          if (right > w + 1 && right - w > over) {
+            over = Math.round(right - w);
+            const cn = el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/)[0] : '';
+            offender = el.tagName.toLowerCase() + cn;
+          }
+        }
+        const words = (d.body.innerText || '').trim().split(/\s+/).filter(Boolean).length;
+        const imgs = d.images.length;
+        rows.push({ p, words, imgs, docH: Math.round(de.scrollHeight), over, offender });
+      } catch (e) { rows.push({ p, err: e.message }); }
+      f.remove(); res();
+    };
+    f.onload = done;
+    f.onerror = () => { rows.push({ p, err: 'load' }); f.remove(); res(); };
+    document.body.appendChild(f);
+  });
+}
+
+(async () => {
+  for (const p of PAGES) await measure(p, W, H);
+  const L = [`### viewport ${W}x${H}`, '  overflow  screens  words  imgs  page'];
+  for (const r of rows.slice().sort((a, b) => b.docH - a.docH)) {
+    if (r.err) { L.push(`  ERR ${r.err} ${r.p}`); continue; }
+    L.push(`  ${String(r.over + 'px').padStart(8)}  ${String((r.docH / H).toFixed(1)).padStart(6)}  ${String(r.words).padStart(5)}  ${String(r.imgs).padStart(4)}  ${r.p}${r.offender ? '  <- ' + r.offender : ''}`);
+  }
+  const ok = rows.filter(r => !r.err);
+  const heights = ok.map(r => r.docH).sort((a, b) => a - b);
+  const med = heights[Math.floor(heights.length / 2)];
+  L.push(`  --> median page ${med}px = ${(med / H).toFixed(1)} screens; tallest ${heights[heights.length - 1]}px = ${(heights[heights.length - 1] / H).toFixed(1)} screens`);
+  L.push(`  --> ${ok.reduce((a, r) => a + r.words, 0)} words total across ${ok.length} pages; pages with horizontal overflow: ${ok.filter(r => r.over > 1).length}`);
+  document.getElementById('out').textContent = L.join('\n');
+  await fetch('/__probe', { method: 'POST', body: L.join('\n') }).catch(() => {});
+})();
+</script>
+</body></html>

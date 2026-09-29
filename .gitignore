@@ -1,0 +1,9 @@
+# local scaffolding and probe output
+_probe-result.txt
+_probe*.html
+_p-*.html
+
+# OS noise
+Thumbs.db
+Desktop.ini
+.DS_Store

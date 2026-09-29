@@ -1,0 +1,123 @@
+{
+  "$comment": "Machine-readable design record for the strata-modern build. Human narrative is DESIGN.md; product truth is PRODUCT.md.",
+  "project": "strata-modern",
+  "surface": "static-web",
+  "generatedBy": "build.mjs",
+  "world": {
+    "name": "AGENDA — the AGM notice pack",
+    "seedKey": "0b84fe2c",
+    "scope": "direction",
+    "mode": "persuade",
+    "premise": "The incumbent's own subject matter is the agenda paper: a bound notice pack a strata manager assembles, punches, circulates and files. Every page is a sheet on a desk.",
+    "generatedByWorld": [
+      "the punch margin and its folio rail",
+      "clause numbering in the gutter",
+      "the double head-rule of a printed schedule",
+      "index tabs cut into a sheet edge",
+      "rubber stamps in SVG turbulence",
+      "one highlighter sweep on the operative words",
+      "a perforated back cover and a slip of paper for the cookie notice"
+    ]
+  },
+  "tokens": {
+    "color": {
+      "desk": { "value": "#EDEBE6", "role": "the desk the sheets sit on; page background only" },
+      "sheet": { "value": "#FFFFFF", "role": "an office-white sheet" },
+      "sheet2": { "value": "#FAF9F6", "role": "second sheet / recessed print area (inputs, hover rows)" },
+      "ink": { "value": "#00102E", "role": "primary ink; the incumbent brand navy, kept as the ink" },
+      "ink2": { "value": "#2C3A56", "role": "secondary text; tinted from the ink, never a grey" },
+      "ink3": { "value": "#5A6880", "role": "tertiary text and annotations" },
+      "rule": { "value": "rgba(0,16,46,.18)", "role": "hairline rules inside schedules" },
+      "ruleMid": { "value": "rgba(0,16,46,.38)", "role": "input borders, table header underline" },
+      "ruleInk": { "value": "rgba(0,16,46,.82)", "role": "the document's own rules" },
+      "strata": { "value": "#094BC1", "role": "links, focus rings, the live control" },
+      "strataInk": { "value": "#063A96", "role": "pressed / deeper blue" },
+      "stamp": { "value": "#C8341F", "role": "rubber stamps and the single primary action. Nothing else." },
+      "stampInk": { "value": "#A32715", "role": "the primary action's pressed state" },
+      "marker": { "value": "#F2E14C", "role": "the highlighter. One sweep per sheet, one field band per site." },
+      "plus": { "value": "#00544E", "role": "the Strata Staff Plus service line" },
+      "gold": { "value": "#BE894A", "role": "accreditation seals only" }
+    },
+    "structure": {
+      "gutter": "78px",
+      "padX": "58px",
+      "barH": "64px",
+      "ruleHead": "3px double var(--rule-ink)"
+    },
+    "type": {
+      "sans": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
+      "mono": "'Spline Sans Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace",
+      "scale": {
+        "h1": "clamp(2.55rem, 1.1rem + 5.4vw, 5.4rem)",
+        "h2": "clamp(1.85rem, 1.05rem + 2.9vw, 3.15rem)",
+        "h3": "clamp(1.18rem, 1.02rem + .6vw, 1.45rem)",
+        "lede": "clamp(1.06rem, .98rem + .5vw, 1.34rem)",
+        "body": "1.0625rem",
+        "measure": "68ch"
+      },
+      "floors": { "functionalText": "11px", "annotation": "12.5px" }
+    },
+    "motion": {
+      "ease": "cubic-bezier(.16, 1, .3, 1)",
+      "duration": ".62s",
+      "authoredMotions": ["highlighter sweep (once per sheet)", "stamp settle (resolution band)"],
+      "reducedMotion": "all durations .001ms; highlighter pinned drawn"
+    }
+  },
+  "breakpoints": [1240, 980, 640],
+  "components": [
+    "sheet", "bar", "body-grid", "punch", "cover", "phead",
+    "item", "clauses", "clause", "tabs", "sched", "register", "scale", "reg-table",
+    "stamp", "mark", "field-marker", "seal", "plats", "platwall", "stmt", "opts", "opt",
+    "form", "field", "foot", "perf", "cookies", "drawer", "resolution", "facts", "trio", "duo"
+  ],
+  "signatureInteraction": {
+    "id": "capacity",
+    "page": "index.html",
+    "what": "A range input on a printed ruler that rebuilds the post register from an inline JSON pool and updates four live readouts.",
+    "noJsBehaviour": "register renders its first five posts statically; nothing is hidden",
+    "labelled": "illustrative"
+  },
+  "accessibility": {
+    "standard": "WCAG 2.1 AA",
+    "headingOrder": "one h1, then h2 per item, then h3; footer column titles are h3 so no level is skipped",
+    "focus": "visible :focus-visible rings on strata blue; drawer restores focus on close",
+    "drawer": "inert while closed, aria-expanded toggled, Escape to close",
+    "contrast": {
+      "inkOnSheet": 18.4, "ink2OnSheet": 11.4, "ink3OnSheet": 5.6,
+      "stampOnSheet": 5.3, "strataOnSheet": 7.5, "inkOnMarker": 14.0,
+      "bodyOnResolution": 12.7
+    },
+    "forms": "front-end only, inline field errors with role=alert, success in role=status; demo notice shown"
+  },
+  "detector": {
+    "engine": "impeccable 0.1.6",
+    "command": "impeccable detect --json <all 40 pages>",
+    "findingsBefore": 1109,
+    "findingsAfter": 285,
+    "clearedRules": [
+      "low-contrast", "side-tab", "cramped-padding", "undersized-ui-text",
+      "tiny-text", "dark-glow", "tight-leading"
+    ],
+    "remainingByRule": {
+      "numbered-section-labels": { "count": 127, "severity": "advisory", "disposition": "deliberate" },
+      "all-caps-body": { "count": 115, "severity": "warning", "disposition": "deliberate" },
+      "gpt-thin-border-wide-shadow": { "count": 40, "severity": "advisory", "disposition": "deliberate" },
+      "marketing-buzzword": { "count": 2, "severity": "warning", "disposition": "deliberate" },
+      "em-dash-overuse": { "count": 1, "severity": "advisory", "disposition": "deliberate" }
+    },
+    "reasons": {
+      "numbered-section-labels": "The agenda numbers are the notice pack's own item numbering and the sequence is referenced by the proxy form and the folio rail. Numbers that carried no information were removed from two lists.",
+      "all-caps-body": "Uppercase is confined to control and record labels (buttons, footer legal, breadcrumbs, table headers). Every uppercase full sentence was removed.",
+      "gpt-thin-border-wide-shadow": "A 1px-bordered sheet of paper lifted off a desk. The shadow is offset with a large negative spread and is neutral black.",
+      "marketing-buzzword": "The phrase occurs inside a client's verbatim testimonial. Editing a client's language to satisfy a lint rule would make the evidence less true.",
+      "em-dash-overuse": "The privacy annexure is a restatement of the incumbent's policy and uses parenthetical dashes as the source does."
+    }
+  },
+  "knownContentGaps": [
+    "Team portraits are not paired with names: 19 plates against 20 names, and filenames do not map reliably. The page shows an unnamed photographic register plus a named register of officers, and states why.",
+    "Strata Executive Assistant has no page in the live sitemap but is listed in the navigation; the role page is built only from real published phrases and its real five training modules.",
+    "platform-mri-2.webp returned 404 from the incumbent host; not shipped.",
+    "All forms are front-end only and say so on the page."
+  ]
+}
