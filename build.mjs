@@ -296,7 +296,7 @@ const schRows = rows => rows.map(r =>
 
 const roleTable = roles => `
       <table class="sched">
-        <thead><tr><th scope="col">Item</th><th scope="col">Role</th><th scope="col">What it covers</th><th scope="col" class="n">Schedule</th></tr></thead>
+        <thead><tr><th scope="col">Item</th><th scope="col">Role</th><th scope="col">What it covers</th><th scope="col" class="n">Detail</th></tr></thead>
         <tbody>
           ${roles.map(r => `<tr class="is-link">
             <td class="n">${r.no}</td>
