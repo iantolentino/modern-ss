@@ -139,6 +139,29 @@ The lowest ratio anywhere in the palette is **5.10:1**, against an AA floor of
 because `#69727D` measures 4.47:1 on `--sheet-2` — just under the floor — and
 `--ink-3` is used on hovered rows, which sit on `--sheet-2`.
 
+### The navy band's text, which the token sweep cannot see
+
+The closing band paints its secondary text as white at reduced opacity over
+`--ink`, so the colour that actually renders is a **composite**, not a token, and
+the sweep above is blind to it. The band rendered for the first time during the
+home page re-layout, so these pairs were added to `contrast.mjs` and composited
+explicitly:
+
+| Pair | Composited to | Ratio |
+| --- | --- | --- |
+| `.resolution h2` — white at 100% | `#FFFFFF` | 18.86:1 |
+| `.resolution .prose` — white at 82% | `#D1D4D9` | 12.69:1 |
+| `.resolution__ref .note/.ref` — white at 62% | `#9EA4B0` | 7.54:1 |
+| `.resolution .btn2` — `--marker` | `#B7DAD3` | 12.56:1 |
+
+The lowest pair in the band is **7.54:1**. Several of these use `rgba()`, and a
+token-only audit would have reported the band as unmeasured rather than as
+passing, which is the more dangerous of the two failures.
+
+Two components added in the same round were checked and clear comfortably:
+`.band__k` (`--teal-soft` on `--sheet-2`) at 8.59:1, and `.stmt--compact`'s
+quotes, which sit on the sheet and use `--ink`.
+
 ---
 
 ## 3. Type
@@ -525,9 +548,9 @@ The `#defs` container is visually hidden with the clip pattern, **not**
 ## 10. Asset provenance
 
 All raster assets in `assets/` are the incumbent site's own files, downloaded
-during the scan (`strata-scan/assets.mjs`). `build.mjs` re-derives the shipped
-set from the rendered HTML plus `url()` references in every stylesheet, and
-reports anything unreferenced.
+during the initial scan by a one-off workbench script that is not part of this
+repo. `build.mjs` re-derives the shipped set from the rendered HTML plus `url()`
+references in every stylesheet, and reports anything unreferenced.
 
 That walk used to `unlink` the leftovers, and it was changed to report-only
 because the delete was destructive in a way that only showed up later. Removing
@@ -549,7 +572,7 @@ This exists because it happened. All ten role pages once shipped
 `<a href="undefined">undefined</a>` and `Item A.2 — undefined` in their
 breadcrumbs, because the page function was handed the role *array* where it
 expected a line descriptor. Every page still returned HTTP 200 and rendered, so
-only a full-reference sweep caught it. `strata-scan/final-check.mjs` is that
+only a full-reference sweep caught it. `tools/final-check.mjs` is that
 sweep: it fetches all 40 pages, checks the shell markers on each, resolves every
 local `href`/`src`, confirms no remote dependency, matches emitted tab ids
 against generated visibility rules, and walks each page's `h1`–`h4` sequence.

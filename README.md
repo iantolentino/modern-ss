@@ -49,6 +49,13 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `content/` | Posts and job listings as JSON. |
 | `tools/measure-fit.html` | Measures every page for horizontal overflow, height in screens, word count and how much of the viewport the sheet covers — and names the widest element behind any overflow. |
 | `tools/measure-fit.ps1` | The runner for the above. Boots the preview server if needed and drives Chrome headless. |
+| `tools/measure-blocks.html` | Measures one page block by block, with the computed padding and border of any selector's children. `-Upper` dumps every element the stylesheet uppercases. |
+| `tools/measure-blocks.ps1` | The runner for the above. |
+| `tools/render-plates.ps1` | Renders the plates in `.impeccable/plates/`, measuring each page first so a plate ends where the page ends. |
+| `tools/contrast.mjs` | Recomputes every text/background ratio from the tokens in `styles.css`, including the composited white-on-navy pairs. |
+| `tools/final-check.mjs` | Fetches all 40 pages, resolves every local reference, confirms no remote dependency, matches emitted tab ids against generated rules, and walks each heading sequence. Needs `serve.mjs` running. |
+| `tools/detect-all.mjs` | Re-runs the impeccable detector over all 40 pages and summarises by rule. Needs `IMPECCABLE_HOME` and `IMPECCABLE_CMD`. |
+| `tools/detect-show.mjs` | Prints the detail behind one rule's findings, e.g. `node tools/detect-show.mjs cramped`. |
 | `DESIGN.md` | The design system, the accessibility decisions, and the detector findings. |
 | `PRODUCT.md` | The product truth every claim on the site traces back to. |
 | `.impeccable/` | The direction contract, the machine-readable design record, and rendered plates. |
@@ -71,7 +78,7 @@ the stamps. Teal is the record voice — clause and schedule numbers, the second
 action, the seals, and the highlighter wash (`#B7DAD3`).
 
 An earlier revision invented a vermilion stamp, a yellow highlighter and a gold
-seal. All three were replaced. `node ../strata-scan/contrast.mjs` recomputes the
+seal. All three were replaced. `node tools/contrast.mjs` recomputes the
 contrast ratios from the tokens; the lowest in the palette is **5.10:1** against
 an AA floor of 4.5:1.
 
@@ -145,6 +152,8 @@ dumping every uppercase text node showed that `.btn2` was uppercasing
 `SOLUTIONS@STRATASTAFFGLOBAL.COM`. `.btn2` is now sentence case and the site's
 uppercase is reserved for the primary action and for short labels.
 
-`strata-scan/detect-all.mjs` re-runs the sweep and summarises by rule;
-`strata-scan/detect-show.mjs <rule>` prints the detail for one rule, which is how
-each finding was located rather than guessed at.
+`tools/detect-all.mjs` re-runs the sweep and summarises by rule;
+`tools/detect-show.mjs <rule>` prints the detail for one rule, which is how each
+finding was located rather than guessed at. Both need the local `impeccable`
+binary and take its install path from `IMPECCABLE_BIN`, so they check the
+`IMPECCABLE_HOME` environment before running.
