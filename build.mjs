@@ -812,7 +812,7 @@ PAGES['solutions.html'] = () => page({
     <main id="main">
 ${phead({
     crumb: [['solutions.html', 'Solutions']],
-    ref: 'Schedule of specialists',
+    ref: 'The ten roles',
     title: 'Meet our offshore specialists',
     lede: 'Offshore capacity for your agency, from administrative tasks to specialised services, with flexible scaling and strata-trained talent.',
     aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp(['Ten roles', 'one standard'], 'stamp--sm', '-3deg')}</div>`,
@@ -882,9 +882,9 @@ ${ctaBlock()}
     </main>`,
   });
 }
-PAGES['strata-services.html'] = () => serviceLine('Strata Services', 'Six strata specialists trained on Australian strata legislation and platforms.', 'Schedule A', STRATA_ROLES,
+PAGES['strata-services.html'] = () => serviceLine('Strata Services', 'Six strata specialists trained on Australian strata legislation and platforms.', 'Strata Services &middot; six roles', STRATA_ROLES,
   'Our strata specialists are trained specifically in strata operations and understand the changing requirements of agencies across Australia and Canada.');
-PAGES['strata-staff-plus.html'] = () => serviceLine('Strata Staff Plus', 'Four property management specialists for agencies running both strata and rental portfolios.', 'Schedule B', PM_ROLES,
+PAGES['strata-staff-plus.html'] = () => serviceLine('Strata Staff Plus', 'Four property management specialists for agencies running both strata and rental portfolios.', 'Strata Staff Plus &middot; four roles', PM_ROLES,
   'Strata Staff Plus extends the same training standard into property management: tenancy documentation, lease renewals, trust reconciliation, inspections and tenant care.');
 
 /* ----------------------------------------------------------- role pages --- */
@@ -1412,7 +1412,7 @@ PAGES['insights.html'] = () => page({
     <main id="main">
 ${phead({
     crumb: [['insights.html', 'Insights']],
-    ref: 'Papers circulated',
+    ref: 'All eight articles',
     title: 'Insights',
     lede: 'News, updates and industry insight from Strata Staff Global &mdash; announcements, quarterly newsletters and notes from the client partnership programme.',
   })}
@@ -1695,7 +1695,7 @@ ${phead({
           </div>
           <aside class="item__aside">
             <table class="sched sched--particulars">
-              <caption class="note">Contact schedule</caption>
+              <caption class="note">At a glance</caption>
               <tbody>
                 <tr><td class="k">Solutions email</td><td class="v n" style="font-size:.86rem"><a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a></td></tr>
                 <tr><td class="k">Training email</td><td class="v n" style="font-size:.86rem"><a class="link" href="mailto:${MAIL_TRN}">${MAIL_TRN}</a></td></tr>
