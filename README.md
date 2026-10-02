@@ -54,6 +54,7 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `tools/render-plates.ps1` | Renders the plates in `.impeccable/plates/`, measuring each page first so a plate ends where the page ends. |
 | `tools/contrast.mjs` | Recomputes every text/background ratio from the tokens in `styles.css`, including the composited white-on-navy pairs. |
 | `tools/final-check.mjs` | Fetches all 40 pages, resolves every local reference, confirms no remote dependency, matches emitted tab ids against generated rules, and walks each heading sequence. Needs `serve.mjs` running. |
+| `tools/a11y-check.mjs` | Audits every built page for duplicate ids, dangling fragment links, dangling ARIA references, unnamed controls and missing `alt`. Needs `serve.mjs` running. |
 | `tools/detect-all.mjs` | Re-runs the impeccable detector over all 40 pages and summarises by rule. Needs `IMPECCABLE_HOME` and `IMPECCABLE_CMD`. |
 | `tools/detect-show.mjs` | Prints the detail behind one rule's findings, e.g. `node tools/detect-show.mjs cramped`. |
 | `DESIGN.md` | The design system, the accessibility decisions, and the detector findings. |
@@ -118,6 +119,14 @@ and `inert` contents drawer, `aria-live` register readouts, inline form
 validation with `role="alert"`, and a `prefers-reduced-motion` path that pins the
 highlighter drawn. All text/background pairs were measured by hand; the ratios
 are recorded in `DESIGN.md` and `.impeccable/design.json`.
+
+`node tools/a11y-check.mjs` audits the built pages for the failures a visual
+review cannot see. Current result: **40 pages, 280 `id` attributes, zero
+duplicate ids, zero dangling `#fragment` links, zero dangling `aria-describedby`
+/ `aria-labelledby` / `aria-controls` references, zero controls without an
+accessible name, and zero images without an `alt` attribute.** The check was
+verified against a deliberately broken copy of a page to confirm it is not
+passing vacuously.
 
 ## Honest limitations
 

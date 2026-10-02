@@ -324,6 +324,34 @@ model and the 200,000 tasks/month figure is the company's reported number.
   carry empty alts and a caption device (see §8).
 - Print stylesheet removes the bar, drawer, punch gutter and cookie slip.
 
+### What the automated audit covers
+
+Everything above was written by hand and could all have been true of the source
+while something else was true of the built pages, so `tools/a11y-check.mjs` walks
+the 40 rendered pages and tests the failures that are invisible to a visual
+review:
+
+| Check | Result across 40 pages |
+| --- | --- |
+| duplicate `id` attributes within a page | **0** (280 ids scanned) |
+| internal `href="#…"` pointing at a missing id | **0** |
+| `aria-describedby` / `aria-labelledby` / `aria-controls` target missing | **0** |
+| form control with no accessible name (`label[for]`, wrapping `label`, or `aria-label`) | **0** |
+| `<label for>` pointing at a missing or non-control element | **0** |
+| `<img>` with no `alt` attribute at all (`alt=""` is allowed and deliberate) | **0** |
+| every page serving with the full shell | **40 / 40** |
+
+This is the check that matters most for the form work, because the validation
+messages are wired by *generated* ids (`field-err-0`, `field-err-1`, …) appended to
+`aria-describedby` at runtime. A collision there would be silent: the page would
+render, the form would work, and a screen reader would read the wrong message.
+
+The first run reported four unnamed controls on `careers.html`. Those turned out
+to be radios wrapped in their own `<label>` inside a `<fieldset>` — implicit
+association, which is correct — so the **check** was fixed, not the page. It was
+then pointed at a deliberately broken copy of that page and correctly flagged the
+control, which is what shows the passing result is not vacuous.
+
 ---
 
 ## 7. Detector findings: what was fixed
