@@ -1470,6 +1470,10 @@ ${phead({
               <div class="clause"><p class="clause__no">Today</p><h3>More than 200,000 tasks a month</h3><p>From basic strata administration like archiving to S184 and S22, levy queries, financial bank statements, inbox management and drafting AGM agendas &mdash; Strata Staff now handles as many as 200,000+ individual business tasks per month.</p></div>
             </div>
             <p class="prose" style="margin-top:2rem">Earthquakes, lockdowns and the COVID-19 pandemic did not stop the team. Starting with three computers and a water dispenser, they spent long hours documenting every strata admin task while servicing some agencies on casual hours.</p>
+            <p class="note" style="margin-top:2.8rem">The four people this timeline names</p>
+            <div class="roles" style="margin-top:1.3rem">
+              ${EXECUTIVES.map(e => execPlate(e)).join('\n              ')}
+            </div>
           </div>
         </div>
       </section>
@@ -1990,6 +1994,18 @@ ${phead({
               <div class="fact"><p class="fact__v">@</p><p class="fact__k">Ask for it</p><p class="fact__s"><a class="link" href="mailto:${MAIL_SOL}?subject=Capacity%20test">Request the scorecard</a></p></div>
             </div>
             <p class="note" style="margin-top:1.4rem">The scorecard itself is delivered by the solutions team; this rebuild carries the request path only.</p>
+          </div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
+          <div class="item__head"><h2 class="display">Who you would speak to</h2>
+            <p class="item__lede">The discovery call is taken by the client-facing team, not by a call centre.</p></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${['leah-adriano', 'patricia-puno'].map(personBySlug).filter(Boolean).map(p => platePerson(p, '(max-width: 640px) 44vw, 23vw')).join('\n              ')}
+            </div>
           </div>
         </div>
       </section>
