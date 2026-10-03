@@ -847,3 +847,134 @@ Both numbers are stated here so the trade is visible rather than implied.
 Horizontal overflow remains zero at 320, 390, 768, 1024, 1099, 1180, 1280, 1440,
 1920 and 2560px.
 
+## 13. The imagery system, second pass: the rest of the site
+
+§12 put the company's own photography on the home and team pages. It left **28 of
+the 40 pages carrying no photograph at all**, including `solutions.html` — the page
+whose heading is "Meet our offshore specialists" and which had 23 images, every one
+of them a platform mark or the logo.
+
+The cause was the same one §12 records. The original scan captured markup and copy
+but never pulled the images those pages display. The difference in this pass is
+that eight of those images are *per-post featured images* the incumbent publishes
+as its own `og:image`, so they could be fetched by name rather than guessed at from
+the `<img>` tags in the article bodies — the two newsletter posts carry 8–14 page
+scans, which are the article's content, not its hero.
+
+### The rule used to decide where a photograph goes
+
+A photograph was added to a page only where the page's own subject is the thing
+pictured. That produced a smaller change than blanket coverage would have, and it
+is the reason five pages still have none:
+
+| Page | The photograph, and why it belongs there |
+| --- | --- |
+| `solutions.html` | The eight role photographs, as one strip, because the page is a list of roles |
+| `strata-services.html`, `strata-staff-plus.html` | Each role's own photograph beside its name in the table — the face sits against the role it belongs to |
+| `about.html` | The four office bearers, as the answer to "who is behind this" |
+| `journey.html` | The same four, captioned as *the people this timeline names* — the timeline already names them |
+| `foundation-training-program.html`, `learning.html` | The training manager and the two lead trainers |
+| `course-outline.html` | Each role's photograph in its own tab, so switching tabs changes the face with the syllabus |
+| `careers.html` | The office photograph the company published when it refurbished Angeles City, captioned as where these roles are based |
+| the four job pages | The two colleagues that vacancy sits with |
+| `contact.html` | The business development and client success managers, who are the "solutions team" the page already names |
+| `insights.html`, the eight posts | Each post's own featured image |
+
+Nothing was invented to make a page look busier. The lede on
+`foundation-training-program.html` says the lead trainers cover *two* disciplines
+rather than claiming one per discipline, because the accounting lead trainer is one
+of the twenty names the incumbent publishes without a usable photograph; the page
+says what is true instead of a rounder version of it.
+
+### Two bugs in the optimiser, both of which would have shipped a lie
+
+**The width in the filename was the width requested, not the width produced.** The
+600px source was written as `-1200.webp`, so the `srcset` advertised a 1200w
+candidate that did not exist: a large viewport would have selected it and upscaled
+a 600px file. Widths are now data. `optimise-post.py` writes
+`content/post-images.json` recording the real pixel width of every variant and the
+build generates `srcset` from that.
+
+**Sources between 640 and 1200 got only a 640 variant**, so those heroes would also
+have upscaled. The script now emits the source width in that range, and caps at
+1200 rather than shipping the 1536 and 2048 originals — about 250KB of pixels no
+layout asks for.
+
+`tools/post-check.mjs` verifies the rendered `srcset` against **the files on disk**,
+reading each WebP's real header width, rather than against the manifest. A
+manifest-only check would pass the mislabelled-name bug the tool exists to catch.
+
+### Four of the eight post images are not photographs
+
+Measured with the same tells §12 used for the section panels — distinct colours,
+mean edge energy — they run from a 2:1 office photograph at 37.3 edge energy to a
+1:1 announcement panel at 2.7, which is what a flat designed panel carrying its own
+type looks like. So they are **not cropped to a common box**: each keeps its own
+aspect and is fitted `contain` on the `--sheet-2` ground, which reads as a plate
+mounted on a sheet. Cropping a square panel to a landscape box would cut the type
+out of it.
+
+`alt=""` on every one. They carry nothing the surrounding text does not, and nobody
+here has looked at them, so a description would have been invented. An empty alt
+states the image is decorative; a fabricated one is a claim about a picture nobody
+has seen. The named portraits are the exception and carry their name and role —
+composed from `team.json`, not typed.
+
+### A defect found while placing the office bearers
+
+`ctaBlock` had a hardcoded `data-item="09"` on all fifteen pages that use it, and
+`.item__no` is not hidden — it renders as blue mono text in the gutter. So
+`about.html` printed **"01 02 03 04 09"**, telling the reader four sections were
+missing. Every page with fewer than nine items printed the same false jump:
+`solutions` printed 01 02 03 09, `team` and `journey` printed 01 02 09.
+
+Both the attribute and the printed number are now derived from document order after
+the page is generated, and the build asserts both sequences on every page:
+
+```
+data-item sequence is 01 02 04      -> flaw
+printed item numbers are 01 02 04   -> flaw
+```
+
+That check is what would have caught the hardcoded 09, and it is the class of
+defect that survives review because each page looks locally consistent.
+
+### Coverage is now something the build can be asked about
+
+`tools/imagery-audit.mjs` reports which pages carry photography and which do not,
+and exits non-zero if a page carries none without being declared. Imagery work
+regresses silently — a page rebuilt from a template loses its plates and nothing
+fails.
+
+Writing it found a bug in itself worth recording: the first version tested for
+`assets/client/` and so reported `testimonials.html` as carrying **no** photography,
+when it carries nine client faces, because those files are flat at the top of
+`assets/` as `client-*.jpg`. A coverage tool that misreports coverage is worse than
+none. The nine client portraits were then checked properly: all 150×150, 72KB in
+total, served at exactly their natural size, needing no optimisation pass.
+
+### Where the numbers went
+
+| Measure | After §12 | After §13 |
+| --- | --- | --- |
+| Pages carrying photography | 12 of 40 | **35 of 40** |
+| `assets/` on disk | 1.6MB | **2.3MB** (93 files) |
+| Median page, 1440px | 4.0 screens | 4.3 screens |
+| Home page, 1440px | 10.5 screens | unchanged |
+| Detector findings | 242 | 251 |
+| — of which `numbered-section-labels` | 121 | 130 |
+
+The detector total rose by nine and the rise is entirely that one rule, which fires
+on the *existence* of numbered section labels. Here the numbering is the design's
+organising device — the pages read as agenda items and the numbers carry real
+sequence — so it is the one rule knowingly not complied with, and the count moving
+with genuine added content is the expected consequence rather than a regression.
+
+The five pages still without photography are declared, with reasons, in
+`tools/imagery-audit.mjs`: `privacy.html` (a legal document), `404.html` (a dead
+end), `academy.html` (enrolment particulars and a form; the role tracks are on
+`course-outline.html`), and `role-insurance-specialist.html` /
+`role-pm-customer-care.html`, for which the incumbent publishes no photograph —
+those keep the stamp rather than borrowing another role's face.
+
+

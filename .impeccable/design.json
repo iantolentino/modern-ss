@@ -222,7 +222,12 @@
     "roles",
     "role-card",
     "wall",
-    "points"
+    "points",
+    "post-fig",
+    "tab-role",
+    "opt__fig",
+    "role-thumb",
+    "faces--eight"
   ],
   "signatureInteraction": {
     "id": "capacity",
@@ -251,7 +256,7 @@
     "engine": "impeccable 4.1.0",
     "command": "impeccable detect --json <all 40 pages>",
     "findingsBefore": 1109,
-    "findingsAfter": 242,
+    "findingsAfter": 251,
     "clearedRules": [
       "low-contrast",
       "side-tab",
@@ -262,9 +267,10 @@
     ],
     "remainingByRule": {
       "numbered-section-labels": {
-        "count": 121,
+        "count": 130,
         "severity": "advisory",
-        "disposition": "deliberate"
+        "disposition": "deliberate",
+        "note": "Fires on the existence of numbered section labels. The numbering is the organising device of the agenda/papers world and carries real sequence information, so it is knowingly not complied with."
       },
       "all-caps-body": {
         "count": 74,
@@ -317,7 +323,7 @@
         "why": "The detector applies narrow-width media-query rules regardless of viewport and does not consistently resolve a later override, so it sees a border with no inset where the browser sees 19-82px. Three attempts to rule out a real defect did not change the finding: the band was given its own cell classes instead of reusing .fact, the cell borders were removed outright, and the clamp() in both bands' padding was moved into root custom properties. Verified with tools/measure-blocks.ps1 reading getComputedStyle."
       }
     ],
-    "remainingTotal": 242,
+    "remainingTotal": 251,
     "correctedExceptions": [
       {
         "rule": "all-caps-body",
@@ -336,7 +342,9 @@
       "findingsAfterCaptions": 242,
       "note": "The new engine adds a tiny-text rule and reports cramped-padding more widely, so the first run after the imagery read 262 against the 242 recorded for 0.1.6. Eleven of the surplus were all-caps-body and one was tiny-text, all from .plate-fig__role, which set the people's job titles in 10.5px uppercase mono. Raising it to 12.5px sentence case and deleting the register overrides that shrank it further returned the total to 242 on the same rule mix as before, with tiny-text at zero.",
       "caveat": "The 242 recorded for 0.1.6 and the 242 recorded for 4.1.0 are not the same measurement: the engines differ. The composition is what matches, not the engine."
-    }
+    },
+    "disposition": "ship",
+    "secondPassNote": "The total rose 242 -> 251 and the rise is entirely numbered-section-labels (121 -> 130), because the second imagery pass added real numbered sections to previously bare pages. That rule fires on the existence of numbered section labels; here the numbering is the designs organising device and carries real sequence, so it is the one rule knowingly not complied with. The 242 -> 251 change is therefore a content change, not a regression."
   },
   "knownContentGaps": [
     "Maristella Gaton has no usable portrait: the incumbent's own team grid shows her name beside another officer's photograph, verified in the raw markup. Nineteen of twenty names therefore carry a face, and team.html states why the twentieth does not. The pairing of the other nineteen is taken from that same published grid and generated into content/team.json by the asset pass, so it cannot drift from the images that were downloaded.",
@@ -351,7 +359,10 @@
     "detectShow": "strata-scan/detect-show.mjs <rule> - the detail behind one rule's findings",
     "srcsetCheck": "tools/srcset-check.mjs - walks every srcset candidate, <link href> and CSS url() and checks each against disk, then names every shipped image nothing points at. Closes the gap where a build could validate src and ship a broken 800w candidate.",
     "detectJson": "tools/detect-json.mjs - runs the detector and parses its JSON without a shell redirect, which corrupts the stream with a BOM and the wrong code page.",
-    "optimise": "strata-scan/optimise.py - crops every portrait around its own measured face and writes content/team.json."
+    "optimise": "strata-scan/optimise.py - crops every portrait around its own measured face and writes content/team.json.",
+    "postCheck": "tools/post-check.mjs - checks the rendered srcset against the real header width of each file on disk",
+    "imageryAudit": "tools/imagery-audit.mjs - reports which pages carry photography, and fails on an undeclared bare page",
+    "optimisePost": "strata-scan/optimise-post.py - normalises the post images uncropped and writes content/post-images.json"
   },
   "imagery": {
     "inventory": {
@@ -378,7 +389,47 @@
       "The-Strata-Staff-Difference.webp",
       "Tailored-Strategic-Offshore-Capacity-Solutions-For-The-Strata-Industry.webp"
     ],
-    "unusedReason": "Both are 768x768 composed panels with low edge energy and a large dark middle band: designed panels carrying their own type, not photographs. The sections that would have held them use real named people instead."
+    "unusedReason": "Both are 768x768 composed panels with low edge energy and a large dark middle band: designed panels carrying their own type, not photographs. The sections that would have held them use real named people instead.",
+    "coverage": {
+      "pagesWithPhotography": 35,
+      "pagesTotal": 40,
+      "byKind": {
+        "exec": 12,
+        "people": 66,
+        "post": 17,
+        "portrait": 37,
+        "client": 12
+      },
+      "withoutPhotography": [
+        "privacy.html - a legal document; imagery would push the text further down",
+        "404.html - a dead end; the useful thing is the route back",
+        "academy.html - enrolment particulars and a form; the role tracks live on course-outline.html",
+        "role-insurance-specialist.html - the incumbent publishes no photograph for this role",
+        "role-pm-customer-care.html - the incumbent publishes no photograph for this role"
+      ],
+      "enforcedBy": "tools/imagery-audit.mjs, which exits non-zero on an undeclared bare page"
+    },
+    "secondPass": {
+      "what": "The remaining pages, so the photography is not confined to the home and team pages",
+      "postImages": "Each post og:image, fetched by name rather than guessed from the <img> tags in the article body (two newsletter posts carry 8-14 page scans, which are content, not a hero)",
+      "notCropped": "Four of the eight are designed panels carrying their own type (mean edge energy 2.7 against 37.3 for the one clear photograph), so each keeps its own aspect and is contain-fitted on the sheet-2 ground",
+      "altPolicy": "alt=\"\" on every post and office photograph: they carry nothing the surrounding text does not, and nobody here has looked at them, so any description would be invented. Named portraits carry their name and role, composed from team.json.",
+      "optimiserBugsFound": [
+        "The filename carried the width requested, not the width produced: the 600px source was written as -1200.webp, so srcset advertised a 1200w candidate that did not exist and a large viewport would have upscaled a 600px file. Widths are now recorded in content/post-images.json and the build generates srcset from that.",
+        "Sources between 640 and 1200 wide got only a 640 variant, so those heroes would have upscaled too. The source width is now emitted in that range, capped at 1200 rather than shipping the 1536 and 2048 originals."
+      ],
+      "verifiedBy": "tools/post-check.mjs checks the rendered srcset against the files on disk by reading each WebP header width, not against the manifest, because a manifest-only check would pass the mislabelled-name bug it exists to catch"
+    },
+    "defectFoundWhilePlacing": {
+      "what": "ctaBlock carried a hardcoded data-item=\"09\" on all fifteen pages that use it",
+      "visible": ".item__no is not hidden - it renders as blue mono in the gutter - so about.html printed \"01 02 03 04 09\", implying four missing sections",
+      "scope": "every page with fewer than nine items: solutions printed 01 02 03 09, team and journey printed 01 02 09",
+      "fix": "Both the attribute and the printed number are derived from document order after generation; the build asserts both sequences on every page",
+      "whyItSurvived": "each page looks locally consistent, so it is invisible in review"
+    },
+    "clientPortraits": {
+      "note": "Of the nine, all 150x150 and 72KB in total, served at exactly their natural size. They need no optimisation pass. An early version of imagery-audit.mjs reported testimonials.html as bare because it tested for assets/client/ when the files are flat as assets/client-*.jpg."
+    }
   },
   "verifiedAfterImagery": {
     "pages": 40,
@@ -395,5 +446,9 @@
     "contrastFloor": "5.10:1 (--ink-3 on --sheet)",
     "detectorFindings": 242,
     "note": "The home page is 3.5 screens longer than the 7.0 recorded in §11. That is the deliberate trade: the request was \"too much text\", and the response replaced prose with 52 images rather than deleting sections the incumbent's site carries."
+  },
+  "imageryCoverage": {
+    "pagesWithPhotography": 35,
+    "pagesTotal": 40
   }
 }
