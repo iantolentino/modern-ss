@@ -1181,6 +1181,18 @@ ${optionsList([
           </div>
         </div>
       </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
+          <div class="item__head"><h2 class="display">Who teaches</h2>
+            <p class="item__lede">Training is delivered in house by the training and development team and the lead trainers for each discipline.</p></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${['mary-ann-pineda', 'marey-iams-sarate', 'jeremiah-feliciano'].map(personBySlug).filter(Boolean).map(p => platePerson(p, '(max-width: 640px) 44vw, 23vw')).join('\n              ')}
+            </div>
+          </div>
+        </div>
+      </section>
 ${ctaBlock()}
     </main>`,
 });
