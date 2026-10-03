@@ -725,6 +725,11 @@ function platePerson(p, sizes, { caption = true, cls = '' } = {}) {
         </figure>`;
 }
 
+/* A named person, looked up by the slug their file ends with. `PEOPLE` is read at
+   the bottom of this file, but every caller here runs during rendering, so the
+   lookup resolves long before the first call. */
+const personBySlug = s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`));
+
 /* One office bearer, mounted as a plate. Shared by executives.html and the about
    page, which shows the same four people as the answer to "who is behind this";
    two copies of this markup would be two places to fix when it changes. */
@@ -789,15 +794,14 @@ PAGES['index.html'] = () => {
      success. The full register of named people is further down the page. */
   const STRIP = ['anna-marie-david', 'mary-ann-pineda', 'jahaziel-beltran',
     'desika-mundia', 'riel-lacsamana', 'patricia-puno']
-    .map(s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`))).filter(Boolean);
+    .map(personBySlug).filter(Boolean);
 
-  const bySlug = s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`));
   /* The two people who carry the middle of the page. The training manager stands
      beside the training claim and the accounting manager beside the capacity
      claim, so the argument is made by the person who actually does the work
      rather than by a graphic. */
-  const FEATURE_TRAINING = bySlug('mary-ann-pineda');
-  const FEATURE_ACCOUNTS = bySlug('jahaziel-beltran');
+  const FEATURE_TRAINING = personBySlug('mary-ann-pineda');
+  const FEATURE_ACCOUNTS = personBySlug('jahaziel-beltran');
 
   const stats = [
     ['500+', 'Placements', 'Since April 2019'],
@@ -1265,6 +1269,18 @@ ${phead({
       <section class="item" data-item="02">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
+          <div class="item__head"><h2 class="display">Who runs the programme</h2>
+            <p class="item__lede">The training and development team runs the programme, alongside the lead trainers for the executive assistant and administrative specialist disciplines.</p></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${['mary-ann-pineda', 'marey-iams-sarate', 'jeremiah-feliciano'].map(personBySlug).filter(Boolean).map(p => platePerson(p, '(max-width: 640px) 44vw, 23vw')).join('\n              ')}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
           <div class="item__head"><h2 class="display">Continuing education</h2>
             <p class="item__lede">The learning delivery team also runs the published Strata Property Management 101 programme, a six-course series delivered face to face or by live stream.</p>
             <p class="item__lede" style="margin-top:1rem">Contact the enrolment team for current dates and fees.</p>
@@ -1287,6 +1303,23 @@ ${ctaBlock()}
     </main>`,
 });
 
+/* One role's course outline, as a tab panel. The role's own photograph sits beside
+   its module list, so switching tabs changes the face as well as the syllabus --
+   which is the honest reading of this page: the modules belong to a role, and the
+   photograph is of the role, not of a name we could publish.
+   The module count comes from the data rather than a literal, so a role gaining a
+   module cannot leave a stale number in its heading. */
+const coursePanel = r => {
+  const face = ROLE_FACE[r.href];
+  return `<div class="tab-role">
+              ${face ? `<span class="tab-role__fig"><img src="assets/portrait/${face}-400.webp" srcset="${portraitSrcset(`assets/portrait/${face}`)}" sizes="(max-width: 640px) 40vw, 190px" width="400" height="500" alt="" loading="lazy" decoding="async"></span>` : ''}
+              <div class="tab-role__body">
+                <h3>${esc(r.name)} &mdash; ${r.modules.length} modules</h3>
+                <ul>${r.modules.map((m, i) => `<li><span class="num" style="color:var(--ink-3);margin-right:.7rem">M${i + 1}</span>${esc(m)}</li>`).join('')}</ul>
+              </div>
+            </div>`;
+};
+
 PAGES['course-outline.html'] = () => page({
   page: 'course-outline.html',
   head: { title: 'Course Outline Per Role', desc: 'Role-specific strata and property management training outlines for every Strata Staff Global position.' },
@@ -1305,7 +1338,7 @@ ${phead({
           <div class="item__body item__body--wide">
 ${tabs('course', STRATA_ROLES.map(r => ({
             id: `tab-c-${r.id}`, label: esc(r.name.replace('Strata ', '')),
-            html: `<h3>${esc(r.name)} &mdash; ${r.modules.length} modules</h3><ul>${r.modules.map((m, i) => `<li><span class="num" style="color:var(--ink-3);margin-right:.7rem">M${i + 1}</span>${esc(m)}</li>`).join('')}</ul>`,
+            html: coursePanel(r),
           })))}
           </div>
         </div>
@@ -1318,7 +1351,7 @@ ${tabs('course', STRATA_ROLES.map(r => ({
           <div class="item__body item__body--wide">
 ${tabs('coursepm', PM_ROLES.map(r => ({
             id: `tab-p-${r.id}`, label: esc(r.name.replace('Property Management ', '')),
-            html: `<h3>${esc(r.name)} &mdash; 6 modules</h3><ul>${r.modules.map((m, i) => `<li><span class="num" style="color:var(--ink-3);margin-right:.7rem">M${i + 1}</span>${esc(m)}</li>`).join('')}</ul>`,
+            html: coursePanel(r),
           })))}
           </div>
         </div>

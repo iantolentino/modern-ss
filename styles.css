@@ -680,6 +680,17 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .opt:hover .opt__go { transform: translateX(4px); color: var(--blue); }
 .opt--plus .opt__no { color: var(--teal); }
 
+/* A course-outline tab: the role's photograph beside its module list. The
+   photograph is mounted on the same tinted ground as the post plates and is
+   `contain`-fitted, so a 4:5 portrait in the box is never cropped. */
+.tab-role { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 1.8rem; align-items: start; }
+.tab-role__fig {
+  display: block; background: var(--sheet-2);
+  border: 1px solid var(--rule); overflow: hidden;
+}
+.tab-role__fig img { display: block; width: 100%; height: auto; }
+.tab-role__body h3 { margin-bottom: .9rem; }
+
 /* An index row that carries a plate. The image column is declared whenever any
    row in the list has one, and a row without holds the place with an empty span,
    so the titles stay on one vertical line down the list.
@@ -1233,6 +1244,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .opts--fig .opt__no, .opts--fig .opt__name,
   .opts--fig .opt__desc, .opts--fig .opt__go { grid-column: 2; }
   .opts--fig .opt__go { justify-self: start; }
+  .tab-role { grid-template-columns: 108px minmax(0, 1fr); gap: 1.1rem; }
   .foot__col { grid-column: span 6; }
   /* Label beside value, not above it: stacking the two addresses doubles the
      height of the tallest block in the footer for no gain in legibility. */
