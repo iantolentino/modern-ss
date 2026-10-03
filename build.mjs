@@ -720,6 +720,17 @@ function platePerson(p, sizes, { caption = true, cls = '' } = {}) {
         </figure>`;
 }
 
+/* One office bearer, mounted as a plate. Shared by executives.html and the about
+   page, which shows the same four people as the answer to "who is behind this";
+   two copies of this markup would be two places to fix when it changes. */
+function execPlate(e, sizes = '(max-width: 640px) 44vw, 23vw') {
+  const base = `assets/exec/${e.img}`;
+  return `<figure class="plate-fig">
+                <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}" sizes="${sizes}" width="400" height="500" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
+                <figcaption><span class="plate-fig__name">${esc(e.n)}</span><span class="plate-fig__role">${esc(e.r)}</span></figcaption>
+              </figure>`;
+}
+
 /* ------------------------------------------------------------------ home --
    The order on this page is the incumbent's own, top to bottom: the hero, the
    team behind your team, the three headline figures, the difference, the
@@ -1330,6 +1341,19 @@ ${phead({
       <section class="item" data-item="02">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
+          <div class="item__head"><h2 class="display">Who is behind this</h2>
+            <p class="item__lede">Four office bearers, accountable for the business end to end.</p></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${EXECUTIVES.map(e => execPlate(e)).join('\n              ')}
+            </div>
+            <p style="margin-top:2.2rem"><a class="btn2" href="executives.html">Read what each one is accountable for ${arrow}</a></p>
+          </div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
           <div class="item__head"><h2 class="display">The Strata Staff difference</h2></div>
           <div class="item__body item__body--wide">
             <div class="trio">
@@ -1342,9 +1366,9 @@ ${phead({
           </div>
         </div>
       </section>
-      <section class="item" data-item="03">
+      <section class="item" data-item="04">
         <div class="item__wrap">
-          <p class="item__no"><span class="sr">Item </span>03</p>
+          <p class="item__no"><span class="sr">Item </span>04</p>
           <div class="item__head"><h2 class="display">Where to go next</h2></div>
           <div class="item__body item__body--wide">
 ${optionsList([
@@ -1423,10 +1447,7 @@ ${phead({
           <div class="item__head"><h2 class="display">The four office bearers</h2></div>
           <div class="item__body item__body--wide">
             <div class="roles">
-              ${EXECUTIVES.map(e => `<figure class="plate-fig">
-                <span class="plate-fig__frame"><img src="assets/exec/${e.img}-400.webp" srcset="assets/exec/${e.img}-400.webp 400w, assets/exec/${e.img}-800.webp 800w" sizes="(max-width: 640px) 44vw, 23vw" width="400" height="500" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
-                <figcaption><span class="plate-fig__name">${esc(e.n)}</span><span class="plate-fig__role">${esc(e.r)}</span></figcaption>
-              </figure>`).join('\n              ')}
+              ${EXECUTIVES.map(e => execPlate(e)).join('\n              ')}
             </div>
           </div>
         </div>
@@ -1975,10 +1996,28 @@ for (const j of JOBS) PAGES[`job-${j.slug}.html`] = () => jobPage(j);
    so it was removed with the home page re-layout and this wrapper with it. */
 
 /* ------------------------------------------------------------- the write -- */
+
+/* The printed item numbers have to form a real sequence. The closing call block
+   was written with a hardcoded 09, so every page shorter than nine items ended
+   "01 02 03 04 09" — telling the reader four sections were missing, in visible
+   blue text in the gutter. Deriving both the attribute and the printed number
+   from document order means a page can gain or lose a section without anyone
+   remembering to renumber the ones after it.
+   `item--plain` sections carry neither, so the two counters stay in step; the
+   build asserts that below. */
+function renumberItems(html) {
+  const pad = i => String(i).padStart(2, '0');
+  let attr = 0;
+  let printed = 0;
+  return html
+    .replace(/(data-item=")\d+(")/g, (_, a, b) => `${a}${pad(++attr)}${b}`)
+    .replace(/(<span class="sr">Item <\/span>)\d+(<\/p>)/g, (_, a, b) => `${a}${pad(++printed)}${b}`);
+}
+
 const written = [];
 const flaws = [];
 for (const [file, fn] of Object.entries(PAGES)) {
-  const html = fn();
+  const html = renumberItems(fn());
   // A template hole that was never filled ships as the literal word. Catch it
   // here rather than in a browser.
   for (const bad of ['undefined', 'NaN', '[object Object]', '&lt;span']) {
@@ -1987,6 +2026,13 @@ for (const [file, fn] of Object.entries(PAGES)) {
       flaws.push(`${file}: contains "${bad}" near …${html.slice(Math.max(0, at - 70), at + 40).replace(/\s+/g, ' ')}…`);
     }
   }
+  // Every numbered section must show the number it declares, and the sequence
+  // must not skip. This is the check that would have caught the hardcoded 09.
+  const attrs = [...html.matchAll(/data-item="(\d+)"/g)].map(m => m[1]);
+  const shown = [...html.matchAll(/<span class="sr">Item <\/span>(\d+)<\/p>/g)].map(m => m[1]);
+  const want = attrs.map((_, i) => String(i + 1).padStart(2, '0'));
+  if (attrs.join() !== want.join()) flaws.push(`${file}: data-item sequence is ${attrs.join(' ')}`);
+  if (shown.join() !== want.join()) flaws.push(`${file}: printed item numbers are ${shown.join(' ')}`);
   await writeFile(path.join(ROOT, file), html, 'utf8');
   written.push([file, html.length]);
 }
