@@ -669,6 +669,15 @@ const ROLE_FACE = {
 /* portrait/ and exec/ ship at two widths; people/ ships at one. */
 const portraitSrcset = base => `${base}-400.webp 400w, ${base}-800.webp 800w`;
 
+/* The eight role photographs, ordered so the strata roles come first and the
+   property-management roles follow — the same order the page's two tables use.
+   Used as a single strip at the head of the solutions page, where the subject of
+   the page is the roles themselves. */
+const ROLE_STRIP = [
+  'administrative-specialist', 'accountant', 'executive-assistant', 'compliance',
+  'team-administration', 'team-accountant', 'team-executive-assistant', 'team-customer-care',
+];
+
 /* A mounted role photograph: hairline frame, slim mount, caption under the rule.
    `alt` is mandatory because these are meaningful images, never decoration. */
 function plateRole(slug, alt, sizes, { name = '', role = '', lazy = true } = {}) {
@@ -933,6 +942,12 @@ ${phead({
     lede: 'Offshore capacity for your agency, from administrative tasks to specialised services, with flexible scaling and strata-trained talent.',
     aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp(['Ten roles', 'one standard'], 'stamp--sm', '-3deg')}</div>`,
   })}
+
+      <section class="faces faces--eight" aria-label="Strata Staff Global specialists">
+${ROLE_STRIP.map(s => `        <img src="assets/portrait/${s}-400.webp" srcset="${portraitSrcset(`assets/portrait/${s}`)}" sizes="(max-width: 640px) 25vw, 12vw" width="400" height="500" alt="" loading="lazy" decoding="async">`).join('\n')}
+      </section>
+      <p class="faces__cap">Eight of the ten roles, photographed for our own register. The full scope of each &mdash; and the platforms it runs on &mdash; is set out below.</p>
+
       <section class="item" data-item="01">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
