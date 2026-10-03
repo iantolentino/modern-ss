@@ -2216,10 +2216,17 @@ for (const cssFile of ['styles.css', 'styles-tabs.css', 'assets/fonts/fonts.css'
 }
 let removed = 0, kept = 0;
 const unused = [];
+/* This walk asks "does any page or stylesheet reference this file?", which is the
+   right question for a shippable asset and the wrong one for a record that is
+   deliberately not referenced. assets/PROVENANCE.json is data about the assets, so
+   scoping the walk to asset types keeps the report about assets -- otherwise the
+   provenance record is reported as dead weight on every build. */
+const ASSET_EXT = /\.(webp|png|jpe?g|gif|svg|avif|woff2?|ttf|otf|css|ico)$/i;
 async function prune(dir, prefix = '') {
   for (const e of await readdir(path.join(ROOT, dir), { withFileTypes: true })) {
     const rel = prefix + e.name;
     if (e.isDirectory()) { await prune(path.join(dir, e.name), rel + '/'); continue; }
+    if (!ASSET_EXT.test(e.name)) continue;
     if (shipped.has(rel)) { kept++; continue; }
     unused.push(rel);
     removed++;
