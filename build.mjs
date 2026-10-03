@@ -296,13 +296,19 @@ const item = ({ no, id, title, lede, body = '', aside = '', wide = false }) => {
 const schRows = rows => rows.map(r =>
   `<tr><td class="k">${r[0]}</td><td class="v n">${r[1]}</td></tr>`).join('');
 
-const roleTable = roles => `
+/* `thumbs` puts the role's own photograph beside its name. The two service-line
+   pages use it so the face sits against the role it belongs to; the solutions
+   page does not, because it already leads with all eight in a strip and repeating
+   them in the table would say the same thing twice.
+   Eight of the ten roles have a photograph; the other two rows simply start with
+   the name. Substituting another role's face would be worse than none. */
+const roleTable = (roles, { thumbs = false } = {}) => `
       <table class="sched">
         <thead><tr><th scope="col">Item</th><th scope="col">Role</th><th scope="col">What it covers</th><th scope="col" class="n">Detail</th></tr></thead>
         <tbody>
           ${roles.map(r => `<tr class="is-link">
             <td class="n">${r.no}</td>
-            <td class="role"><a href="${r.href}">${esc(r.name)}</a></td>
+            <td class="role">${thumbs && ROLE_FACE[r.href] ? `<span class="role-thumb"><img src="assets/portrait/${ROLE_FACE[r.href]}-400.webp" alt="" width="400" height="500" loading="lazy" decoding="async"></span>` : ''}<a href="${r.href}">${esc(r.name)}</a></td>
             <td class="k">${esc(r.one)}</td>
             <td class="n"><a href="${r.href}">Read${' &rarr;'}</a></td>
           </tr>`).join('\n          ')}
@@ -1006,7 +1012,7 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">${esc(title)} roles</h2></div>
-          <div class="item__body item__body--wide">${roleTable(roles)}</div>
+          <div class="item__body item__body--wide">${roleTable(roles, { thumbs: true })}</div>
         </div>
       </section>
 ${ctaBlock()}

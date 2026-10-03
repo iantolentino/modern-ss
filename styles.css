@@ -430,6 +430,17 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .sched tr.is-link:hover { background: var(--sheet-2); }
 .sched .role { font-weight: 650; font-stretch: 103%; }
 
+/* A role's photograph beside its name, in the two service-line tables. Inline
+   rather than flex so the cell stays a table cell: `display: flex` on a td
+   detaches it from the table's column algorithm and the header stops lining up. */
+.role-thumb { display: inline-block; width: 40px; margin-right: .7rem; vertical-align: middle; }
+.role-thumb img {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 4 / 5; object-fit: cover;
+  border: 1px solid var(--rule-mid);
+  filter: saturate(.94) contrast(1.03);
+}
+
 /* ============================================================ agenda items = */
 .item { border-top: 1px solid var(--rule); }
 .item:first-of-type { border-top: 0; }
