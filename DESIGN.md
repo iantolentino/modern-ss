@@ -483,6 +483,15 @@ the band's and the navy band's padding was moved into root custom properties.
 None changed the finding, which is the evidence that the parser, not the CSS, is
 the limit. The measured values above are the rendered ones.
 
+**Re-run after the imagery work.** The engine changed from `0.1.6` to `4.1.0`
+partway through this rebuild, and the newer engine adds a `tiny-text` rule and
+reports `cramped-padding` more widely. Its first pass over the photographic pages
+read 262. One of those findings was real and mattered: `.plate-fig__role` was
+setting people's job titles in 10.5px uppercase mono. Fixing it returned the total
+to **242** on the same rule mix listed above, with `tiny-text` at zero. The two
+242s are therefore not the same measurement — the composition matches, the engine
+does not. See §12.
+
 ---
 
 ## 8. Deliberate exceptions
@@ -531,12 +540,18 @@ reason; none is an oversight.
 
 ### Content exceptions, stated on the page
 
-- **Team portraits are not paired with names.** The gallery holds 19 plates
-  against 20 names and the filenames do not map reliably on their own.
-  Mislabelling a colleague is worse than leaving the pair apart, so the page
-  shows an unnamed photographic register plus a separate named register of
-  officers, and says so in the copy. Executive and client portraits *are* paired,
-  because those filenames are unambiguous.
+- **Team portraits are paired with names** — this entry previously said the
+  opposite, and the earlier caution was misplaced. The pairing is published by the
+  incumbent beside each photograph on its own team page, so it is established
+  rather than inferred, and it is generated into `content/team.json`. See §12.
+  **One name of twenty remains unpaired**: Maristella Gaton appears on the
+  incumbent's gallery beside another officer's photograph, verified in the raw
+  markup, so she is left out rather than shown under a face that is not hers. The
+  page states this. Executive and client portraits are paired for the same reason
+  as the rest — the pairing is published.
+- **The eight role photographs carry no personal name**, because the incumbent
+  publishes none against them. They are captioned by role and no identity is
+  invented for them. See §12.
 - **`Strata Executive Assistant` has no page in the live sitemap**, though the
   navigation lists it. The role page is built only from real published phrases
   and its real five training modules, and does not invent scope.
@@ -685,3 +700,150 @@ with it. The `journey.html` clause markers (`2015–16`, `2019`, `2020`, `Today`
 were kept: those are dates, and they carry information. The "Education schedule —
 E.1/E.2/E.3" references on the three learning pages were kept for the same reason
 as the clause references in §8 — they are page references, not procedure.
+
+## 12. The imagery system
+
+### The defect this section exists to record
+
+§11 re-laid the home page out to the incumbent's own section order and measured
+it honestly at 7.0 screens. It was still wrong, and the owner said so: *"you need
+to use the images on the site, so visitors can see the staffs and real persons,
+not just [text] … as of now it is too much text."*
+
+He was describing a real hole in the rebuild, not a matter of taste. **The
+original scan never downloaded the photography.** It captured 65 pages of markup
+and 58 text files, and the image audit found the logo, the flags, the platform
+logos and a handful of 163px thumbnails — but not the eight `Model-*.webp` role
+portraits the incumbent leads with, not the two 1000×1000 section images, and not
+the team portraits at any usable size. A page cannot show faces it does not have.
+The rebuild was text-heavy because its asset set was, and no amount of copy
+editing would have fixed that.
+
+### What was fetched, and what was thrown away
+
+Everything the incumbent publishes, at the largest size it publishes:
+
+| Set | Source | Result |
+| --- | --- | --- |
+| 19 team portraits | the incumbent's own team grid, re-fetched at 480w | `assets/people/*.webp`, 3:4, 224KB total |
+| 8 role photographs | `Model-*.webp`, 908×1671 | `assets/portrait/*-{400,800}.webp`, 4:5, 404KB |
+| 4 executive portraits | `exec-*.jpg`, 908×1671, up to 1.4MB each | `assets/exec/*-{400,800}.webp`, 4:5, 469KB |
+| 12 platform logos | already held | `assets/platform-*.{png,jpg}` |
+| 8 named `alt` strings | the incumbent's own markup | `content/team.json` |
+
+**`assets/` went from 8.4MB to 1.6MB** across 78 files. The weight came out of
+three places: the executives were re-encoded to WebP at two widths (6.79MB →
+1.10MB, −84%); the 19 team portraits were replaced at 480×640 (−70% each on
+average); and 33 files that no shipped page referenced were removed from the
+folder entirely — the 19 superseded 163px thumbnails, the fourteen
+`Model-*.webp`/`exec-*.jpg` originals, and the two section panels.
+
+Those fourteen originals were **moved to `strata-scan/raw-portrait/`, not
+deleted.** They are inputs to `optimise.py`, so deleting them would have made the
+asset pass unreproducible. Moving them is verified safe: re-running the optimiser
+from the new folder reproduces the shipped files **byte for byte**, with zero
+`MISSING` entries.
+
+### Framing is decided at build time, not in CSS
+
+The measured face position in these photographs sits anywhere from **27% to 66%
+down the frame** (skin-tone centroid, `faces.py`; a subject was located in 31 of
+31 images, median 56%). A single `object-position` cannot serve that spread:
+setting it for the median decapitates every low-framed subject, and setting it
+for the extremes crops out everyone else.
+
+So each image is cropped to its target aspect ratio **around its own measured
+face** before it ships (`optimise.py`), and the stylesheet carries no
+`object-position` at all. `object-fit: cover` remains only as a safety net for
+the responsive widths, not as the framing mechanism. This is why
+`aspect-ratio` can be changed per component — 3:4 for the contact strip, 4:5 for
+role cards and the register — without any risk of cutting a head off.
+
+### Named people and unnamed role photographs are different sets
+
+The incumbent's own team page publishes each portrait beside its owner's name and
+title, so **the pairing is established, not guessed.** `content/team.json` is
+generated by the asset pass rather than typed by hand, so the pairing cannot
+drift from the images that were actually downloaded. Nineteen portraits carry a
+published name; `assets/people/` and the register on `team.html` use them.
+
+The `Model-*.webp` role photographs are a **separate set and carry no published
+personal name.** They are role illustrations. Their captions therefore read as
+roles ("Strata Administrative Specialist"), and no identity is invented for them
+— inventing a name for a stock photograph of a real employee would be the single
+most damaging thing this rebuild could do. On the role pages the caption is
+omitted entirely, because the page title already names the role.
+
+Eight of the ten role pages can carry one of these photographs. `insurance-specialist`
+and `pm-customer-care` have no matching photograph on the live site, so they keep
+the stamp rather than borrowing a face that belongs to a different role.
+
+**Nineteen portraits stand against twenty names.** The twentieth, Maristella
+Gaton (Accountant Lead Trainer), appears on the incumbent's own gallery **with
+another officer's photograph.** This was verified in the raw markup. She is
+deliberately absent rather than shown under a face that is not hers, and the
+`team.html` register says so in a note. An earlier revision of this rebuild
+handled this by showing all nineteen portraits *without any names*; that was
+over-cautious, because the pairing was published all along and only one entry was
+unusable.
+
+### Two images were downloaded and deliberately not used
+
+`The-Strata-Staff-Difference.webp` and
+`Tailored-Strategic-Offshore-Capacity-Solutions-For-The-Strata-Industry.webp` are
+768×768 composed panels. Measured, both are low-edge-energy with a large dark
+band through the middle — the signature of a designed panel carrying its own
+type, not a photograph. Placing unverifiable, text-bearing artwork beside
+headings that say the same thing would either duplicate the words or contradict
+them.
+
+The sections that would have carried them use **real named people** instead: the
+training manager stands beside the training claim, the accounting manager beside
+the capacity claim. The images are kept in `strata-scan/raw-portrait/` with the
+other unused sources.
+
+### The caption was the worst-set text on the page
+
+The detector re-run after this work caught something the design had got backwards.
+`.plate-fig__role` — the line that tells a visitor *who this person is* — was set
+in **10.5px uppercase mono**, the least readable treatment available, on the most
+important line of the component. The `tiny-text` and `all-caps-body` rules both
+fired.
+
+This was fixed on its merits, not to quiet the detector: the role line is now
+sentence-case mono at **12.5px** in `--ink-2`, and the register overrides that
+made it smaller were deleted. The face caption (`11.84px`), the strip caption and
+the platform captions were raised at the same time. **Findings went 262 → 242**,
+and `tiny-text` went to zero.
+
+### Phone behaviour: the register becomes a list
+
+Nineteen plates in two columns is ten rows of scrolling — 4.71 screens of the
+smallest viewport spent on one section. Below 640px the register stops being a
+grid and becomes a list: a 60px thumbnail, the name, the role, one line each.
+That is **3.58 screens instead of 4.71**, and it reads better, because a 60px
+thumbnail beside a name is legible where a 90px plate with a wrapped caption is
+not. No person is hidden at any width.
+
+### Where the numbers went
+
+| Measure | Before §12 | After |
+| --- | --- | --- |
+| Home page, 1440px | 7.0 screens | **10.5 screens** |
+| Home page, 390px | 12.7 screens | 17.0 screens |
+| Home page, 320px | 17.4 screens | 21.3 screens |
+| Images on the home page | 6 | **52** |
+| `assets/` on disk | 8.4MB | **1.6MB** |
+| Worst caption size | 10.5px uppercase | 12.5px sentence case |
+| Detector findings | 262 | 242 |
+
+**The page got longer and that is the honest outcome.** It is 3.5 screens taller
+at 1440px because it now shows 52 images, 19 of them named portraits and 4 of them
+role cards. The complaint being answered was *"too much text"*, not *"too long"*,
+and the response was to replace prose with photography rather than to delete
+sections the incumbent's own site carries. Text density fell; scroll length rose.
+Both numbers are stated here so the trade is visible rather than implied.
+
+Horizontal overflow remains zero at 320, 390, 768, 1024, 1099, 1180, 1280, 1440,
+1920 and 2560px.
+

@@ -1,0 +1,158 @@
+{
+  "note": "Portraits and the name/role pairing are the ones the incumbent publishes on its own team page. Maristella Gaton appears in that grid with another person's photograph, so she is deliberately absent here rather than mislabelled.",
+  "crop": "3:4, centred on the measured face position",
+  "people": [
+    {
+      "file": "people/anna-marie-david.webp",
+      "name": "Anna Marie David",
+      "role": "Human Resource Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 38.3
+    },
+    {
+      "file": "people/trixy-bulaun.webp",
+      "name": "Trixy Bulaun",
+      "role": "HR Officer",
+      "w": 480,
+      "h": 640,
+      "faceY": 55.9
+    },
+    {
+      "file": "people/neil-dane-puno.webp",
+      "name": "Neil Dane Puno",
+      "role": "HR Generalist",
+      "w": 480,
+      "h": 640,
+      "faceY": 44.9
+    },
+    {
+      "file": "people/mary-ann-pineda.webp",
+      "name": "Mary Ann Pineda",
+      "role": "Training and Development Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 41.7
+    },
+    {
+      "file": "people/marey-iams-sarate.webp",
+      "name": "Marey Iams Sarate",
+      "role": "Executive Assistant Lead Trainer",
+      "w": 480,
+      "h": 640,
+      "faceY": 62.9
+    },
+    {
+      "file": "people/jeremiah-feliciano.webp",
+      "name": "Jeremiah Feliciano",
+      "role": "Administrative Specialist Lead Trainer",
+      "w": 480,
+      "h": 640,
+      "faceY": 51.3
+    },
+    {
+      "file": "people/jahaziel-beltran.webp",
+      "name": "Jahaziel Beltran",
+      "role": "Accounting Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 47.9
+    },
+    {
+      "file": "people/sarahjane-manliclic.webp",
+      "name": "Sarahjane Manliclic",
+      "role": "Accounting Officer",
+      "w": 480,
+      "h": 640,
+      "faceY": 40.1
+    },
+    {
+      "file": "people/desika-mundia.webp",
+      "name": "Desika Mundia",
+      "role": "Administration and Facilities Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 61.3
+    },
+    {
+      "file": "people/patricia-garcia.webp",
+      "name": "Patricia Garcia",
+      "role": "Executive Assistant To The Executive Managing Director / Support Executive Services Team Lead",
+      "w": 480,
+      "h": 640,
+      "faceY": 57.3
+    },
+    {
+      "file": "people/leah-adriano.webp",
+      "name": "Leah Adriano",
+      "role": "Business Development Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 48.5
+    },
+    {
+      "file": "people/riel-lacsamana.webp",
+      "name": "Riel Lacsamana",
+      "role": "Information Technology Officer",
+      "w": 480,
+      "h": 640,
+      "faceY": 41.3
+    },
+    {
+      "file": "people/dave-jason-velasquez.webp",
+      "name": "Dave Jason Velasquez",
+      "role": "Information Technology Specialist",
+      "w": 480,
+      "h": 640,
+      "faceY": 57.5
+    },
+    {
+      "file": "people/ian-kenneth-crisostomo.webp",
+      "name": "Ian Kenneth Crisostomo",
+      "role": "Information Technology Specialist",
+      "w": 480,
+      "h": 640,
+      "faceY": 53.2
+    },
+    {
+      "file": "people/patricia-puno.webp",
+      "name": "Patricia Puno",
+      "role": "Client Success Manager",
+      "w": 480,
+      "h": 640,
+      "faceY": 51.3
+    },
+    {
+      "file": "people/rei-sanchez.webp",
+      "name": "Rei Sanchez",
+      "role": "Team Leader",
+      "w": 480,
+      "h": 640,
+      "faceY": 27.3
+    },
+    {
+      "file": "people/sheena-magdaraog.webp",
+      "name": "Sheena Magdaraog",
+      "role": "Team Leader",
+      "w": 480,
+      "h": 640,
+      "faceY": 32.4
+    },
+    {
+      "file": "people/carlo-andreu-tayag.webp",
+      "name": "Carlo Andreu Tayag",
+      "role": "Team Leader",
+      "w": 480,
+      "h": 640,
+      "faceY": 51.3
+    },
+    {
+      "file": "people/mcryn-aie-changcoco.webp",
+      "name": "Mcryn Aie Changcoco",
+      "role": "Team Leader",
+      "w": 480,
+      "h": 640,
+      "faceY": 56.0
+    }
+  ]
+}

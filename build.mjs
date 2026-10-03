@@ -158,14 +158,17 @@ const TESTIMONIALS = [
     q: 'Strata Staff service has been very professional and outcome focused. They have a superb team that execute tasks diligently. We expect this relationship to grow much more with the years ahead as we expand offshore requirements using the full depth of Strata Staff\u2019s expertise.' },
 ];
 
+/* `img` is the slug of the optimised pair in assets/exec/, not a filename: the
+   originals are 908x1671 and up to 1.4MB each, which is not what a page whose job
+   is to earn a call should be shipping. See DESIGN.md §12. */
 const EXECUTIVES = [
-  { n: 'Trevor McGuinness', r: 'Owner / Co-Founder', img: 'exec-trevor.jpg',
+  { n: 'Trevor McGuinness', r: 'Owner / Co-Founder', img: 'trevor',
     b: 'Co-founded Strata Staff in April 2019 after several reconnaissance trips to the Philippines, and set the company\u2019s original thesis: that strata administration could be documented, taught and delivered offshore to a standard Australian agencies would trust.' },
-  { n: 'Paul Miller', r: 'Owner / Co-Founder', img: 'exec-paul.jpg',
+  { n: 'Paul Miller', r: 'Owner / Co-Founder', img: 'paul',
     b: 'Shared the vision from the first conversation and, with Trevor, beta-tested strata administration work in the Philippines before the hard launch. Paul\u2019s focus is the long-term health of the client partnerships the business is built on.' },
-  { n: 'Tongta Miller', r: 'Chief Financial Officer', img: 'exec-tongta.jpg',
+  { n: 'Tongta Miller', r: 'Chief Financial Officer', img: 'tongta',
     b: 'Leads the finance function across both jurisdictions, holding the commercial discipline behind a business that has scaled from three computers to more than 200,000 individual strata tasks a month.' },
-  { n: 'Dan Fabros', r: 'Executive Managing Director', img: 'exec-dan.jpg',
+  { n: 'Dan Fabros', r: 'Executive Managing Director', img: 'dan',
     b: 'Dan manages the company\u2019s macro to micro-operations. He works directly with the ownership group to set strategic goals while managing budgets and resources. He manages the core people by leading and developing the leadership and management teams. He ensures that Strata Staff\u2019s service level continuously improves by executing agile methodologies for optimum outcomes. He represents Strata Staff in establishing partnerships and relationships with key stakeholders. Dan is ultimately responsible for driving business growth and ensuring the long-term scalability and success of the business.', c: true },
 ];
 
@@ -199,12 +202,11 @@ const TEAM_FILTERS = [
   ['cs', 'Client Success & Team Leaders'],
 ];
 
-const TEAM_PHOTOS = [
-  'team-anna.jpg', 'team-trixy.webp', 'team-neil.webp', 'team-maryann.jpg', 'team-marey.webp',
-  'team-jeremiah.webp', 'team-jahaziel.jpg', 'team-sarahjane.webp', 'team-desika.jpg',
-  'team-patricia-garcia.webp', 'team-leah.jpg', 'team-riel.jpg', 'team-dave.webp', 'team-ian.webp',
-  'team-patricia-puno.jpg', 'team-rei.jpg', 'team-sheena.jpg', 'team-carlo.jpg', 'team-mcryn.jpg',
-];
+/* The portraits used to live here as an unpaired list of nineteen filenames,
+   rendered without names because the pairing could not be verified. It can be,
+   and is: the incumbent publishes each portrait next to its owner on its own
+   team page. The named set is built into content/team.json by the asset pass and
+   read into PEOPLE at the bottom of this file. */
 
 /* ------------------------------------------------------------- the index -- */
 const NAV = [
@@ -636,7 +638,73 @@ const resolutionBlock = (heading = 'Schedule Free Discovery Call') => `
 /* ============================================================== the pages == */
 const PAGES = {};
 
-/* ------------------------------------------------------------------ home -- */
+/* --------------------------------------------------- photographs, mounted --- */
+
+/* The four role photographs the incumbent pairs with its own four role cards,
+   named exactly as its own alt text names them. None of them carries a published
+   personal name — they are role illustrations — so their caption is the role and
+   no identity is invented for them. The nineteen real, named people are a
+   separate set, in assets/people/.
+
+   Every source was cropped to its final aspect around its own measured face
+   position when the assets were prepared (DESIGN.md §12), so the framing is
+   already correct and no `object-position` is guessed at in CSS. */
+/* Eight of the ten role pages can carry one of the company's own role
+   photographs. `role-insurance-specialist` and `role-pm-customer-care` have no
+   matching photograph on the live site, so they stay typographic rather than
+   borrowing a face that belongs to a different role. These are role
+   illustrations, not portraits of named individuals: the company publishes no
+   personal name against them, and none is invented here. See DESIGN.md §12. */
+const ROLE_FACE = {
+  'role-administrative-specialist.html': 'administrative-specialist',
+  'role-accountant.html': 'accountant',
+  'role-executive-assistant.html': 'executive-assistant',
+  'role-compliance-specialist.html': 'compliance',
+  'role-customer-care.html': 'team-customer-care',
+  'role-pm-administrative-specialist.html': 'team-administration',
+  'role-pm-executive-assistant.html': 'team-executive-assistant',
+  'role-pm-accountant.html': 'team-accountant',
+};
+
+/* portrait/ and exec/ ship at two widths; people/ ships at one. */
+const portraitSrcset = base => `${base}-400.webp 400w, ${base}-800.webp 800w`;
+
+/* A mounted role photograph: hairline frame, slim mount, caption under the rule.
+   `alt` is mandatory because these are meaningful images, never decoration. */
+function plateRole(slug, alt, sizes, { name = '', role = '', lazy = true } = {}) {
+  const base = `assets/portrait/${slug}`;
+  return `<figure class="plate-fig">
+          <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}"
+            sizes="${sizes}" width="400" height="500" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}></span>
+          ${name || role ? `<figcaption>${name ? `<span class="plate-fig__name">${esc(name)}</span>` : ''}${role ? `<span class="plate-fig__role">${esc(role)}</span>` : ''}</figcaption>` : ''}
+        </figure>`;
+}
+
+/* The role card: a face, the role, one line, one affordance. The whole card is
+   the link, so the photograph is the tap target rather than a word after it. */
+function roleCard(role) {
+  const base = `assets/portrait/${role.face}`;
+  return `<a class="role-card" href="${role.href}">
+          <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}"
+            sizes="(max-width: 980px) 44vw, 22vw" width="400" height="500"
+            alt="${esc(role.name)}" loading="lazy" decoding="async"></span>
+          <span class="role-card__name">${esc(role.name.replace(/^Strata /, ''))}</span>
+          <span class="role-card__one">${esc(role.one)}</span>
+          <span class="role-card__go">Read more ${arrow}</span>
+        </a>`;
+}
+
+/* A real, named person from the board, mounted as a plate. One file per person,
+   already cropped 3:4 around their own face. */
+function platePerson(p, sizes, { caption = true, cls = '' } = {}) {
+  return `<figure class="plate-fig${cls ? ' ' + cls : ''}">
+          <span class="plate-fig__frame"><img src="assets/${p.file}"
+            alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640"
+            sizes="${sizes}" loading="lazy" decoding="async"></span>
+          ${caption ? `<figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>` : ''}
+        </figure>`;
+}
+
 /* ------------------------------------------------------------------ home --
    The order on this page is the incumbent's own, top to bottom: the hero, the
    team behind your team, the three headline figures, the difference, the
@@ -653,31 +721,41 @@ const PAGES = {};
    the remaining six statements all live on the pages that own them, and are
    linked from here. */
 PAGES['index.html'] = () => {
-  // the four roles the incumbent leads with, in its own order
+  /* The four roles the incumbent leads with, in its own order, each carrying the
+     photograph it pairs with that role. Built from STRATA_ROLES so a role rename
+     can never leave a card pointing at the wrong face. */
   const HOME_ROLES = [
-    'role-executive-assistant.html', 'role-accountant.html',
-    'role-administrative-specialist.html', 'role-customer-care.html',
-  ].map(h => STRATA_ROLES.find(r => r.href === h)).filter(Boolean);
+    'role-administrative-specialist.html', 'role-accountant.html',
+    'role-executive-assistant.html', 'role-compliance-specialist.html',
+  ].map(h => ({ ...STRATA_ROLES.find(r => r.href === h), face: ROLE_FACE[h] }))
+    .filter(r => r.href && r.face);
 
-  const rows = [
-    ['Operating since', 'April 2019'],
-    ['Placements', '500+'],
-    ['Client retention rate', '98%'],
-    ['Specialist roles', '10'],
-    ['Delivery locations', 'AU · CA · PH'],
-  ];
+  /* Six of the nineteen, chosen for breadth of function rather than appearance:
+     human resources, training, accounting, administration, technology and client
+     success. The full register of named people is further down the page. */
+  const STRIP = ['anna-marie-david', 'mary-ann-pineda', 'jahaziel-beltran',
+    'desika-mundia', 'riel-lacsamana', 'patricia-puno']
+    .map(s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`))).filter(Boolean);
+
+  const bySlug = s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`));
+  /* The two people who carry the middle of the page. The training manager stands
+     beside the training claim and the accounting manager beside the capacity
+     claim, so the argument is made by the person who actually does the work
+     rather than by a graphic. */
+  const FEATURE_TRAINING = bySlug('mary-ann-pineda');
+  const FEATURE_ACCOUNTS = bySlug('jahaziel-beltran');
 
   const stats = [
     ['500+', 'Placements', 'Since April 2019'],
     ['98%', 'Retention rate', 'Across both countries'],
-    ['10+', 'Industries served', 'Strata and property management'],
+    ['10+', 'Specialist roles', 'Strata and property'],
   ];
 
   const steps = [
-    ['Book a discovery call', 'A free 30-minute call with our solutions team to share your staffing needs and goals.'],
-    ['We design your solution', 'A tailored offshore capacity plan &mdash; the right roles, skills and strata platforms for your business.'],
-    ['Meet your offshore team', 'We select, vet and purpose-train your staff on strata operations, so they are ready from day one.'],
-    ['Scale with confidence', 'Your team integrates into your workflows, lifting capacity without proportional overhead.'],
+    ['Book a discovery call', 'A free thirty minutes on the work that is not getting done.'],
+    ['We design your solution', 'The roles, skills and platforms that fit your agency.'],
+    ['Meet your offshore team', 'Selected, vetted, then purpose-trained on strata.'],
+    ['Scale with confidence', 'Capacity rises. Overhead does not.'],
   ];
 
   return page({
@@ -692,32 +770,33 @@ PAGES['index.html'] = () => {
         <div class="wrap">
           <div class="cover__main">
             <h1 class="display">Build your Strata Staff Global ${mark('offshore')} team.</h1>
-            <p class="lede">Strata-trained professionals who expand your capacity, streamline daily operations and help your business grow with confidence. Serving Australian and Canadian strata agencies since April 2019.</p>
+            <p class="lede">Strata-trained professionals who expand your capacity and take on the work that is not getting done. Serving Australian and Canadian agencies since April 2019.</p>
             <div class="cover__acts">
-              <a class="btn btn--lg" href="contact.html#capacity">Take the capacity test ${arrow}</a>
-              <a class="btn2" href="contact.html#book">Talk to us</a>
+              <a class="btn btn--lg" href="contact.html#book">Book a free discovery call ${arrow}</a>
+              <a class="btn2" href="solutions.html">See the ten roles</a>
             </div>
             <p class="cover__ref">
-              <span class="ref">No obligation &middot; see where your team can unlock capacity</span>
+              <span class="ref">Thirty minutes &middot; no obligation</span>
               <span class="ref">AU <a class="link" href="tel:${TEL_AU_H}">${TEL_AU_D}</a></span>
               <span class="ref">CA <a class="link" href="tel:${TEL_CA_H}">${TEL_CA_D}</a></span>
               <span class="ref"><a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a></span>
             </p>
           </div>
           <aside class="cover__aside">
-            <table class="sched sched--particulars">
-              <caption class="note">At a glance</caption>
-              <tbody>${schRows(rows)}</tbody>
-            </table>
-            <div class="stamp-wrap">${stamp(['Strata-trained', 'Ready day one'], 'stamp--lg', '-3.2deg')}</div>
-            <p class="note" style="margin-top:1.6rem;display:flex;align-items:center;gap:.7rem">
+            ${plateRole('administrative-specialist', 'A Strata Staff Global administrative specialist', '(max-width: 980px) 64vw, 30vw', { role: 'Strata Administrative Specialist', lazy: false })}
+            <p class="note cover__aside-note">
               <img src="assets/flag-au.svg" alt="" width="22" height="16" loading="lazy">
               <img src="assets/flag-ca.svg" alt="" width="22" height="16" loading="lazy">
-              Australia &amp; Canada
+              Trained in Angeles City &amp; San Fernando
             </p>
           </aside>
         </div>
       </section>
+
+      <section class="faces" aria-label="Members of the Strata Staff Global team">
+${STRIP.map(p => `        <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">`).join('\n')}
+      </section>
+      <p class="faces__cap">Six of the nineteen specialists on our board &mdash; human resources, training, accounting, administration, technology and client success. <a class="link" href="team.html">Meet all nineteen</a></p>
 
       <div class="field-marker">
         <p>Every placement is trained on strata legislation and thirteen-plus strata platforms before they touch your portfolio.</p>
@@ -725,11 +804,13 @@ PAGES['index.html'] = () => {
 
 ${item({
       id: 'team', title: 'Meet the team behind your team',
-      lede: 'Skilled professionals, trained in strata workflows and ready to support your agency.',
+      lede: 'Four of the ten roles, each purpose-trained on strata operations and on the platforms you already run before they touch your portfolio.',
       wide: true,
       body: `
-        ${optionsList(HOME_ROLES.map(r => ({ href: r.href, name: r.name, desc: r.one })))}
-        <p style="margin-top:2rem"><a class="btn2" href="solutions.html">See all ten roles and both service lines ${arrow}</a></p>`,
+        <div class="roles">
+${HOME_ROLES.map(r => '          ' + roleCard(r)).join('\n')}
+        </div>
+        <p style="margin-top:2.4rem"><a class="btn2" href="solutions.html">See all ten roles and both service lines ${arrow}</a></p>`,
     })}
 
       <section class="band">
@@ -742,20 +823,36 @@ ${item({
 
 ${item({
       id: 'difference', title: 'The Strata Staff Difference',
-      lede: 'High-performing global teams that are strata trained and ready, able to understand the dynamics and ever-changing requirements of strata agencies.',
       wide: true,
       body: `
-        <div class="trio">
-          <div><h3>Strata-trained, not generalist</h3><p>Trained in strata operations and in Australian and Canadian strata legislation, not in generic back-office work.</p></div>
-          <div><h3>Capacity without the overhead</h3><p>Seats added to the work that is growing, without a proportional increase in the cost of the business.</p></div>
-          <div><h3>Ready on the platforms you run</h3><p>Thirteen or more strata platforms, so ramp-up is measured in days rather than in months.</p></div>
+        <div class="duo" style="padding:0">
+          <div class="duo__a">
+            <ul class="points">
+              <li><h3>Strata-trained, not generalist</h3><p>Trained in strata operations and in Australian and Canadian legislation, not in generic back-office work.</p></li>
+              <li><h3>Capacity without the overhead</h3><p>Seats added to the work that is growing, without a proportional rise in the cost base.</p></li>
+              <li><h3>Ready on the platforms you run</h3><p>Thirteen or more strata platforms, so ramp-up is measured in days rather than in months.</p></li>
+            </ul>
+          </div>
+          <div class="duo__b">
+            ${platePerson(FEATURE_TRAINING, '(max-width: 980px) 60vw, 30vw', { cls: 'plate-fig--beside' })}
+            <p class="note" style="margin-top:1.3rem">Our training and development manager writes and runs the Foundation Training Program that every specialist is endorsed against.</p>
+          </div>
         </div>`,
     })}
 
 ${item({
       id: 'what-we-do', title: 'Tailored &amp; Strategic Offshore Capacity Solutions For The Strata Industry',
-      lede: 'Capacity solutions that offset rising staff and operating costs, so revenue moves up rather than sideways. The mix of roles is decided by your lot count, your portfolio and the work that is not getting done &mdash; then trained, then placed.',
-      body: `<p><a class="btn2" href="solutions.html">See the roles and what each covers ${arrow}</a></p>`,
+      wide: true,
+      body: `
+        <div class="duo" style="padding:0">
+          <div class="duo__a">
+            ${platePerson(FEATURE_ACCOUNTS, '(max-width: 980px) 60vw, 30vw', { cls: 'plate-fig--beside' })}
+          </div>
+          <div class="duo__b">
+            <p class="prose">Capacity that offsets rising staff and operating costs, so revenue moves up rather than sideways. The mix of roles is decided by your lot count, your portfolio and the work that is not getting done &mdash; then trained, then placed.</p>
+            <p style="margin-top:1.8rem"><a class="btn2" href="solutions.html">See the roles and what each covers ${arrow}</a></p>
+          </div>
+        </div>`,
     })}
 
 ${item({
@@ -770,12 +867,13 @@ ${item({
 
 ${item({
       id: 'technology', title: 'Strata Technology Capabilities',
-      lede: 'Our familiarity with the strata platforms you already run works to your advantage. Your staff know the software on day one, so ramp-up is measured in days rather than in months.',
+      lede: 'Your staff already know the software you run, so ramp-up is measured in days rather than in months.',
       wide: true,
       body: `
-        <ul class="tasks">${TASK_LEDGER.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
-        <p class="note" style="margin-top:1.6rem">Thirteen or more strata platforms in daily use, including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ and Smata. The platform wall and the role-by-role breakdown are on the solutions page.</p>
-        <p style="margin-top:1.4rem"><a class="btn2" href="solutions.html">See the platforms and the ten roles ${arrow}</a></p>`,
+        <div class="plats">
+          ${PLATFORMS.map(p => `<div class="plat"><img src="assets/${p[0]}" alt="${esc(p[1])}" loading="lazy" decoding="async"><span class="plat__cap">${esc(p[1])}</span></div>`).join('\n          ')}
+        </div>
+        <p style="margin-top:1.8rem"><a class="btn2" href="solutions.html">See the platforms and the ten roles ${arrow}</a></p>`,
     })}
 
 ${item({
@@ -796,6 +894,24 @@ ${item({
         </div>
         <p style="margin-top:2rem"><a class="btn2" href="testimonials.html">Read all nine statements ${arrow}</a></p>`,
     })}
+
+      <section class="item item--plain" id="people">
+        <div class="item__wrap">
+          <div class="item__head">
+            <h2 class="display">The people who do the work</h2>
+            <p class="item__lede">The team behind every placement, by name and by role: the trainers who write the program, the managers who run delivery, and the leaders who look after your staff once they are in post.</p>
+          </div>
+          <div class="item__body item__body--wide">
+            <div class="wall">
+${PEOPLE.map(p => `              <figure>
+                <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">
+                <figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>
+              </figure>`).join('\n')}
+            </div>
+            <p style="margin-top:2rem"><a class="btn2" href="team.html">See the whole board and how they are trained ${arrow}</a></p>
+          </div>
+        </div>
+      </section>
 ${resolutionBlock()}
     </main>`,
   });
@@ -903,7 +1019,12 @@ ${phead({
       ref: `Item ${role.no} &mdash; ${line.name}`,
       title: esc(role.name),
       lede: role.one,
-      aside: `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp([line.kind === 'strata' ? 'Strata' : 'Property mgmt', 'specialist'], 'stamp--sm', '-3.4deg')}</div>`,
+      /* Eight of the ten roles have one of the company's own role photographs. The
+       other two fall back to the stamp, so no page is left with an empty column
+       and none borrows a face belonging to a different role. */
+    aside: ROLE_FACE[role.href]
+      ? `<div class="phead__plate">${plateRole(ROLE_FACE[role.href], `A Strata Staff Global ${role.name} at work`, '(max-width: 980px) 60vw, 30vw', { lazy: false })}</div>`
+      : `<div class="stamp-wrap" style="padding-top:0;justify-content:flex-end">${stamp([line.kind === 'strata' ? 'Strata' : 'Property mgmt', 'specialist'], 'stamp--sm', '-3.4deg')}</div>`,
     })}
       <section class="item" data-item="01">
         <div class="item__wrap">
@@ -1280,13 +1401,10 @@ ${phead({
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">The four office bearers</h2></div>
           <div class="item__body item__body--wide">
-            <div class="seals" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-              ${EXECUTIVES.map(e => `<figure class="seal">
-                <img src="assets/${e.img}" alt="${esc(e.n)}" width="908" height="1671" loading="lazy" decoding="async" style="width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:top;border:1px solid var(--rule)">
-                <figcaption class="seal__cap seal__cap--person" style="margin-top:1rem">
-                  <b class="exec__name">${esc(e.n)}</b>
-                  <span class="seal__role">${esc(e.r)}</span>
-                </figcaption>
+            <div class="roles">
+              ${EXECUTIVES.map(e => `<figure class="plate-fig">
+                <span class="plate-fig__frame"><img src="assets/exec/${e.img}-400.webp" srcset="assets/exec/${e.img}-400.webp 400w, assets/exec/${e.img}-800.webp 800w" sizes="(max-width: 640px) 44vw, 23vw" width="400" height="500" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
+                <figcaption><span class="plate-fig__name">${esc(e.n)}</span><span class="plate-fig__role">${esc(e.r)}</span></figcaption>
               </figure>`).join('\n              ')}
             </div>
           </div>
@@ -1334,12 +1452,15 @@ ${phead({
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">Photographic register</h2>
-            <p class="item__lede">Portraits from the company&rsquo;s own gallery, shown without name pairings: this rebuild could not verify each portrait against each name, and mislabelling a colleague would be worse than leaving them apart.</p></div>
+            <p class="item__lede">The board, by name and by role &mdash; the people who train, manage and support every specialist we place.</p></div>
           <div class="item__body item__body--wide">
-            <div class="platwall">
-              ${TEAM_PHOTOS.map((p, i) => `<figure><img src="assets/${p}" alt="" width="163" height="300" loading="lazy" decoding="async"><figcaption>Plate ${String(i + 1).padStart(2, '0')}</figcaption></figure>`).join('\n              ')}
+            <div class="wall">
+${PEOPLE.map(p => `              <figure>
+                <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">
+                <figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>
+              </figure>`).join('\n')}
             </div>
-            <p class="note" style="margin-top:1.2rem">Nineteen plates stand against twenty names in the register, and the filenames do not map reliably on their own, so the pairs are left apart.</p>
+            <p class="note" style="margin-top:1.8rem">Nineteen portraits carry a published name and role. The twentieth name in the register appears on the company&rsquo;s own gallery with another officer&rsquo;s photograph, so she is left out here rather than shown under a face that is not hers.</p>
           </div>
         </div>
       </section>
@@ -1817,6 +1938,10 @@ ${optionsList([
 /* ============================================================ the render == */
 const POSTS = await readJSON('posts.json');
 const RAW_JOBS = await readJSON('jobs.json');
+/* The board: nineteen real portraits with the name/role pairing the incumbent
+   publishes itself. Written by the asset pass, not by hand, so the pairing cannot
+   drift from the images that were actually downloaded. */
+const PEOPLE = (await readJSON('team.json')).people;
 const JOBS = RAW_JOBS.map(j => ({
   ...j,
   slug: { 'junior-accountant': 'junior-accountant', 'mid-level-accountant-nightshift': 'mid-level-accountant', 'apply__senior-accountant': 'senior-accountant', 'hr-assistant': 'hr-assistant' }[j.file],
