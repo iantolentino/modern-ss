@@ -604,6 +604,43 @@ recovered from version control, and the pruner now prints
 "present but unreferenced" and leaves the files alone. Removal is a decision for a
 human or a commit, where it is visible and reversible.
 
+### Every file, rather than every set
+
+The paragraph above was the whole of the provenance record for most of this build,
+and it is a claim about a *set*: it cannot be checked against a file, so it cannot
+fail when one file is not what it says. `assets/PROVENANCE.json` now carries one row
+per shipped asset — the URL it came from, or its authorship, and for the derived
+families the record the mapping came from. `strata-scan/provenance.mjs` generates it
+and exits non-zero on an unresolved row. Current result: **93 assets, 92 with a
+source URL, 1 authored, 0 unresolved.**
+
+The mapping is derived from records the asset passes already wrote, not retyped:
+`assets.mjs` (shipped name → upload path, for brand, membership marks, platform
+logos, executive originals and client portraits), `raw-team/roster.json` (the raw
+stem, published name and role of the nineteen officers), `optimise.py`'s `ROLE_ART`
+and `EXECS` (which `Model-N` became which role), `fetch-post-images.mjs`'s
+`FEATURED` (each post's own `og:image`), and `content/post-images.json` (the short
+shipped stem → full post slug). The team portraits use the incumbent's own
+name-adjacency: the caption that follows each portrait in its gallery is the pairing
+it publishes, and that is where `people/anna-marie-david.webp` ←
+`2024/05/Anna-full-163x300.jpg` comes from.
+
+**The mapping had to be stated, not inferred, and the first attempt proved it.** It
+slug-matched shipped basenames against every URL in the scan and reported **all 93
+assets as sourceless**, because the shipped names were chosen for this site rather
+than copied from the source: `Model-1.webp` shipped as `portrait/accountant-400.webp`,
+`Flag_of_Australia_converted.svg` as `flag-au.svg`, `Paul-Cvetko-Lueger-150x150.jpg`
+as `client-paul-cvetko.jpg`. Deriving the name was never going to work; the passes
+had already written down what they did, and the record had to read that.
+
+Three bugs in the generator are worth keeping, because all three were silent.
+Slugging the shipped *path* rather than its basename (`people/anna-marie-david` never
+matches an index keyed `anna-marie-david`). Hand-counting a character offset into
+`'ROLE_ART = {'` — eleven instead of twelve, producing `return {{` rather than a
+wrong answer. And treating `optimise.py`'s `ROLE_ART` as JavaScript when it is a
+Python dict carrying `#` comments. The offsets are computed and the dicts are read
+with a regex now.
+
 ### The build guard
 
 `build.mjs` renders every page into memory and refuses to write anything if any
