@@ -711,6 +711,9 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    aspect -- nothing is cropped and nothing is letterboxed. */
 .post-fig--hero { max-width: 760px; margin: 0 0 2.6rem; aspect-ratio: auto; }
 .post-fig--hero img { height: auto; }
+/* A hero that is the point of its section rather than an illustration beside one,
+   so it runs the full measure instead of stopping at a reading width. */
+.post-fig--wide { max-width: none; }
 
 /* ================================================================= seals == */
 .seals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px; }

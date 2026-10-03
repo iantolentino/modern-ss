@@ -756,12 +756,13 @@ function execPlate(e, sizes = '(max-width: 640px) 44vw, 23vw') {
    decorative; a fabricated description would be a claim about a picture nobody
    here has looked at. */
 let POST_IMG = {};
-function postFigure(slug, sizes, { hero = false } = {}) {
+function postFigure(slug, sizes, { hero = false, wide = false } = {}) {
   const im = POST_IMG[slug];
   if (!im || !im.variants.length) return '';
   const widest = im.variants[0];
   const srcset = im.variants.map(v => `${v.file} ${v.w}w`).join(', ');
-  return `<span class="post-fig${hero ? ' post-fig--hero' : ''}"><img src="${widest.file}" ${im.variants.length > 1 ? `srcset="${srcset}" sizes="${sizes}" ` : ''}width="${widest.w}" height="${widest.h}" alt="" loading="lazy" decoding="async"></span>`;
+  const cls = `post-fig${hero ? ' post-fig--hero' : ''}${wide ? ' post-fig--wide' : ''}`;
+  return `<span class="${cls}"><img src="${widest.file}" ${im.variants.length > 1 ? `srcset="${srcset}" sizes="${sizes}" ` : ''}width="${widest.w}" height="${widest.h}" alt="" loading="lazy" decoding="async"></span>`;
 }
 
 /* ------------------------------------------------------------------ home --
@@ -1722,6 +1723,14 @@ ${phead({
       <tr><td class="k">Employment</td><td class="v n">Permanent</td></tr>
     </tbody></table>`,
   })}
+      <section class="item item--plain" aria-label="Our office">
+        <div class="item__wrap">
+          <div class="item__body item__body--wide">
+            ${postFigure('strata-staff-unveils-its-upgraded-marisol-office', '(max-width: 900px) 92vw, 1100px', { hero: true, wide: true })}
+            <p class="faces__cap" style="padding-left:0">Our Angeles City office, where these roles are based.</p>
+          </div>
+        </div>
+      </section>
       <section class="item" data-item="01">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>01</p>
@@ -1733,6 +1742,18 @@ ${phead({
       <section class="item" data-item="02">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
+          <div class="item__head"><h2 class="display">Who you would work with</h2>
+            <p class="item__lede">The people and culture team, and one of the team leaders you would report to day to day.</p></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${['anna-marie-david', 'trixy-bulaun', 'neil-dane-puno', 'rei-sanchez'].map(personBySlug).filter(Boolean).map(p => platePerson(p, '(max-width: 640px) 44vw, 23vw')).join('\n              ')}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
           <div class="item__head"><h2 class="display">Apply</h2>
             <p class="item__lede">Tell us who you are and which role you are applying for. The people and culture team reviews every application.</p></div>
           <div class="item__body item__body--wide">
@@ -1783,6 +1804,16 @@ ${phead({
 ${ctaBlock()}
     </main>`,
 });
+
+/* Who each vacancy sits with, taken from the published board rather than invented:
+   three of the four openings are accounting roles under the accounting manager and
+   accounting officer, and the HR assistant sits with people and culture. */
+const JOB_TEAM = {
+  'senior-accountant': ['jahaziel-beltran', 'sarahjane-manliclic'],
+  'mid-level-accountant': ['jahaziel-beltran', 'sarahjane-manliclic'],
+  'junior-accountant': ['jahaziel-beltran', 'sarahjane-manliclic'],
+  'hr-assistant': ['anna-marie-david', 'trixy-bulaun'],
+};
 
 function jobPage(j) {
   const L = j.lines;
@@ -1847,6 +1878,17 @@ ${phead({
       <section class="item" data-item="02">
         <div class="item__wrap">
           <p class="item__no"><span class="sr">Item </span>02</p>
+          <div class="item__head"><h2 class="display">Who this role sits with</h2></div>
+          <div class="item__body item__body--wide">
+            <div class="roles">
+              ${(JOB_TEAM[j.slug] || []).map(personBySlug).filter(Boolean).map(p => platePerson(p, '(max-width: 640px) 44vw, 23vw')).join('\n              ')}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="item" data-item="03">
+        <div class="item__wrap">
+          <p class="item__no"><span class="sr">Item </span>03</p>
           <div class="item__head"><h2 class="display">About the job</h2></div>
           <div class="item__body item__body--wide"><div class="doc-body">${about.map(p => `<p>${esc(p)}</p>`).join('')}</div></div>
         </div>
