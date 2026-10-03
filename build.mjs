@@ -318,12 +318,17 @@ const roleTable = (roles, { thumbs = false } = {}) => `
 /* A ruled list of links. Rows that carry a reference number get the leading
    column; a list where no row has one drops the column *and* the empty span, so
    three children go into three columns. Emitting the empty span anyway pushed
-   the arrow onto an implicit second grid row and doubled every row's height. */
+   the arrow onto an implicit second grid row and doubled every row's height.
+   A row may also carry `img`, pre-rendered markup for a leading plate. The column
+   is declared whenever *any* row has one and an empty span holds the place in the
+   rows that do not, so the names stay on one vertical line down the list. */
 const optionsList = (rows, cls = '') => {
   const anyNo = rows.some(r => r.no);
+  const anyImg = rows.some(r => r.img);
   return `
-      <div class="opts${anyNo ? '' : ' opts--plain'}${cls}">
+      <div class="opts${anyNo ? '' : ' opts--plain'}${anyImg ? ' opts--fig' : ''}${cls}">
         ${rows.map(r => `<a class="opt" href="${r.href}">
+          ${anyImg ? `<span class="opt__fig">${r.img || ''}</span>` : ''}
           ${anyNo ? `<span class="opt__no">${r.no || ''}</span>` : ''}
           <span class="opt__name">${esc(r.name)}</span>
           <span class="opt__desc">${esc(r.desc)}</span>
@@ -729,6 +734,29 @@ function execPlate(e, sizes = '(max-width: 640px) 44vw, 23vw') {
                 <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}" sizes="${sizes}" width="400" height="500" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
                 <figcaption><span class="plate-fig__name">${esc(e.n)}</span><span class="plate-fig__role">${esc(e.r)}</span></figcaption>
               </figure>`;
+}
+
+/* A post's featured image, looked up by the post's slug. Populated from
+   content/post-images.json just before the pages are rendered.
+
+   Mounted `object-fit: contain` on a tinted ground rather than cropped to a
+   common box. Four of the eight are designed announcement panels carrying their
+   own type -- `as-we-enter-2025` measures 2.7 mean edge energy against 37.3 for
+   the one clear photograph, i.e. almost no detail, which is what a flat panel
+   looks like. Cropping a 1:1 panel to a banner would cut its type out.
+
+   `alt=""` on purpose: these images carry no information the surrounding text
+   does not, and we have not seen them, so writing a description would mean
+   inventing one. An empty alt is the honest statement that the image is
+   decorative; a fabricated description would be a claim about a picture nobody
+   here has looked at. */
+let POST_IMG = {};
+function postFigure(slug, sizes, { hero = false } = {}) {
+  const im = POST_IMG[slug];
+  if (!im || !im.variants.length) return '';
+  const widest = im.variants[0];
+  const srcset = im.variants.map(v => `${v.file} ${v.w}w`).join(', ');
+  return `<span class="post-fig${hero ? ' post-fig--hero' : ''}"><img src="${widest.file}" ${im.variants.length > 1 ? `srcset="${srcset}" sizes="${sizes}" ` : ''}width="${widest.w}" height="${widest.h}" alt="" loading="lazy" decoding="async"></span>`;
 }
 
 /* ------------------------------------------------------------------ home --
@@ -1587,6 +1615,7 @@ ${phead({
 ${optionsList(POSTS.map((p, i) => ({
     href: `post-${p.file}.html`, no: String(i + 1).padStart(2, '0'), name: p.title,
     desc: `${p.cat} · ${p.date} — ${p.summary}`,
+    img: postFigure(p.file, '(max-width: 640px) 76px, (max-width: 980px) 104px, 120px'),
   })))}
           </div>
         </div>
@@ -1614,6 +1643,7 @@ ${phead({
           <p class="item__no"><span class="sr">Item </span>01</p>
           <div class="item__head"><h2 class="display">The paper</h2></div>
           <div class="item__body item__body--wide">
+            ${postFigure(p.file, '(max-width: 900px) 92vw, 760px', { hero: true })}
             <div class="doc-body">
               ${paras.map(t => `<p>${esc(t)}</p>`).join('\n              ')}
             </div>
@@ -1979,6 +2009,11 @@ ${optionsList([
 
 /* ============================================================ the render == */
 const POSTS = await readJSON('posts.json');
+/* Each post's featured image, as the incumbent publishes it, normalised uncropped.
+   Keyed by slug so a post page can ask for its own by name. */
+POST_IMG = Object.fromEntries(
+  Object.values((await readJSON('post-images.json')).images).map(v => [v.slug, v]),
+);
 const RAW_JOBS = await readJSON('jobs.json');
 /* The board: nineteen real portraits with the name/role pairing the incumbent
    publishes itself. Written by the asset pass, not by hand, so the pairing cannot

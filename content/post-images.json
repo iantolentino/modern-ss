@@ -1,0 +1,159 @@
+{
+  "note": "Featured images for the eight posts, normalised uncropped. Widths are the real pixel widths; the build builds srcset from this.",
+  "images": {
+    "a-new-symbol": {
+      "slug": "as-we-enter-2025-a-new-symbol-will-lead-the-way",
+      "srcW": 1200,
+      "srcH": 675,
+      "ratio": 1.7778,
+      "variants": [
+        {
+          "w": 1200,
+          "h": 675,
+          "file": "assets/post/a-new-symbol-1200.webp",
+          "bytes": 9122
+        },
+        {
+          "w": 640,
+          "h": 360,
+          "file": "assets/post/a-new-symbol-640.webp",
+          "bytes": 4806
+        }
+      ]
+    },
+    "client-partnerships": {
+      "slug": "premium-in-strategic-client-partnerships-and-engagement",
+      "srcW": 1024,
+      "srcH": 785,
+      "ratio": 1.3045,
+      "variants": [
+        {
+          "w": 1024,
+          "h": 785,
+          "file": "assets/post/client-partnerships-1024.webp",
+          "bytes": 191902
+        },
+        {
+          "w": 640,
+          "h": 491,
+          "file": "assets/post/client-partnerships-640.webp",
+          "bytes": 76580
+        }
+      ]
+    },
+    "connect-q1-q2-2024": {
+      "slug": "strata-staff-connect-1st-2nd-quarter-2024",
+      "srcW": 600,
+      "srcH": 456,
+      "ratio": 1.3158,
+      "variants": [
+        {
+          "w": 600,
+          "h": 456,
+          "file": "assets/post/connect-q1-q2-2024-600.webp",
+          "bytes": 19862
+        }
+      ]
+    },
+    "connect-q3-2024": {
+      "slug": "strata-staff-connect-3rd-quarter-2024",
+      "srcW": 1024,
+      "srcH": 772,
+      "ratio": 1.3264,
+      "variants": [
+        {
+          "w": 1024,
+          "h": 772,
+          "file": "assets/post/connect-q3-2024-1024.webp",
+          "bytes": 38980
+        },
+        {
+          "w": 640,
+          "h": 482,
+          "file": "assets/post/connect-q3-2024-640.webp",
+          "bytes": 23324
+        }
+      ]
+    },
+    "joins-sca-sa": {
+      "slug": "strata-staff-joins-sca-south-australia",
+      "srcW": 800,
+      "srcH": 800,
+      "ratio": 1.0,
+      "variants": [
+        {
+          "w": 800,
+          "h": 800,
+          "file": "assets/post/joins-sca-sa-800.webp",
+          "bytes": 31186
+        },
+        {
+          "w": 640,
+          "h": 640,
+          "file": "assets/post/joins-sca-sa-640.webp",
+          "bytes": 23158
+        }
+      ]
+    },
+    "joins-cci-bc": {
+      "slug": "strata-staff-joins-the-canadian-condominium-institute-cci-british-columbia-chapter",
+      "srcW": 2048,
+      "srcH": 2048,
+      "ratio": 1.0,
+      "variants": [
+        {
+          "w": 1200,
+          "h": 1200,
+          "file": "assets/post/joins-cci-bc-1200.webp",
+          "bytes": 53962
+        },
+        {
+          "w": 640,
+          "h": 640,
+          "file": "assets/post/joins-cci-bc-640.webp",
+          "bytes": 26720
+        }
+      ]
+    },
+    "marisol-office": {
+      "slug": "strata-staff-unveils-its-upgraded-marisol-office",
+      "srcW": 1024,
+      "srcH": 512,
+      "ratio": 2.0,
+      "variants": [
+        {
+          "w": 1024,
+          "h": 512,
+          "file": "assets/post/marisol-office-1024.webp",
+          "bytes": 58190
+        },
+        {
+          "w": 640,
+          "h": 320,
+          "file": "assets/post/marisol-office-640.webp",
+          "bytes": 31328
+        }
+      ]
+    },
+    "trusted-sca-member": {
+      "slug": "we-are-a-trusted-sca-member",
+      "srcW": 1536,
+      "srcH": 1536,
+      "ratio": 1.0,
+      "variants": [
+        {
+          "w": 1200,
+          "h": 1200,
+          "file": "assets/post/trusted-sca-member-1200.webp",
+          "bytes": 90006
+        },
+        {
+          "w": 640,
+          "h": 640,
+          "file": "assets/post/trusted-sca-member-640.webp",
+          "bytes": 35776
+        }
+      ]
+    }
+  }
+}

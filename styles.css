@@ -680,6 +680,27 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .opt:hover .opt__go { transform: translateX(4px); color: var(--blue); }
 .opt--plus .opt__no { color: var(--teal); }
 
+/* An index row that carries a plate. The image column is declared whenever any
+   row in the list has one, and a row without holds the place with an empty span,
+   so the titles stay on one vertical line down the list.
+   4/3 is the plate box because that is the median aspect of the eight featured
+   images (they run 1:1 to 2:1). The image is `contain`, not `cover`: four of the
+   eight are designed panels carrying their own type, and cropping a square panel
+   to a landscape box would cut that type out. The tinted ground takes up the
+   difference, which is what a plate mounted on a sheet looks like. */
+.opts--fig .opt { grid-template-columns: 120px 74px minmax(0, 1fr) minmax(0, 1.35fr) 30px; align-items: center; }
+.opt__fig { display: block; }
+.post-fig {
+  display: block; background: var(--sheet-2);
+  border: 1px solid var(--rule); overflow: hidden;
+}
+.post-fig img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.opt__fig .post-fig { aspect-ratio: 4 / 3; }
+/* On the post's own page the image is the subject, so it runs at its natural
+   aspect -- nothing is cropped and nothing is letterboxed. */
+.post-fig--hero { max-width: 760px; margin: 0 0 2.6rem; aspect-ratio: auto; }
+.post-fig--hero img { height: auto; }
+
 /* ================================================================= seals == */
 .seals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px; }
 .seal { text-align: center; }
@@ -849,6 +870,13 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   .faces--eight { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .wall { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* Five columns beside a plate leaves the description about 280px wide, so the
+     row becomes a plate with its text stacked in the middle and the arrow held
+     out on the right where it still reads as a list. */
+  .opts--fig .opt { grid-template-columns: 104px minmax(0, 1fr) 30px; row-gap: .4rem; }
+  .opts--fig .opt__fig { grid-column: 1; grid-row: 1 / span 4; align-self: start; }
+  .opts--fig .opt__no, .opts--fig .opt__name, .opts--fig .opt__desc { grid-column: 2; }
+  .opts--fig .opt__go { grid-column: 3; grid-row: 1 / span 4; align-self: start; justify-self: end; }
 }
 /* Nineteen plates in two columns is ten rows of scrolling: four and a half
    screens of the smallest viewport spent on one section. On a phone the register
@@ -1196,6 +1224,15 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .opt { grid-template-columns: 46px minmax(0, 1fr); row-gap: .4rem; }
   .opt__desc, .opt__go { grid-column: 2; }
   .opt__go { justify-self: start; }
+  /* A row with a plate stacks beside it instead: the plate holds the left column
+     across the text rows, so it lines up with the title it belongs to. The span is
+     stated rather than left implicit -- auto-placement would put the plate across
+     the first three rows and drop the arrow onto a fourth it did not cover. */
+  .opts--fig .opt { grid-template-columns: 76px minmax(0, 1fr); row-gap: .3rem; }
+  .opts--fig .opt__fig { grid-column: 1; grid-row: 1 / span 4; align-self: start; }
+  .opts--fig .opt__no, .opts--fig .opt__name,
+  .opts--fig .opt__desc, .opts--fig .opt__go { grid-column: 2; }
+  .opts--fig .opt__go { justify-self: start; }
   .foot__col { grid-column: span 6; }
   /* Label beside value, not above it: stacking the two addresses doubles the
      height of the tallest block in the footer for no gain in legibility. */
