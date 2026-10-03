@@ -1,5 +1,4 @@
-# Strata Staff Global — modern rebuild
-
+# Strata Staff Global — modern rebuild 
 A full rebuild of [stratastaffglobal.com](https://stratastaffglobal.com/) as a
 static site. No build step is needed to view it. The 40 HTML pages are committed
 as-is and work by opening `index.html`.
