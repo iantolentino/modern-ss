@@ -16,3 +16,6 @@ tools/_detect.json
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# commit-message scratch (PowerShell has no heredoc)
+_commitmsg.txt
