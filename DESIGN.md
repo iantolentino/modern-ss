@@ -1014,4 +1014,135 @@ end), `academy.html` (enrolment particulars and a form; the role tracks are on
 `role-pm-customer-care.html`, for which the incumbent publishes no photograph —
 those keep the stamp rather than borrowing another role's face.
 
+## 14. Faces: the portraits were framing on a centroid, not on a head
+
+Asked to make sure the faces are shown properly. Answering that honestly meant
+building a detector first, because the check I had was not measuring faces.
+
+### The check was wrong, and it said so twice
+
+The first version found a "face" with the YCbCr skin-tone test carried over from
+`faces.py`. On these photographs it returned a box spanning the **entire frame** at
+11–34% coverage, because that test also fires on warm walls, timber and beige office
+background. Built on it, the check reported **79 clipped faces**, none of which were
+clipped, and it reported them with confident per-file detail.
+
+It was replaced with OpenCV Haar cascades, frontal and profile, pooled over nine
+parameter sets and filtered by shape. One setting alone missed real faces — 11 of the
+19 officers — and loosening without the shape filter invents them, which is how an
+earlier run put "the face" of one officer in the top 12% of her portrait on the
+strength of a light fitting. A face in these frames is a substantial part of the
+picture, so a detection under a tenth of the height is not one.
+
+Two more bugs in the tooling, both caught by reading the output instead of trusting
+it:
+
+- The crop records are keyed by basename and the face boxes by path, so the join
+  matched **36 of 535** images — only the files sitting at the top of `assets/`. It
+  then announced, on that evidence, that no face was clipped.
+- Density was computed from `naturalWidth`. With a `srcset` of `w` descriptors and a
+  `sizes` attribute, Chrome reports `naturalWidth` already divided by the effective
+  density, so dividing by the CSS box width applies the correction twice and invents
+  softness. It called `accountant-400` — a 400×500 file in a 320×400 box — an upscale
+  at "0.73×". Eleven of the reported thirteen were this artefact. The real figure is
+  read from the file's own dimensions.
+
+A measurement tool that flatters the thing it measures is worse than no tool. Both
+of these reported success.
+
+### What the detector found
+
+**Seven of the nineteen officers, and four more portraits, were shipping with the top
+of the head cut off** — and the layout then removed another 3.1% in the 4:5 boxes.
+`neil-dane-puno` had 0.000 headroom where his source had 0.135.
+
+The cause was `frame()` in `strata-scan/optimise.py`:
+
+```python
+top = round((fy * H) - FACE_BIAS * ch)
+```
+
+`fy` is the **skin-tone centroid**, and it is dragged downward by the neck, the hands,
+and any warm background. For a subject in a light top it sat well below the face, the
+crop followed it down, and the head went off the top. Recording where a face *is* is
+not the same as knowing where a head *ends*.
+
+### The rule the material implies
+
+Rather than keep tuning the detector, every raw source was measured for where its
+head actually sits:
+
+| | Headroom in the raw, as a fraction of height |
+| --- | --- |
+| Minimum | **0.024** (`exec-trevor`) |
+| Median | **0.097** |
+| Maximum | 0.148 |
+
+All 31 sources keep the head inside the top 15%. The margin a brow needs above the
+detected box is larger than that, so the constraint is always active and **the window
+is top-anchored for this material**. That is the right answer rather than a
+workaround: these are portraits cropped from taller pictures, so the head is at the
+top and everything worth keeping is below it.
+
+Two sources — Mary Ann Pineda and Trevor — have the head at the very top of the
+download, where **no crop can create headroom**. They now sit at their source's floor
+instead of below it. `mary-ann-pineda` went from 0.008 to 0.064.
+
+Two selection bugs surfaced on the way, both the same mistake in different clothes:
+
+- **Largest detection wins** picked a torso over the face on `team-accountant`, whose
+  raw yields a face box at y 0.072–0.384 and a bigger torso at y 0.382–0.762.
+- **Largest in the upper half** still admitted a torso centred at 0.502 on
+  `carlo-andreu-tayag`, which is why his head shipped cut at 0.005 while his source
+  had room to spare.
+
+The rule is now **the highest plausible detection**, which is what a single-subject
+portrait implies: the head is the topmost face-like blob.
+
+### The circles
+
+`.stmt__sig img` carried `border-radius: 50%`, showing nine real clients through a
+round mask. A round crop is the avatar idiom, and an avatar is what you show when you
+have no photograph. We have the photographs; the corners come off a face for no reason
+but convention. The rule now reads:
+
+```css
+.stmt__sig img {
+  width: 68px; height: 68px; object-fit: cover;
+  border: 1px solid var(--rule); filter: saturate(.9);
+}
+```
+
+The only two circles left in the stylesheet are `.hole` (a punched hole) and
+`.perf::before/after` (perforation dots). Those are paper, not people.
+
+### The numbers
+
+| Measure | Before | After |
+| --- | --- | --- |
+| Portraits under 5% headroom (of 43) | 11 | **1** |
+| Portraits under 3.5% headroom | 7 | **1** |
+| Faces clipped by a box, 1440px and 390px | 79 *reported* | **0** |
+| Client faces behind a circular mask | 9 | **0** |
+| Face centre position, median | 38% (intended) | 35% (measured) |
+
+The one remaining tight portrait is Trevor, at 2.4%, which is his source's limit.
+
+### How to check this without trusting the detector
+
+`tools/face-verify.mjs` joins the browser's measured crop rectangles against the
+detected face boxes, and exits non-zero on a clipped or masked face. It reports the
+*tight* cases rather than hiding them, because a margin is not a failure.
+
+But it is a heuristic, so `tools/contact-sheet.py` renders every crop — using the real
+visible rectangles the browser reported, not a second guess at the CSS — and marks the
+detected face, for a person to look at. **Read the contact sheet, not the exit code.**
+If the blue outline is not on a face, the measurement is wrong rather than the crop,
+and that is exactly the failure this pair of tools is built to expose.
+
+Two sub-1× densities remain and both are source-limited: `marisol-office` is a 1024px
+original in a 1248px box and `connect-q1-q2-2024` a 600px original in a 758px box, with
+nothing larger published to serve. Recorded rather than hidden.
+
+
 

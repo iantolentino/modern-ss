@@ -177,6 +177,33 @@ node tools/post-check.mjs      # the rendered srcset agrees with the file's real
 node tools/imagery-audit.mjs   # which pages carry photography, and which say why not
 ```
 
+### Faces
+
+Every portrait is cropped so the head is in frame, and this is measured rather than
+assumed. `strata-scan/face-boxes.py` finds the face in each shipped file with OpenCV
+Haar cascades (frontal and profile, pooled over nine parameter sets and filtered by
+shape); `tools/face-check.ps1` drives headless Chrome over all 40 pages at two
+viewports and records the rectangle each image actually shows; and
+`tools/face-verify.mjs` joins the two and exits non-zero on a face that is clipped or
+behind a round mask.
+
+```
+python strata-scan/face-boxes.py                      # where the faces are
+powershell -File tools/face-check.ps1 -Viewports "1440x900,390x844"
+node tools/face-verify.mjs                            # 215 faces, 0 clipped, 0 masked
+```
+
+**The detector is a heuristic, so the check is a contact sheet.** Run
+`python tools/contact-sheet.py` to render every crop — using the browser's own
+measured rectangles — with the detected face outlined, and look at it. If the outline
+is not on a face the measurement is wrong rather than the crop, which is the failure
+the pair of tools exists to expose. The earlier skin-tone version of this check
+reported 79 clipped faces that were not clipped, and a key-mismatch bug in the join
+once tested 36 images out of 535 while announcing the site clean.
+
+Eleven of the 43 portraits were shipping with the head cut; one still is, at 2.4%,
+which is the limit of its own download. `DESIGN.md` §14 has the account.
+
 **Every file, not just every set.** `assets/PROVENANCE.json` carries one row per
 shipped asset — its source URL, or its authorship — because "all raster assets are
 the incumbent's own files" is a claim about a set and cannot fail when one file is
@@ -236,6 +263,20 @@ beside their own visible captions — carry an empty one.
   nothing the surrounding text does not, and nobody here has looked at them, so
   any description would have been invented. The named portraits are the exception
   and carry their name and role.
+- **Two portraits are cropped at their source's limit.** Trevor and Mary Ann
+  Pineda have the top of the head within 2.4% and 4.2% of the top of the file the
+  incumbent publishes. The re-crop puts them there rather than below it, but no
+  crop can create headroom the download does not contain; a larger original would
+  be needed.
+- **The face check is a heuristic.** It is an OpenCV Haar detector, not a
+  face-recognition model, and it is wrong on a minority of frames — which is why
+  it ships with a contact sheet to look at rather than only an exit code. An
+  earlier skin-tone version of the same check reported 79 clipped faces that were
+  not clipped.
+- **Two images are served slightly above their file width**, at 0.82× and 0.79×:
+  `marisol-office` (1024px original) and `connect-q1-q2-2024` (600px original).
+  Nothing larger is published upstream, so the alternatives are a softer image or
+  a narrower layout, and the layout was kept.
 - **`Strata Executive Assistant` has no page in the live sitemap**, though the
   navigation lists it. That role page is built only from real published phrases
   and its real five training modules.
