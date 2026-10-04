@@ -1,0 +1,74 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>face crop check</title></head>
+<body>
+<pre id="out">measuring...</pre>
+<script>
+/* What each photograph actually shows, after the box has had its way with it.
+ *
+ * The site crops in CSS -- `object-fit: cover` inside a fixed aspect box -- so what a
+ * visitor sees is a sub-rectangle of the source. This reports that sub-rectangle as
+ * fractions of the source, for every <img> on the page, so the skin-tone boxes from
+ * face-boxes.py can be tested against it. A face the box does not include is a face
+ * nobody sees, and no amount of "the file is fine" catches that.
+ *
+ * Emits one JSON object per line, prefixed CROP| so the joiner can find them.
+ */
+const q = new URLSearchParams(location.search);
+const [W, H] = (q.get('v') || '1440x900').split('x').map(Number);
+const PAGE = q.get('p') || 'index.html';
+
+const f = document.createElement('iframe');
+f.style.cssText = `width:${W}px;height:${H}px;position:absolute;left:-99999px;top:0;border:0`;
+f.src = '../' + PAGE;
+f.onload = () => {
+  const d = f.contentDocument, win = f.contentWindow;
+  const rows = [];
+  for (const img of d.querySelectorAll('img')) {
+    const cs = win.getComputedStyle(img);
+    const r = img.getBoundingClientRect();
+    const nw = img.naturalWidth, nh = img.naturalHeight;
+    const bw = r.width, bh = r.height;
+
+    // the src actually chosen: read currentSrc so a srcset pick is what is measured
+    let src = img.currentSrc || img.src || '';
+    src = src.split('/').pop().split('?')[0];
+
+    const row = {
+      page: PAGE, vw: W, src, nw, nh, bw: Math.round(bw * 10) / 10, bh: Math.round(bh * 10) / 10,
+      fit: cs.objectFit, pos: cs.objectPosition, radius: cs.borderRadius,
+    };
+
+    if (nw && nh && bw && bh) {
+      if (cs.objectFit === 'cover') {
+        const scale = Math.max(bw / nw, bh / nh);
+        const visW = bw / scale, visH = bh / scale;
+        // object-position is centred everywhere on this site; parse it anyway so the
+        // check stays honest if that ever stops being true
+        const [px, py] = (cs.objectPosition || '50% 50%').split(/\s+/);
+        const fx = px.endsWith('%') ? parseFloat(px) / 100 : 0.5;
+        const fy = py.endsWith('%') ? parseFloat(py) / 100 : 0.5;
+        const x0 = (nw - visW) * fx, y0 = (nh - visH) * fy;
+        row.vis = { x0: x0 / nw, x1: (x0 + visW) / nw, y0: y0 / nh, y1: (y0 + visH) / nh };
+        row.crop = {
+          w: Math.round((1 - visW / nw) * 1000) / 10,
+          h: Math.round((1 - visH / nh) * 1000) / 10,
+        };
+      } else {
+        // contain / fill / none: the whole source is shown, so nothing can be cut
+        row.vis = { x0: 0, x1: 1, y0: 0, y1: 1 };
+        row.crop = { w: 0, h: 0 };
+      }
+      // how many device pixels each rendered pixel gets: a 150px file in a 40px box
+      // is fine, the reverse is a soft face
+      row.density = Math.round((nw / bw) * 100) / 100;
+    }
+    rows.push(row);
+  }
+
+  const L = rows.map(r => 'CROP|' + JSON.stringify(r));
+  document.getElementById('out').textContent = L.join('\n');
+  fetch('/__probe', { method: 'POST', body: L.join('\n') }).catch(() => {});
+};
+document.body.appendChild(f);
+</script>
+</body></html>

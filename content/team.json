@@ -1,6 +1,6 @@
 {
   "note": "Portraits and the name/role pairing are the ones the incumbent publishes on its own team page. Maristella Gaton appears in that grid with another person's photograph, so she is deliberately absent here rather than mislabelled.",
-  "crop": "3:4, centred on the measured face position",
+  "crop": "3:4, framed on a detected face with the skull kept in frame. The face is placed FACE_BIAS down the window, but never so low that the head is cut; see frame() in strata-scan/optimise.py.",
   "people": [
     {
       "file": "people/anna-marie-david.webp",
@@ -8,7 +8,7 @@
       "role": "Human Resource Manager",
       "w": 480,
       "h": 640,
-      "faceY": 38.3
+      "faceY": 25.2
     },
     {
       "file": "people/trixy-bulaun.webp",
@@ -16,7 +16,7 @@
       "role": "HR Officer",
       "w": 480,
       "h": 640,
-      "faceY": 55.9
+      "faceY": 26.3
     },
     {
       "file": "people/neil-dane-puno.webp",
@@ -24,7 +24,7 @@
       "role": "HR Generalist",
       "w": 480,
       "h": 640,
-      "faceY": 44.9
+      "faceY": 28.1
     },
     {
       "file": "people/mary-ann-pineda.webp",
@@ -32,7 +32,7 @@
       "role": "Training and Development Manager",
       "w": 480,
       "h": 640,
-      "faceY": 41.7
+      "faceY": 25.8
     },
     {
       "file": "people/marey-iams-sarate.webp",
@@ -40,7 +40,7 @@
       "role": "Executive Assistant Lead Trainer",
       "w": 480,
       "h": 640,
-      "faceY": 62.9
+      "faceY": 25.4
     },
     {
       "file": "people/jeremiah-feliciano.webp",
@@ -48,7 +48,7 @@
       "role": "Administrative Specialist Lead Trainer",
       "w": 480,
       "h": 640,
-      "faceY": 51.3
+      "faceY": 25.1
     },
     {
       "file": "people/jahaziel-beltran.webp",
@@ -56,7 +56,7 @@
       "role": "Accounting Manager",
       "w": 480,
       "h": 640,
-      "faceY": 47.9
+      "faceY": 25.7
     },
     {
       "file": "people/sarahjane-manliclic.webp",
@@ -64,7 +64,7 @@
       "role": "Accounting Officer",
       "w": 480,
       "h": 640,
-      "faceY": 40.1
+      "faceY": 27.5
     },
     {
       "file": "people/desika-mundia.webp",
@@ -72,7 +72,7 @@
       "role": "Administration and Facilities Manager",
       "w": 480,
       "h": 640,
-      "faceY": 61.3
+      "faceY": 25.1
     },
     {
       "file": "people/patricia-garcia.webp",
@@ -80,7 +80,7 @@
       "role": "Executive Assistant To The Executive Managing Director / Support Executive Services Team Lead",
       "w": 480,
       "h": 640,
-      "faceY": 57.3
+      "faceY": 24.3
     },
     {
       "file": "people/leah-adriano.webp",
@@ -88,7 +88,7 @@
       "role": "Business Development Manager",
       "w": 480,
       "h": 640,
-      "faceY": 48.5
+      "faceY": 27.4
     },
     {
       "file": "people/riel-lacsamana.webp",
@@ -96,7 +96,7 @@
       "role": "Information Technology Officer",
       "w": 480,
       "h": 640,
-      "faceY": 41.3
+      "faceY": 24.1
     },
     {
       "file": "people/dave-jason-velasquez.webp",
@@ -104,7 +104,7 @@
       "role": "Information Technology Specialist",
       "w": 480,
       "h": 640,
-      "faceY": 57.5
+      "faceY": 24.2
     },
     {
       "file": "people/ian-kenneth-crisostomo.webp",
@@ -112,7 +112,7 @@
       "role": "Information Technology Specialist",
       "w": 480,
       "h": 640,
-      "faceY": 53.2
+      "faceY": 22.6
     },
     {
       "file": "people/patricia-puno.webp",
@@ -120,7 +120,7 @@
       "role": "Client Success Manager",
       "w": 480,
       "h": 640,
-      "faceY": 51.3
+      "faceY": 27.3
     },
     {
       "file": "people/rei-sanchez.webp",
@@ -128,7 +128,7 @@
       "role": "Team Leader",
       "w": 480,
       "h": 640,
-      "faceY": 27.3
+      "faceY": 26.6
     },
     {
       "file": "people/sheena-magdaraog.webp",
@@ -136,7 +136,7 @@
       "role": "Team Leader",
       "w": 480,
       "h": 640,
-      "faceY": 32.4
+      "faceY": 24.4
     },
     {
       "file": "people/carlo-andreu-tayag.webp",
@@ -144,7 +144,7 @@
       "role": "Team Leader",
       "w": 480,
       "h": 640,
-      "faceY": 51.3
+      "faceY": 24.6
     },
     {
       "file": "people/mcryn-aie-changcoco.webp",
@@ -152,7 +152,7 @@
       "role": "Team Leader",
       "w": 480,
       "h": 640,
-      "faceY": 56.0
+      "faceY": 25.3
     }
   ]
 }

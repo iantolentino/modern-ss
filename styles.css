@@ -627,8 +627,13 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding: 1.8rem 0; border-bottom: 1px solid var(--rule);
 }
 .stmt__row:last-child { border-bottom: 1px solid var(--rule-ink); }
+/* Square, not circular. These are nine real clients, and a round crop is the one
+   shape that takes the corners off a face for no reason other than convention: it
+   is the avatar idiom, and an avatar is what you show when you have no photograph.
+   We have the photographs. A square with the same rule border also matches the rest
+   of the sheet, where nothing else is rounded. */
 .stmt__sig img {
-  width: 68px; height: 68px; object-fit: cover; border-radius: 50%;
+  width: 68px; height: 68px; object-fit: cover;
   border: 1px solid var(--rule); filter: saturate(.9);
 }
 .stmt blockquote { font-size: 1.05rem; line-height: 1.62; color: var(--ink); max-width: 68ch; }

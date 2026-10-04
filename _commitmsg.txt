@@ -1,0 +1,67 @@
+Re-crop the portraits so no head is cut, and stop circling client faces
+
+Asked to make sure faces are shown properly. Checking that properly meant building
+a face detector first, because the check I had was not measuring faces at all.
+
+The check that was wrong
+  The first version used the YCbCr skin-tone test to find a face. On these
+  photographs it returned a box spanning the entire frame at 11-34% coverage --
+  it also fires on warm walls, timber and beige office background. Built on
+  that, the check reported 79 clipped faces, none of which were clipped. It was
+  replaced with OpenCV Haar cascades (frontal and profile), pooled over several
+  parameter sets and filtered by shape, because one setting missed real faces and
+  loosening without the filter invents them.
+
+  Two further bugs in the tooling, both caught by reading the output rather than
+  trusting it: the crop records and the face boxes were keyed differently, so the
+  join tested 36 of 535 images and called the site clean on almost no evidence;
+  and density was computed from naturalWidth, which Chrome already divides by the
+  effective srcset density, which invented eleven upscales that were not upscales.
+
+What the detector found
+  Seven of the nineteen officers and four more portraits were shipping with the
+  top of the head cut off, and the layout then removed another 3.1% in the 4:5
+  boxes. neil-dane-puno had 0.000 headroom where his source had 0.135.
+
+  The cause was frame() in strata-scan/optimise.py. It placed the skin-tone
+  centroid at FACE_BIAS down the window, and the centroid is dragged downward by
+  the neck, the hands and any warm background, so for a subject in a light top
+  the crop followed it down and took the head with it.
+
+  Measuring every raw source settled the rule: all 31 have the head within the
+  top 15% (min 0.024, median 0.097), which is less than the margin a brow needs,
+  so the window is top-anchored for this material. Two sources, Mary Ann Pineda
+  and Trevor, have the head at the very top of the download, where no crop can
+  create headroom; those now sit at their source's floor rather than below it.
+
+  Two selection bugs surfaced while fixing it. Largest-detection-wins picked a
+  torso over the face on team-accountant, and "largest in the upper half" still
+  admitted a torso centred at 0.502 on carlo-andreu-tayag. The rule is now the
+  highest plausible detection, which is what a single-subject portrait implies.
+
+Result
+  Headroom under 5%, across the 43 portraits: 11 before, 1 after. Across every
+  rendered image at 1440 and 390: no face is clipped by any box, and the five
+  remaining tight cases are all Trevor at his source's limit. Face centres now
+  sit at 14-39% with a median of 35%, near the intended bias of 38%.
+
+The circles
+  .stmt__sig img carried border-radius: 50%, showing nine real clients through a
+  round mask. A round crop is the avatar idiom, and an avatar is what you show
+  when you have no photograph; we have the photographs. The corners come off a
+  face for no reason but convention. Now square, with the rule border it already
+  had. The only two circles left in the stylesheet are a punched hole and a
+  perforation dot, which are paper, not people.
+
+Verification
+  tools/face-verify.mjs joins the browser's measured crop rectangles against the
+  detected face boxes and exits non-zero on a clipped or masked face. It reports
+  the tight cases rather than hiding them, since a margin is not a failure.
+  tools/contact-sheet.py renders every crop for a person to look at, marking the
+  detected face, because a measurement is only as good as its detector and this
+  one is a heuristic. Read the contact sheet, not the exit code.
+
+  Full sweep still green: 40 pages 200, 113 references resolve, a11y clean,
+  88 images all pointed at, contrast 5.10:1 lowest, 35 of 40 pages carry
+  photography with the other 5 declared. Two remaining sub-1x densities are
+  source-limited: a 1024px and a 600px original with nothing larger to serve.
