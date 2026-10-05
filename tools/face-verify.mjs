@@ -33,10 +33,17 @@ const crops = strip(await readFile(path.join(ROOT, 'tools', '_crops.json'), 'utf
 
 const boxes = JSON.parse(await readFile(FACES, 'utf8'));
 
-/* Optional: where the shoulders are. Written by strata-scan/shoulders.py. Absent is
-   tolerated so this still runs on a checkout that has not built it. */
+/* Where the shoulders are, written by strata-scan/shoulders.py.
+
+   Absence is reported, not tolerated. A check that quietly does nothing when its
+   input is missing is worse than no check: it prints a clean line and the reader
+   concludes the shoulders were verified, when nothing was measured at all. That is
+   the same category of mistake as the layout guard below, which stayed silent when
+   the bug was put back. If this file is not on disk the run says so and fails. */
 let silhouette = {};
-try { silhouette = JSON.parse(await readFile(SILHOUETTE, 'utf8')); } catch { /* optional */ }
+let silhouetteMissing = false;
+try { silhouette = JSON.parse(await readFile(SILHOUETTE, 'utf8')); }
+catch { silhouetteMissing = true; }
 
 /* The browser reports the chosen file's basename; the boxes are keyed by path
    relative to assets/. Joining those two directly matched only the files that sit at
@@ -178,7 +185,11 @@ if (torso.length) {
     console.log(`    ${r.src}  loses the bottom ${(r.cut * 100).toFixed(0)}%  (subject there is ${r.bottom.toFixed(2)} wide)  box ${r.box}  ${r.page} @${r.vw}`);
   }
   console.log('    A portrait framed as head-and-shoulders reads as a close-up if this is cut.');
-} else if (Object.keys(silhouette).length) {
+} else if (silhouetteMissing) {
+  console.log('\n  SHOULDER CHECK DID NOT RUN - strata-scan/_silhouette.json is missing.');
+  console.log('    Nothing above says anything about whether the portraits keep their');
+  console.log('    shoulders. Run: python strata-scan/shoulders.py');
+} else {
   console.log('\n  no box cuts the bottom of any portrait: every shoulder line is kept.');
 }
 
@@ -196,4 +207,4 @@ if (soft.length) {
   }
 }
 
-process.exitCode = clipped.length || masked.length || torso.length ? 1 : 0;
+process.exitCode = clipped.length || masked.length || torso.length || silhouetteMissing ? 1 : 0;
