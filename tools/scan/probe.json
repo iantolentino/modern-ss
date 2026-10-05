@@ -1,0 +1,87 @@
+[
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "<div>: children flush against border-right/bottom on right (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "<div>: children flush against border-right/bottom on right (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "<div>: children flush against border-right/bottom on right (no inset)"
+  },
+  {
+    "antipattern": "numbered-section-labels",
+    "name": "Tiny numbered section labels",
+    "description": "Small numeric index labels riding next to section headings, repeated section after section, are AI editorial scaffolding — a page numbering its own chapters instead of earning structure. Let hierarchy, content, and rhythm carry the sequence.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "tiny numbered label \"01\" beside h2 \"Probe clauses\" (5 on page)",
+    "advisory": true
+  },
+  {
+    "antipattern": "numbered-section-labels",
+    "name": "Tiny numbered section labels",
+    "description": "Small numeric index labels riding next to section headings, repeated section after section, are AI editorial scaffolding — a page numbering its own chapters instead of earning structure. Let hierarchy, content, and rhythm carry the sequence.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "tiny numbered label \"02\" beside h2 \"Probe trio\" (5 on page)",
+    "advisory": true
+  },
+  {
+    "antipattern": "numbered-section-labels",
+    "name": "Tiny numbered section labels",
+    "description": "Small numeric index labels riding next to section headings, repeated section after section, are AI editorial scaffolding — a page numbering its own chapters instead of earning structure. Let hierarchy, content, and rhythm carry the sequence.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "tiny numbered label \"03\" beside h2 \"Probe facts\" (5 on page)",
+    "advisory": true
+  },
+  {
+    "antipattern": "numbered-section-labels",
+    "name": "Tiny numbered section labels",
+    "description": "Small numeric index labels riding next to section headings, repeated section after section, are AI editorial scaffolding — a page numbering its own chapters instead of earning structure. Let hierarchy, content, and rhythm carry the sequence.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "tiny numbered label \"04\" beside h2 \"Probe opts\" (5 on page)",
+    "advisory": true
+  },
+  {
+    "antipattern": "numbered-section-labels",
+    "name": "Tiny numbered section labels",
+    "description": "Small numeric index labels riding next to section headings, repeated section after section, are AI editorial scaffolding — a page numbering its own chapters instead of earning structure. Let hierarchy, content, and rhythm carry the sequence.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ianto\\Downloads\\ai-tests\\strata-modern\\_probe.html",
+    "line": 0,
+    "snippet": "tiny numbered label \"05\" beside h2 \"Probe duo\" (5 on page)",
+    "advisory": true
+  }
+]

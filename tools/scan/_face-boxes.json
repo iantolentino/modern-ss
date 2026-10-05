@@ -1,0 +1,980 @@
+{
+ "client-craig-mowll.png": {
+  "w": 150,
+  "h": 150,
+  "faces": 10,
+  "candidates": 10,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.36,
+   "x1": 0.72,
+   "y0": 0.0933,
+   "y1": 0.4533
+  },
+  "headroom": 0.0933
+ },
+ "client-jason-elliott.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": 9,
+  "candidates": 9,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2,
+   "x1": 0.66,
+   "y0": 0.2667,
+   "y1": 0.7267
+  },
+  "headroom": 0.2667
+ },
+ "client-joshua-baldwin.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": 9,
+  "candidates": 9,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.42,
+   "x1": 0.6,
+   "y0": 0.1133,
+   "y1": 0.2933
+  },
+  "headroom": 0.1133
+ },
+ "client-mark-louis.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": 15,
+  "candidates": 15,
+  "kind": "profile",
+  "face": {
+   "x0": 0.3533,
+   "x1": 0.7067,
+   "y0": 0.1467,
+   "y1": 0.5
+  },
+  "headroom": 0.1467
+ },
+ "client-michael-haines.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": 9,
+  "candidates": 9,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.3,
+   "x1": 0.6933,
+   "y0": 0.14,
+   "y1": 0.5333
+  },
+  "headroom": 0.14
+ },
+ "client-paul-cvetko.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": 17,
+  "candidates": 17,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2667,
+   "x1": 0.9133,
+   "y0": 0.1667,
+   "y1": 0.8133
+  },
+  "headroom": 0.1667
+ },
+ "client-professionals.jpg": {
+  "w": 150,
+  "h": 150,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "client-stanton-taylor.png": {
+  "w": 150,
+  "h": 150,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "client-strata-bee.png": {
+  "w": 150,
+  "h": 150,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "logo-full.png": {
+  "w": 2049,
+  "h": 447,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "logo-icon.png": {
+  "w": 192,
+  "h": 192,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "member-cci-bc.png": {
+  "w": 230,
+  "h": 129,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "member-reinsw.png": {
+  "w": 230,
+  "h": 128,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "member-sca-nsw.png": {
+  "w": 230,
+  "h": 76,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "member-sca-sa.png": {
+  "w": 230,
+  "h": 73,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-aim.png": {
+  "w": 90,
+  "h": 93,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-bing.png": {
+  "w": 266,
+  "h": 108,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-buildium.png": {
+  "w": 189,
+  "h": 60,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-idmax.png": {
+  "w": 235,
+  "h": 94,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-mri.png": {
+  "w": 89,
+  "h": 89,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-piq.png": {
+  "w": 253,
+  "h": 50,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-smata.jpg": {
+  "w": 200,
+  "h": 61,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-strack.png": {
+  "w": 191,
+  "h": 75,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-stratafy.png": {
+  "w": 2480,
+  "h": 413,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "platform-stratamax.png": {
+  "w": 297,
+  "h": 84,
+  "faces": 12,
+  "candidates": 12,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.404,
+   "x1": 0.5084,
+   "y0": 0.3929,
+   "y1": 0.7619
+  },
+  "headroom": 0.3929
+ },
+ "platform-stratavault.png": {
+  "w": 931,
+  "h": 250,
+  "faces": 1,
+  "candidates": 1,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.0118,
+   "x1": 0.0827,
+   "y0": 0.464,
+   "y1": 0.728
+  },
+  "headroom": 0.464
+ },
+ "platform-urbanise.png": {
+  "w": 1218,
+  "h": 259,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "exec/dan-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 11,
+  "candidates": 11,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.235,
+   "x1": 0.7775,
+   "y0": 0.172,
+   "y1": 0.606
+  },
+  "headroom": 0.172
+ },
+ "exec/dan-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 13,
+  "candidates": 15,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2338,
+   "x1": 0.78,
+   "y0": 0.173,
+   "y1": 0.61
+  },
+  "headroom": 0.173
+ },
+ "exec/paul-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 10,
+  "candidates": 10,
+  "kind": "profile",
+  "face": {
+   "x0": 0.1,
+   "x1": 0.7675,
+   "y0": 0.09,
+   "y1": 0.624
+  },
+  "headroom": 0.09
+ },
+ "exec/paul-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 11,
+  "candidates": 22,
+  "kind": "profile",
+  "face": {
+   "x0": 0.1275,
+   "x1": 0.84,
+   "y0": 0.089,
+   "y1": 0.659
+  },
+  "headroom": 0.089
+ },
+ "exec/tongta-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 17,
+  "candidates": 17,
+  "kind": "profile",
+  "face": {
+   "x0": 0.5575,
+   "x1": 0.99,
+   "y0": 0.06,
+   "y1": 0.406
+  },
+  "headroom": 0.06
+ },
+ "exec/tongta-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 13,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.1775,
+   "x1": 0.7488,
+   "y0": 0.143,
+   "y1": 0.6
+  },
+  "headroom": 0.143
+ },
+ "exec/trevor-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 19,
+  "candidates": 19,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2025,
+   "x1": 0.6925,
+   "y0": 0.024,
+   "y1": 0.416
+  },
+  "headroom": 0.024
+ },
+ "exec/trevor-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 17,
+  "candidates": 17,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.1975,
+   "x1": 0.69,
+   "y0": 0.018,
+   "y1": 0.412
+  },
+  "headroom": 0.018
+ },
+ "people/anna-marie-david.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 12,
+  "candidates": 13,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.275,
+   "x1": 0.7646,
+   "y0": 0.1656,
+   "y1": 0.5328
+  },
+  "headroom": 0.1656
+ },
+ "people/carlo-andreu-tayag.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 30,
+  "kind": "profile",
+  "face": {
+   "x0": 0.3875,
+   "x1": 0.9188,
+   "y0": 0.1375,
+   "y1": 0.5359
+  },
+  "headroom": 0.1375
+ },
+ "people/dave-jason-velasquez.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 20,
+  "candidates": 20,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2083,
+   "x1": 0.7771,
+   "y0": 0.1203,
+   "y1": 0.5469
+  },
+  "headroom": 0.1203
+ },
+ "people/desika-mundia.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 12,
+  "candidates": 12,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2771,
+   "x1": 0.7688,
+   "y0": 0.1594,
+   "y1": 0.5281
+  },
+  "headroom": 0.1594
+ },
+ "people/ian-kenneth-crisostomo.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 25,
+  "kind": "profile",
+  "face": {
+   "x0": 0.1729,
+   "x1": 0.7688,
+   "y0": 0.0844,
+   "y1": 0.5312
+  },
+  "headroom": 0.0844
+ },
+ "people/jahaziel-beltran.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 17,
+  "candidates": 28,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2333,
+   "x1": 0.775,
+   "y0": 0.15,
+   "y1": 0.5562
+  },
+  "headroom": 0.15
+ },
+ "people/jeremiah-feliciano.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 25,
+  "candidates": 25,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2708,
+   "x1": 0.8125,
+   "y0": 0.1359,
+   "y1": 0.5422
+  },
+  "headroom": 0.1359
+ },
+ "people/leah-adriano.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 11,
+  "candidates": 12,
+  "kind": "profile",
+  "face": {
+   "x0": 0.1625,
+   "x1": 0.7792,
+   "y0": 0.1328,
+   "y1": 0.5953
+  },
+  "headroom": 0.1328
+ },
+ "people/marey-iams-sarate.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 17,
+  "candidates": 24,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2229,
+   "x1": 0.7833,
+   "y0": 0.1328,
+   "y1": 0.5531
+  },
+  "headroom": 0.1328
+ },
+ "people/mary-ann-pineda.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 17,
+  "candidates": 17,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.7396,
+   "x1": 0.9521,
+   "y0": 0.0641,
+   "y1": 0.2234
+  },
+  "headroom": 0.0641
+ },
+ "people/mcryn-aie-changcoco.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 10,
+  "candidates": 10,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2958,
+   "x1": 0.7833,
+   "y0": 0.1672,
+   "y1": 0.5328
+  },
+  "headroom": 0.1672
+ },
+ "people/neil-dane-puno.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2708,
+   "x1": 0.825,
+   "y0": 0.1766,
+   "y1": 0.5922
+  },
+  "headroom": 0.1766
+ },
+ "people/patricia-garcia.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2208,
+   "x1": 0.8562,
+   "y0": 0.0984,
+   "y1": 0.575
+  },
+  "headroom": 0.0984
+ },
+ "people/patricia-puno.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 9,
+  "candidates": 12,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2938,
+   "x1": 0.7479,
+   "y0": 0.2062,
+   "y1": 0.5469
+  },
+  "headroom": 0.2062
+ },
+ "people/rei-sanchez.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 20,
+  "candidates": 21,
+  "kind": "profile",
+  "face": {
+   "x0": 0.3521,
+   "x1": 0.8896,
+   "y0": 0.1578,
+   "y1": 0.5609
+  },
+  "headroom": 0.1578
+ },
+ "people/riel-lacsamana.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 9,
+  "candidates": 9,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2938,
+   "x1": 0.825,
+   "y0": 0.1328,
+   "y1": 0.5312
+  },
+  "headroom": 0.1328
+ },
+ "people/sarahjane-manliclic.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2417,
+   "x1": 0.8333,
+   "y0": 0.1656,
+   "y1": 0.6094
+  },
+  "headroom": 0.1656
+ },
+ "people/sheena-magdaraog.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 11,
+  "candidates": 17,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.0167,
+   "x1": 0.2542,
+   "y0": 0.1047,
+   "y1": 0.2828
+  },
+  "headroom": 0.1047
+ },
+ "people/trixy-bulaun.webp": {
+  "w": 480,
+  "h": 640,
+  "faces": 18,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2396,
+   "x1": 0.8146,
+   "y0": 0.1453,
+   "y1": 0.5766
+  },
+  "headroom": 0.1453
+ },
+ "portrait/accountant-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 18,
+  "candidates": 21,
+  "kind": "profile",
+  "face": {
+   "x0": 0.28,
+   "x1": 0.8625,
+   "y0": 0.136,
+   "y1": 0.602
+  },
+  "headroom": 0.136
+ },
+ "portrait/accountant-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 17,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2975,
+   "x1": 0.855,
+   "y0": 0.147,
+   "y1": 0.593
+  },
+  "headroom": 0.147
+ },
+ "portrait/administrative-specialist-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 10,
+  "candidates": 11,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.275,
+   "x1": 0.8025,
+   "y0": 0.168,
+   "y1": 0.59
+  },
+  "headroom": 0.168
+ },
+ "portrait/administrative-specialist-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 10,
+  "candidates": 12,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2762,
+   "x1": 0.795,
+   "y0": 0.167,
+   "y1": 0.582
+  },
+  "headroom": 0.167
+ },
+ "portrait/compliance-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 29,
+  "candidates": 29,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2525,
+   "x1": 0.7875,
+   "y0": 0.128,
+   "y1": 0.556
+  },
+  "headroom": 0.128
+ },
+ "portrait/compliance-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 24,
+  "candidates": 29,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.1888,
+   "x1": 0.7138,
+   "y0": 0.146,
+   "y1": 0.566
+  },
+  "headroom": 0.146
+ },
+ "portrait/executive-assistant-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 18,
+  "candidates": 18,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2825,
+   "x1": 0.7825,
+   "y0": 0.142,
+   "y1": 0.542
+  },
+  "headroom": 0.142
+ },
+ "portrait/executive-assistant-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 18,
+  "candidates": 20,
+  "kind": "profile",
+  "face": {
+   "x0": 0.285,
+   "x1": 0.7762,
+   "y0": 0.141,
+   "y1": 0.534
+  },
+  "headroom": 0.141
+ },
+ "portrait/team-accountant-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 13,
+  "candidates": 14,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.1975,
+   "x1": 0.7675,
+   "y0": 0.108,
+   "y1": 0.564
+  },
+  "headroom": 0.108
+ },
+ "portrait/team-accountant-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 13,
+  "candidates": 19,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2,
+   "x1": 0.765,
+   "y0": 0.109,
+   "y1": 0.561
+  },
+  "headroom": 0.109
+ },
+ "portrait/team-administration-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 9,
+  "candidates": 11,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2325,
+   "x1": 0.7475,
+   "y0": 0.164,
+   "y1": 0.576
+  },
+  "headroom": 0.164
+ },
+ "portrait/team-administration-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 9,
+  "candidates": 15,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.24,
+   "x1": 0.745,
+   "y0": 0.169,
+   "y1": 0.573
+  },
+  "headroom": 0.169
+ },
+ "portrait/team-customer-care-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 28,
+  "candidates": 30,
+  "kind": "profile",
+  "face": {
+   "x0": 0.35,
+   "x1": 0.8025,
+   "y0": 0.158,
+   "y1": 0.52
+  },
+  "headroom": 0.158
+ },
+ "portrait/team-customer-care-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 32,
+  "candidates": 41,
+  "kind": "profile",
+  "face": {
+   "x0": 0.335,
+   "x1": 0.825,
+   "y0": 0.152,
+   "y1": 0.544
+  },
+  "headroom": 0.152
+ },
+ "portrait/team-executive-assistant-400.webp": {
+  "w": 400,
+  "h": 500,
+  "faces": 14,
+  "candidates": 16,
+  "kind": "profile",
+  "face": {
+   "x0": 0.2475,
+   "x1": 0.8,
+   "y0": 0.104,
+   "y1": 0.546
+  },
+  "headroom": 0.104
+ },
+ "portrait/team-executive-assistant-800.webp": {
+  "w": 800,
+  "h": 1000,
+  "faces": 15,
+  "candidates": 17,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2188,
+   "x1": 0.7438,
+   "y0": 0.141,
+   "y1": 0.561
+  },
+  "headroom": 0.141
+ },
+ "post/a-new-symbol-1200.webp": {
+  "w": 1200,
+  "h": 675,
+  "faces": [],
+  "candidates": 3,
+  "reason": "3 detections, none face-shaped"
+ },
+ "post/a-new-symbol-640.webp": {
+  "w": 640,
+  "h": 360,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "post/client-partnerships-1024.webp": {
+  "w": 1024,
+  "h": 785,
+  "faces": 15,
+  "candidates": 114,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2822,
+   "x1": 0.5322,
+   "y0": 0.2025,
+   "y1": 0.5287
+  },
+  "headroom": 0.2025
+ },
+ "post/client-partnerships-640.webp": {
+  "w": 640,
+  "h": 491,
+  "faces": 16,
+  "candidates": 82,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.2984,
+   "x1": 0.5156,
+   "y0": 0.2179,
+   "y1": 0.501
+  },
+  "headroom": 0.2179
+ },
+ "post/connect-q1-q2-2024-600.webp": {
+  "w": 600,
+  "h": 456,
+  "faces": 18,
+  "candidates": 20,
+  "kind": "profile",
+  "face": {
+   "x0": 0.7467,
+   "x1": 0.9067,
+   "y0": 0.3487,
+   "y1": 0.5592
+  },
+  "headroom": 0.3487
+ },
+ "post/connect-q3-2024-1024.webp": {
+  "w": 1024,
+  "h": 772,
+  "faces": 21,
+  "candidates": 26,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.6992,
+   "x1": 0.8984,
+   "y0": 0.2513,
+   "y1": 0.5155
+  },
+  "headroom": 0.2513
+ },
+ "post/connect-q3-2024-640.webp": {
+  "w": 640,
+  "h": 482,
+  "faces": 16,
+  "candidates": 17,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.7,
+   "x1": 0.9078,
+   "y0": 0.2407,
+   "y1": 0.5166
+  },
+  "headroom": 0.2407
+ },
+ "post/joins-cci-bc-1200.webp": {
+  "w": 1200,
+  "h": 1200,
+  "faces": [],
+  "candidates": 18,
+  "reason": "18 detections, none face-shaped"
+ },
+ "post/joins-cci-bc-640.webp": {
+  "w": 640,
+  "h": 640,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "post/joins-sca-sa-640.webp": {
+  "w": 640,
+  "h": 640,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "post/joins-sca-sa-800.webp": {
+  "w": 800,
+  "h": 800,
+  "faces": [],
+  "reason": "no face detected"
+ },
+ "post/marisol-office-1024.webp": {
+  "w": 1024,
+  "h": 512,
+  "faces": 4,
+  "candidates": 9,
+  "kind": "frontal",
+  "face": {
+   "x0": 0.3281,
+   "x1": 0.6523,
+   "y0": 0.0859,
+   "y1": 0.7344
+  },
+  "headroom": 0.0859
+ },
+ "post/marisol-office-640.webp": {
+  "w": 640,
+  "h": 320,
+  "faces": 5,
+  "candidates": 5,
+  "kind": "profile",
+  "face": {
+   "x0": 0.4094,
+   "x1": 0.5312,
+   "y0": 0.3719,
+   "y1": 0.6156
+  },
+  "headroom": 0.3719
+ },
+ "post/trusted-sca-member-1200.webp": {
+  "w": 1200,
+  "h": 1200,
+  "faces": [],
+  "candidates": 11,
+  "reason": "11 detections, none face-shaped"
+ },
+ "post/trusted-sca-member-640.webp": {
+  "w": 640,
+  "h": 640,
+  "faces": [],
+  "candidates": 2,
+  "reason": "2 detections, none face-shaped"
+ }
+}
