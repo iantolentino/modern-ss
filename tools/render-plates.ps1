@@ -18,7 +18,7 @@ Set-Location $root
 # page, width, height-cap. The cap keeps a runaway measurement from producing a
 # 30000px image; it is well above every measured page.
 $default = @(
-  'index.html,1920', 'index.html,390', 'index.html,2560',
+  'index.html,1440', 'index.html,1920', 'index.html,390', 'index.html,2560',
   'solutions.html,1440', 'role-accountant.html,1440', 'team.html,1440',
   'contact.html,1440', 'executives.html,1440', 'insights.html,1440',
   'job-hr-assistant.html,1440', 'strata-staff-plus.html,1440', '404.html,1440',

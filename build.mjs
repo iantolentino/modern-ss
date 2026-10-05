@@ -795,14 +795,18 @@ function postFigure(slug, sizes, { hero = false, wide = false } = {}) {
    the remaining six statements all live on the pages that own them, and are
    linked from here. */
 PAGES['index.html'] = () => {
-  /* The four roles the incumbent leads with, in its own order, each carrying the
-     photograph it pairs with that role. Built from STRATA_ROLES so a role rename
-     can never leave a card pointing at the wrong face. */
-  const HOME_ROLES = [
-    'role-administrative-specialist.html', 'role-accountant.html',
-    'role-executive-assistant.html', 'role-compliance-specialist.html',
-  ].map(h => ({ ...STRATA_ROLES.find(r => r.href === h), face: ROLE_FACE[h] }))
-    .filter(r => r.href && r.face);
+  /* What the visitor receives, in three lines. This section did not exist before: the
+     page led with the team and the roles and never said what the business sells, which
+     is why a reader could not tell what the site was for. Each item is a deliverable
+     rather than a virtue. */
+  const DELIVER = [
+    ['Trained people, not r\u00e9sum\u00e9s',
+     'Every specialist is vetted, then purpose-trained on strata legislation and on thirteen-plus strata platforms before they touch your portfolio.'],
+    ['The roles you are short of',
+     'Administrative, accounting, executive assistant, compliance and six more &mdash; matched to your lot count, your portfolio and the work that is not getting done.'],
+    ['A team that stays',
+     'Ninety-eight per cent retention across Australia and Canada. The seat you fill stays filled, and the people who learn your portfolio are the people who keep it.'],
+  ];
 
   /* Six of the nineteen, chosen for breadth of function rather than appearance:
      human resources, training, accounting, administration, technology and client
@@ -811,12 +815,16 @@ PAGES['index.html'] = () => {
     'desika-mundia', 'riel-lacsamana', 'patricia-puno']
     .map(personBySlug).filter(Boolean);
 
-  /* The two people who carry the middle of the page. The training manager stands
-     beside the training claim and the accounting manager beside the capacity
-     claim, so the argument is made by the person who actually does the work
-     rather than by a graphic. */
-  const FEATURE_TRAINING = personBySlug('mary-ann-pineda');
-  const FEATURE_ACCOUNTS = personBySlug('jahaziel-beltran');
+  /* What actually changes, stated as outcomes for the agency rather than as features
+     of ours. The rest of the page exists to earn these three claims. */
+  const IMPROVE = [
+    ['Your cost base',
+     'Capacity rises with the work. The overhead does not rise with it, so revenue moves up rather than sideways.'],
+    ['Your turnaround',
+     'Your staff already know the software you run, so ramp-up is measured in days rather than in months.'],
+    ['Your cover',
+     'Two service lines and ten roles, so the gap you have is the gap we fill rather than the nearest thing to it.'],
+  ];
 
   const stats = [
     ['500+', 'Placements', 'Since April 2019'],
@@ -834,25 +842,25 @@ PAGES['index.html'] = () => {
   return page({
     page: 'index.html',
     head: {
-      title: 'Build Your Strata Staff Global Offshore Team',
-      desc: 'Strata-trained offshore specialists who expand your agency\u2019s capacity. Serving Australian and Canadian strata agencies since April 2019.',
+      title: 'Your Strata Agency, With The Capacity To Grow',
+      desc: 'Offshore strata-trained specialists who expand an agency\u2019s capacity: ten roles across two service lines, trained on thirteen-plus strata platforms. Serving Australian and Canadian agencies since April 2019.',
     },
     main: `
     <main id="main">
       <section class="cover">
         <div class="wrap">
           <div class="cover__main">
-            <h1 class="display">Build your Strata Staff Global ${mark('offshore')} team.</h1>
-            <p class="lede">Strata-trained professionals who expand your capacity and take on the work that is not getting done. Serving Australian and Canadian agencies since April 2019.</p>
+            <h1 class="display">Your strata agency, with the ${mark('capacity')} to grow.</h1>
+            <p class="lede">We recruit, train and place offshore specialists for strata and property management agencies in Australia and Canada. You get the work that is not getting done, done &mdash; without the overhead of hiring locally.</p>
             <div class="cover__acts">
               <a class="btn btn--lg" href="contact.html#book">Book a free discovery call ${arrow}</a>
-              <a class="btn2" href="solutions.html">See the ten roles</a>
+              <a class="btn2" href="#deliver">See what we deliver</a>
             </div>
             <p class="cover__ref">
-              <span class="ref">Thirty minutes &middot; no obligation</span>
-              <span class="ref">AU <a class="link" href="tel:${TEL_AU_H}">${TEL_AU_D}</a></span>
-              <span class="ref">CA <a class="link" href="tel:${TEL_CA_H}">${TEL_CA_D}</a></span>
-              <span class="ref"><a class="link" href="mailto:${MAIL_SOL}">${MAIL_SOL}</a></span>
+              <span class="ref">Since April 2019</span>
+              <span class="ref">500+ placements</span>
+              <span class="ref">98% retention</span>
+              <span class="ref">AU &middot; CA &middot; PH</span>
             </p>
           </div>
           <aside class="cover__aside">
@@ -866,24 +874,15 @@ PAGES['index.html'] = () => {
         </div>
       </section>
 
-      <section class="faces" aria-label="Members of the Strata Staff Global team">
-${STRIP.map(p => `        ${wallImg(p)}`).join('\n')}
-      </section>
-      <p class="faces__cap">Six of the nineteen specialists on our board &mdash; human resources, training, accounting, administration, technology and client success. <a class="link" href="team.html">Meet all nineteen</a></p>
-
-      <div class="field-marker">
-        <p>Every placement is trained on strata legislation and thirteen-plus strata platforms before they touch your portfolio.</p>
-      </div>
-
 ${item({
-      id: 'team', title: 'Meet the team behind your team',
-      lede: 'Four of the ten roles, each purpose-trained on strata operations and on the platforms you already run before they touch your portfolio.',
+      id: 'deliver', title: 'What we deliver',
+      lede: 'Three things, and the third is the one agencies tell us they did not expect.',
       wide: true,
       body: `
-        <div class="roles">
-${HOME_ROLES.map(r => '          ' + roleCard(r)).join('\n')}
+        <div class="trio">
+          ${DELIVER.map(d => `<div><h3>${d[0]}</h3><p>${d[1]}</p></div>`).join('\n          ')}
         </div>
-        <p style="margin-top:2.4rem"><a class="btn2" href="solutions.html">See all ten roles and both service lines ${arrow}</a></p>`,
+        <p style="margin-top:2.4rem"><a class="btn2" href="solutions.html">See the ten roles and both service lines ${arrow}</a></p>`,
     })}
 
       <section class="band">
@@ -895,37 +894,13 @@ ${HOME_ROLES.map(r => '          ' + roleCard(r)).join('\n')}
       </section>
 
 ${item({
-      id: 'difference', title: 'The Strata Staff Difference',
+      id: 'improve', title: 'What changes for your agency',
+      lede: 'The three things agency principals tell us they were actually buying.',
       wide: true,
       body: `
-        <div class="duo" style="padding:0">
-          <div class="duo__a">
-            <ul class="points">
-              <li><h3>Strata-trained, not generalist</h3><p>Trained in strata operations and in Australian and Canadian legislation, not in generic back-office work.</p></li>
-              <li><h3>Capacity without the overhead</h3><p>Seats added to the work that is growing, without a proportional rise in the cost base.</p></li>
-              <li><h3>Ready on the platforms you run</h3><p>Thirteen or more strata platforms, so ramp-up is measured in days rather than in months.</p></li>
-            </ul>
-          </div>
-          <div class="duo__b">
-            ${platePerson(FEATURE_TRAINING, '(max-width: 980px) 60vw, 30vw', { cls: 'plate-fig--beside' })}
-            <p class="note" style="margin-top:1.3rem">Our training and development manager writes and runs the Foundation Training Program that every specialist is endorsed against.</p>
-          </div>
-        </div>`,
-    })}
-
-${item({
-      id: 'what-we-do', title: 'Tailored &amp; Strategic Offshore Capacity Solutions For The Strata Industry',
-      wide: true,
-      body: `
-        <div class="duo" style="padding:0">
-          <div class="duo__a">
-            ${platePerson(FEATURE_ACCOUNTS, '(max-width: 980px) 60vw, 30vw', { cls: 'plate-fig--beside' })}
-          </div>
-          <div class="duo__b">
-            <p class="prose">Capacity that offsets rising staff and operating costs, so revenue moves up rather than sideways. The mix of roles is decided by your lot count, your portfolio and the work that is not getting done &mdash; then trained, then placed.</p>
-            <p style="margin-top:1.8rem"><a class="btn2" href="solutions.html">See the roles and what each covers ${arrow}</a></p>
-          </div>
-        </div>`,
+        <ul class="points">
+          ${IMPROVE.map(d => `<li><h3>${d[0]}</h3><p>${d[1]}</p></li>`).join('\n          ')}
+        </ul>`,
     })}
 
 ${item({
@@ -939,14 +914,14 @@ ${item({
     })}
 
 ${item({
-      id: 'technology', title: 'Strata Technology Capabilities',
-      lede: 'Your staff already know the software you run, so ramp-up is measured in days rather than in months.',
+      id: 'who', title: 'Who you will be working with',
+      lede: 'Six of the nineteen specialists on our board, by the work they own. The register is published in full on the team page, with every name against its role.',
       wide: true,
       body: `
-        <div class="plats">
-          ${PLATFORMS.map(p => `<div class="plat"><img src="assets/${p[0]}" alt="${esc(p[1])}" loading="lazy" decoding="async"><span class="plat__cap">${esc(p[1])}</span></div>`).join('\n          ')}
+        <div class="faces">
+${STRIP.map(p => `          ${wallImg(p)}`).join('\n')}
         </div>
-        <p style="margin-top:1.8rem"><a class="btn2" href="solutions.html">See the platforms and the ten roles ${arrow}</a></p>`,
+        <p style="margin-top:2.2rem"><a class="btn2" href="team.html">Meet all nineteen, and how they are trained ${arrow}</a></p>`,
     })}
 
 ${item({
@@ -955,7 +930,7 @@ ${item({
       wide: true,
       body: `
         <div class="stmt stmt--compact">
-          ${TESTIMONIALS.slice(0, 3).map(t => `<div class="stmt__row">
+          ${TESTIMONIALS.slice(0, 2).map(t => `<div class="stmt__row">
             <div class="stmt__sig"><img src="assets/${t.img}" alt="" width="150" height="150" loading="lazy" decoding="async"></div>
             <blockquote>${esc(t.q)}</blockquote>
             <div class="stmt__meta">
@@ -967,24 +942,6 @@ ${item({
         </div>
         <p style="margin-top:2rem"><a class="btn2" href="testimonials.html">Read all nine statements ${arrow}</a></p>`,
     })}
-
-      <section class="item item--plain" id="people">
-        <div class="item__wrap">
-          <div class="item__head">
-            <h2 class="display">The people who do the work</h2>
-            <p class="item__lede">The team behind every placement, by name and by role: the trainers who write the program, the managers who run delivery, and the leaders who look after your staff once they are in post.</p>
-          </div>
-          <div class="item__body item__body--wide">
-            <div class="wall">
-${PEOPLE.map(p => `              <figure>
-                ${wallImg(p)}
-                <figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>
-              </figure>`).join('\n')}
-            </div>
-            <p style="margin-top:2rem"><a class="btn2" href="team.html">See the whole board and how they are trained ${arrow}</a></p>
-          </div>
-        </div>
-      </section>
 ${resolutionBlock()}
     </main>`,
   });
