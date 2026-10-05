@@ -3,156 +3,156 @@
   "crop": "3:4, framed on a detected face with the skull kept in frame. The face is placed FACE_BIAS down the window, but never so low that the head is cut; see frame() in strata-scan/optimise.py.",
   "people": [
     {
-      "file": "people/anna-marie-david.webp",
+      "file": "people/anna-marie-david-400.webp",
       "name": "Anna Marie David",
       "role": "Human Resource Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.2
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.3
     },
     {
-      "file": "people/trixy-bulaun.webp",
+      "file": "people/trixy-bulaun-400.webp",
       "name": "Trixy Bulaun",
       "role": "HR Officer",
-      "w": 480,
-      "h": 640,
-      "faceY": 26.3
+      "w": 908,
+      "h": 1671,
+      "faceY": 26.2
     },
     {
-      "file": "people/neil-dane-puno.webp",
+      "file": "people/neil-dane-puno-400.webp",
       "name": "Neil Dane Puno",
       "role": "HR Generalist",
-      "w": 480,
-      "h": 640,
+      "w": 908,
+      "h": 1671,
       "faceY": 28.1
     },
     {
-      "file": "people/mary-ann-pineda.webp",
+      "file": "people/mary-ann-pineda-400.webp",
       "name": "Mary Ann Pineda",
       "role": "Training and Development Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.8
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.9
     },
     {
-      "file": "people/marey-iams-sarate.webp",
+      "file": "people/marey-iams-sarate-400.webp",
       "name": "Marey Iams Sarate",
       "role": "Executive Assistant Lead Trainer",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.4
-    },
-    {
-      "file": "people/jeremiah-feliciano.webp",
-      "name": "Jeremiah Feliciano",
-      "role": "Administrative Specialist Lead Trainer",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.1
-    },
-    {
-      "file": "people/jahaziel-beltran.webp",
-      "name": "Jahaziel Beltran",
-      "role": "Accounting Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.7
-    },
-    {
-      "file": "people/sarahjane-manliclic.webp",
-      "name": "Sarahjane Manliclic",
-      "role": "Accounting Officer",
-      "w": 480,
-      "h": 640,
-      "faceY": 27.5
-    },
-    {
-      "file": "people/desika-mundia.webp",
-      "name": "Desika Mundia",
-      "role": "Administration and Facilities Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.1
-    },
-    {
-      "file": "people/patricia-garcia.webp",
-      "name": "Patricia Garcia",
-      "role": "Executive Assistant To The Executive Managing Director / Support Executive Services Team Lead",
-      "w": 480,
-      "h": 640,
-      "faceY": 24.3
-    },
-    {
-      "file": "people/leah-adriano.webp",
-      "name": "Leah Adriano",
-      "role": "Business Development Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 27.4
-    },
-    {
-      "file": "people/riel-lacsamana.webp",
-      "name": "Riel Lacsamana",
-      "role": "Information Technology Officer",
-      "w": 480,
-      "h": 640,
-      "faceY": 24.1
-    },
-    {
-      "file": "people/dave-jason-velasquez.webp",
-      "name": "Dave Jason Velasquez",
-      "role": "Information Technology Specialist",
-      "w": 480,
-      "h": 640,
-      "faceY": 24.2
-    },
-    {
-      "file": "people/ian-kenneth-crisostomo.webp",
-      "name": "Ian Kenneth Crisostomo",
-      "role": "Information Technology Specialist",
-      "w": 480,
-      "h": 640,
-      "faceY": 22.6
-    },
-    {
-      "file": "people/patricia-puno.webp",
-      "name": "Patricia Puno",
-      "role": "Client Success Manager",
-      "w": 480,
-      "h": 640,
-      "faceY": 27.3
-    },
-    {
-      "file": "people/rei-sanchez.webp",
-      "name": "Rei Sanchez",
-      "role": "Team Leader",
-      "w": 480,
-      "h": 640,
-      "faceY": 26.6
-    },
-    {
-      "file": "people/sheena-magdaraog.webp",
-      "name": "Sheena Magdaraog",
-      "role": "Team Leader",
-      "w": 480,
-      "h": 640,
-      "faceY": 24.4
-    },
-    {
-      "file": "people/carlo-andreu-tayag.webp",
-      "name": "Carlo Andreu Tayag",
-      "role": "Team Leader",
-      "w": 480,
-      "h": 640,
+      "w": 908,
+      "h": 1671,
       "faceY": 24.6
     },
     {
-      "file": "people/mcryn-aie-changcoco.webp",
+      "file": "people/jeremiah-feliciano-400.webp",
+      "name": "Jeremiah Feliciano",
+      "role": "Administrative Specialist Lead Trainer",
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.4
+    },
+    {
+      "file": "people/jahaziel-beltran-400.webp",
+      "name": "Jahaziel Beltran",
+      "role": "Accounting Manager",
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.6
+    },
+    {
+      "file": "people/sarahjane-manliclic-400.webp",
+      "name": "Sarahjane Manliclic",
+      "role": "Accounting Officer",
+      "w": 908,
+      "h": 1671,
+      "faceY": 28.1
+    },
+    {
+      "file": "people/desika-mundia-400.webp",
+      "name": "Desika Mundia",
+      "role": "Administration and Facilities Manager",
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.0
+    },
+    {
+      "file": "people/patricia-garcia-400.webp",
+      "name": "Patricia Garcia",
+      "role": "Executive Assistant To The Executive Managing Director / Support Executive Services Team Lead",
+      "w": 908,
+      "h": 1671,
+      "faceY": 24.6
+    },
+    {
+      "file": "people/leah-adriano-400.webp",
+      "name": "Leah Adriano",
+      "role": "Business Development Manager",
+      "w": 908,
+      "h": 1671,
+      "faceY": 27.5
+    },
+    {
+      "file": "people/riel-lacsamana-400.webp",
+      "name": "Riel Lacsamana",
+      "role": "Information Technology Officer",
+      "w": 908,
+      "h": 1671,
+      "faceY": 24.1
+    },
+    {
+      "file": "people/dave-jason-velasquez-400.webp",
+      "name": "Dave Jason Velasquez",
+      "role": "Information Technology Specialist",
+      "w": 908,
+      "h": 1671,
+      "faceY": 24.1
+    },
+    {
+      "file": "people/ian-kenneth-crisostomo-400.webp",
+      "name": "Ian Kenneth Crisostomo",
+      "role": "Information Technology Specialist",
+      "w": 908,
+      "h": 1671,
+      "faceY": 22.7
+    },
+    {
+      "file": "people/patricia-puno-400.webp",
+      "name": "Patricia Puno",
+      "role": "Client Success Manager",
+      "w": 908,
+      "h": 1671,
+      "faceY": 27.1
+    },
+    {
+      "file": "people/rei-sanchez-400.webp",
+      "name": "Rei Sanchez",
+      "role": "Team Leader",
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.9
+    },
+    {
+      "file": "people/sheena-magdaraog-400.webp",
+      "name": "Sheena Magdaraog",
+      "role": "Team Leader",
+      "w": 908,
+      "h": 1671,
+      "faceY": 24.3
+    },
+    {
+      "file": "people/carlo-andreu-tayag-400.webp",
+      "name": "Carlo Andreu Tayag",
+      "role": "Team Leader",
+      "w": 908,
+      "h": 1671,
+      "faceY": 24.7
+    },
+    {
+      "file": "people/mcryn-aie-changcoco-400.webp",
       "name": "Mcryn Aie Changcoco",
       "role": "Team Leader",
-      "w": 480,
-      "h": 640,
-      "faceY": 25.3
+      "w": 908,
+      "h": 1671,
+      "faceY": 25.4
     }
   ]
 }

@@ -179,30 +179,40 @@ node tools/imagery-audit.mjs   # which pages carry photography, and which say wh
 
 ### Faces
 
-Every portrait is cropped so the head is in frame, and this is measured rather than
-assumed. `strata-scan/face-boxes.py` finds the face in each shipped file with OpenCV
-Haar cascades (frontal and profile, pooled over nine parameter sets and filtered by
-shape); `tools/face-check.ps1` drives headless Chrome over all 40 pages at two
-viewports and records the rectangle each image actually shows; and
-`tools/face-verify.mjs` joins the two and exits non-zero on a face that is clipped or
-behind a round mask.
+Portraits are shipped **uncropped**. The incumbent publishes every photograph of a
+person at 908×1671 — head, neck and shoulders in one frame — and the site keeps that
+frame whole, with portrait boxes carrying the same `908 / 1671` ratio so CSS has
+nothing to crop either.
+
+That is a correction, and the way it was found is worth keeping. An earlier pass
+cropped these into 3:4 and 4:5 boxes, then built a face detector to prove no head was
+cut. The detector was right: no head was cut. It was also useless, because the damage
+was below the chin. Measuring the subject's silhouette row by row shows the shoulders
+occupy the bottom 30% of every one of these sources, and a 3:4 crop of a 0.543-aspect
+photograph keeps the top 72.5% — landing just above them. Head and neck, no shoulders.
+`anna-marie-david`'s bottom tenth measured 0.36 that way against 0.91 in the source.
+
+A face detector can only answer "is the face cut?". The question was "what does this
+look like?", so the check was replaced by one that describes the composition:
 
 ```
+python strata-scan/silhouette.py                      # subject width per tenth of frame
 python strata-scan/face-boxes.py                      # where the faces are
 powershell -File tools/face-check.ps1 -Viewports "1440x900,390x844"
-node tools/face-verify.mjs                            # 215 faces, 0 clipped, 0 masked
+node tools/face-verify.mjs                            # 0 clipped, 0 masked
+python tools/contact-sheet.py                         # and look at the result
 ```
 
-**The detector is a heuristic, so the check is a contact sheet.** Run
-`python tools/contact-sheet.py` to render every crop — using the browser's own
-measured rectangles — with the detected face outlined, and look at it. If the outline
-is not on a face the measurement is wrong rather than the crop, which is the failure
-the pair of tools exists to expose. The earlier skin-tone version of this check
-reported 79 clipped faces that were not clipped, and a key-mismatch bug in the join
-once tested 36 images out of 535 while announcing the site clean.
+The detector is still a heuristic, so the contact sheet is still the real check: run
+it and look. If the outlined box is not on a face, the measurement is wrong rather than
+the crop. The earlier skin-tone version reported 79 clipped faces that were not
+clipped, and a key-mismatch once tested 36 images out of 535 while announcing the site
+clean.
 
-Eleven of the 43 portraits were shipping with the head cut; one still is, at 2.4%,
-which is the limit of its own download. `DESIGN.md` §14 has the account.
+The uncropped uploads live in `strata-scan/raw-team-orig/`, fetched by
+`strata-scan/fetch-team-originals.mjs` — 908×1671 against the 480×883 generated sizes
+`raw-team/` held, same framing at twice the resolution. `DESIGN.md` §15 has the full
+account, including the second bug it uncovered.
 
 **Every file, not just every set.** `assets/PROVENANCE.json` carries one row per
 shipped asset — its source URL, or its authorship — because "all raster assets are

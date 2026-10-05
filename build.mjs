@@ -308,7 +308,7 @@ const roleTable = (roles, { thumbs = false } = {}) => `
         <tbody>
           ${roles.map(r => `<tr class="is-link">
             <td class="n">${r.no}</td>
-            <td class="role">${thumbs && ROLE_FACE[r.href] ? `<span class="role-thumb"><img src="assets/portrait/${ROLE_FACE[r.href]}-400.webp" alt="" width="400" height="500" loading="lazy" decoding="async"></span>` : ''}<a href="${r.href}">${esc(r.name)}</a></td>
+            <td class="role">${thumbs && ROLE_FACE[r.href] ? `<span class="role-thumb"><img src="assets/portrait/${ROLE_FACE[r.href]}-400.webp" alt="" width="${PORTRAIT_W}" height="${PORTRAIT_H}" loading="lazy" decoding="async"></span>` : ''}<a href="${r.href}">${esc(r.name)}</a></td>
             <td class="k">${esc(r.one)}</td>
             <td class="n"><a href="${r.href}">Read${' &rarr;'}</a></td>
           </tr>`).join('\n          ')}
@@ -677,8 +677,11 @@ const ROLE_FACE = {
   'role-pm-accountant.html': 'team-accountant',
 };
 
-/* portrait/ and exec/ ship at two widths; people/ ships at one. */
+/* Every portrait ships at two widths. The intrinsic size is the incumbent's own
+   908x1671 frame, which is what these photographs are: head, neck and shoulders. */
 const portraitSrcset = base => `${base}-400.webp 400w, ${base}-800.webp 800w`;
+const PORTRAIT_W = 400;
+const PORTRAIT_H = 736;
 
 /* The eight role photographs, ordered so the strata roles come first and the
    property-management roles follow — the same order the page's two tables use.
@@ -695,7 +698,7 @@ function plateRole(slug, alt, sizes, { name = '', role = '', lazy = true } = {})
   const base = `assets/portrait/${slug}`;
   return `<figure class="plate-fig">
           <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}"
-            sizes="${sizes}" width="400" height="500" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}></span>
+            sizes="${sizes}" width="${PORTRAIT_W}" height="${PORTRAIT_H}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : ''}></span>
           ${name || role ? `<figcaption>${name ? `<span class="plate-fig__name">${esc(name)}</span>` : ''}${role ? `<span class="plate-fig__role">${esc(role)}</span>` : ''}</figcaption>` : ''}
         </figure>`;
 }
@@ -706,7 +709,7 @@ function roleCard(role) {
   const base = `assets/portrait/${role.face}`;
   return `<a class="role-card" href="${role.href}">
           <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}"
-            sizes="(max-width: 980px) 44vw, 22vw" width="400" height="500"
+            sizes="(max-width: 980px) 44vw, 22vw" width="${PORTRAIT_W}" height="${PORTRAIT_H}"
             alt="${esc(role.name)}" loading="lazy" decoding="async"></span>
           <span class="role-card__name">${esc(role.name.replace(/^Strata /, ''))}</span>
           <span class="role-card__one">${esc(role.one)}</span>
@@ -714,21 +717,32 @@ function roleCard(role) {
         </a>`;
 }
 
-/* A real, named person from the board, mounted as a plate. One file per person,
-   already cropped 3:4 around their own face. */
+/* A real, named person from the board, mounted as a plate. Uncropped: the frame is
+   the incumbent's own 908x1671, head to shoulders, and the box matches its ratio. */
 function platePerson(p, sizes, { caption = true, cls = '' } = {}) {
+  const base = `assets/${p.file.replace(/-400\.webp$/, '')}`;
   return `<figure class="plate-fig${cls ? ' ' + cls : ''}">
-          <span class="plate-fig__frame"><img src="assets/${p.file}"
-            alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640"
+          <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}"
+            alt="${esc(p.name)}, ${esc(p.role)}" width="${PORTRAIT_W}" height="${PORTRAIT_H}"
             sizes="${sizes}" loading="lazy" decoding="async"></span>
           ${caption ? `<figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>` : ''}
         </figure>`;
 }
 
-/* A named person, looked up by the slug their file ends with. `PEOPLE` is read at
-   the bottom of this file, but every caller here runs during rendering, so the
-   lookup resolves long before the first call. */
-const personBySlug = s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`));
+/* A named person, looked up by slug. Matches on the slug with any width suffix
+   stripped, rather than on the literal filename, so changing what the producer names
+   its files cannot silently resolve every lookup to undefined again. */
+const personBySlug = s => PEOPLE.find(
+  p => p.file.replace(/^people\//, '').replace(/-\d+\.webp$/, '') === s);
+
+/* One face in a wall or a strip: bare img, no plate furniture. Three places emitted
+   this by hand with the old 480x640 dimensions and no srcset, so the 800s were
+   shipped and never referenced. One helper now, so the next change lands in one
+   place. */
+function wallImg(p) {
+  const base = `assets/${p.file.replace(/-400\.webp$/, '')}`;
+  return `<img src="${base}-400.webp" srcset="${portraitSrcset(base)}" alt="${esc(p.name)}, ${esc(p.role)}" width="${PORTRAIT_W}" height="${PORTRAIT_H}" loading="lazy" decoding="async">`;
+}
 
 /* One office bearer, mounted as a plate. Shared by executives.html and the about
    page, which shows the same four people as the answer to "who is behind this";
@@ -736,7 +750,7 @@ const personBySlug = s => PEOPLE.find(p => p.file.endsWith(`/${s}.webp`));
 function execPlate(e, sizes = '(max-width: 640px) 44vw, 23vw') {
   const base = `assets/exec/${e.img}`;
   return `<figure class="plate-fig">
-                <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}" sizes="${sizes}" width="400" height="500" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
+                <span class="plate-fig__frame"><img src="${base}-400.webp" srcset="${portraitSrcset(base)}" sizes="${sizes}" width="${PORTRAIT_W}" height="${PORTRAIT_H}" alt="${esc(e.n)}" loading="lazy" decoding="async"></span>
                 <figcaption><span class="plate-fig__name">${esc(e.n)}</span><span class="plate-fig__role">${esc(e.r)}</span></figcaption>
               </figure>`;
 }
@@ -853,7 +867,7 @@ PAGES['index.html'] = () => {
       </section>
 
       <section class="faces" aria-label="Members of the Strata Staff Global team">
-${STRIP.map(p => `        <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">`).join('\n')}
+${STRIP.map(p => `        ${wallImg(p)}`).join('\n')}
       </section>
       <p class="faces__cap">Six of the nineteen specialists on our board &mdash; human resources, training, accounting, administration, technology and client success. <a class="link" href="team.html">Meet all nineteen</a></p>
 
@@ -963,7 +977,7 @@ ${item({
           <div class="item__body item__body--wide">
             <div class="wall">
 ${PEOPLE.map(p => `              <figure>
-                <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">
+                ${wallImg(p)}
                 <figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>
               </figure>`).join('\n')}
             </div>
@@ -994,7 +1008,7 @@ ${phead({
   })}
 
       <section class="faces faces--eight" aria-label="Strata Staff Global specialists">
-${ROLE_STRIP.map(s => `        <img src="assets/portrait/${s}-400.webp" srcset="${portraitSrcset(`assets/portrait/${s}`)}" sizes="(max-width: 640px) 25vw, 12vw" width="400" height="500" alt="" loading="lazy" decoding="async">`).join('\n')}
+${ROLE_STRIP.map(s => `        <img src="assets/portrait/${s}-400.webp" srcset="${portraitSrcset(`assets/portrait/${s}`)}" sizes="(max-width: 640px) 25vw, 12vw" width="${PORTRAIT_W}" height="${PORTRAIT_H}" alt="" loading="lazy" decoding="async">`).join('\n')}
       </section>
       <p class="faces__cap">Eight of the ten roles, photographed for our own register. The full scope of each &mdash; and the platforms it runs on &mdash; is set out below.</p>
 
@@ -1325,7 +1339,7 @@ ${ctaBlock()}
 const coursePanel = r => {
   const face = ROLE_FACE[r.href];
   return `<div class="tab-role">
-              ${face ? `<span class="tab-role__fig"><img src="assets/portrait/${face}-400.webp" srcset="${portraitSrcset(`assets/portrait/${face}`)}" sizes="(max-width: 640px) 40vw, 190px" width="400" height="500" alt="" loading="lazy" decoding="async"></span>` : ''}
+              ${face ? `<span class="tab-role__fig"><img src="assets/portrait/${face}-400.webp" srcset="${portraitSrcset(`assets/portrait/${face}`)}" sizes="(max-width: 640px) 40vw, 190px" width="${PORTRAIT_W}" height="${PORTRAIT_H}" alt="" loading="lazy" decoding="async"></span>` : ''}
               <div class="tab-role__body">
                 <h3>${esc(r.name)} &mdash; ${r.modules.length} modules</h3>
                 <ul>${r.modules.map((m, i) => `<li><span class="num" style="color:var(--ink-3);margin-right:.7rem">M${i + 1}</span>${esc(m)}</li>`).join('')}</ul>
@@ -1576,7 +1590,7 @@ ${phead({
           <div class="item__body item__body--wide">
             <div class="wall">
 ${PEOPLE.map(p => `              <figure>
-                <img src="assets/${p.file}" alt="${esc(p.name)}, ${esc(p.role)}" width="480" height="640" loading="lazy" decoding="async">
+                ${wallImg(p)}
                 <figcaption><span class="plate-fig__name">${esc(p.name)}</span><span class="plate-fig__role">${esc(p.role)}</span></figcaption>
               </figure>`).join('\n')}
             </div>
@@ -2194,11 +2208,20 @@ for (const [f, n] of written) console.log(`${String(n).padStart(7)}b  ${f}`);
 console.log(`\n${written.length} pages written.`);
 
 /* Remove assets this build does not ship, so nothing in assets/ is orphaned.
-   Assets are referenced from HTML and, for typefaces, from CSS. */
+   Assets are referenced from HTML and, for typefaces, from CSS.
+
+   The character class must exclude whitespace and commas as well as quotes. A
+   `srcset` value is a comma-separated list with a space before each width
+   descriptor, so a class that stops only at a quote swallows the entire attribute
+   as one string: the first candidate registers under a nonsense key containing the
+   second, and neither variant is seen. That made every 2x file look like dead
+   weight -- the "19 present but unreferenced" this build used to report was
+   entirely that, not nineteen real orphans. Had this walk still been destructive, it
+   would have deleted every 800 alongside the 400 it kept. */
 const shipped = new Set(['fonts/fonts.css', 'marker.svg']);
 for (const [f] of written) {
   const html = await readFile(path.join(ROOT, f), 'utf8');
-  for (const m of html.matchAll(/assets\/([^"')?#]+)/g)) shipped.add(m[1]);
+  for (const m of html.matchAll(/assets\/([^"')?#\s,]+)/g)) shipped.add(m[1]);
 }
 for (const cssFile of ['styles.css', 'styles-tabs.css', 'assets/fonts/fonts.css']) {
   let css;

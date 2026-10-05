@@ -1144,5 +1144,93 @@ Two sub-1× densities remain and both are source-limited: `marisol-office` is a 
 original in a 1248px box and `connect-q1-q2-2024` a 600px original in a 758px box, with
 nothing larger published to serve. Recorded rather than hidden.
 
+## 15. The §14 diagnosis was wrong: the crop was throwing away the shoulders
+
+§14 ends by saying no face is clipped and the framing is sound. That was true and it
+was the wrong answer. The complaint was never about faces.
+
+### What the face detector could not see
+
+§14 built a face detector, used it to prove every head was in frame, and reported
+success. A face detector only knows about faces. Every measurement it produced was
+correct and none of them could observe the thing that was wrong, because the fault was
+not in the head — it was in what the crop did to everything below the chin.
+
+The check answered "is the face cut?" with a confident no. The question was "what does
+the picture look like?", and no amount of improving the detector was going to get
+there.
+
+### The silhouette, which is what should have been measured
+
+Measuring the subject's width row by row — background taken from the four corners,
+every pixel that differs marked — describes the composition directly. In tenths of
+frame height, over Anna Marie David's source:
+
+```
+0.85  0.86  0.93  0.81 | 0.33  0.22  0.15 | 0.33  0.41  0.83
+\________ head ________/ \______ neck ____/ \_____ shoulders ____/
+```
+
+The shoulders are the bottom 30%. A 3:4 crop of a 0.543-aspect photograph keeps the top
+72.5% — which lands just above the shoulder line. The result is a large head on a neck:
+head, no shoulders. That is what reads as a face too close up, and it is what "I can
+only see teeth" meant.
+
+Measured the same way, the shipped file's bottom tenth was **0.36** where the source's
+is **0.91**. Neil Dane Puno: 0.35 shipped against 0.91 in source. The shoulders were
+being cut off, on every portrait, by the crop that §14 had just finished making safe.
+
+### The fix: stop cropping
+
+These photographs are already composed as head-and-shoulders. That composition was
+never ours to make.
+
+- The producer no longer crops. `frame()` in `strata-scan/optimise.py` now returns the
+  image unchanged, and the three attempts that preceded it are recorded in its
+  docstring so nobody reintroduces a fourth.
+- Every portrait ships at the incumbent's own **908×1671**, the format it publishes all
+  of them in.
+- Portrait boxes carry `--portrait-ra: 908 / 1671`, so `object-fit: cover` has nothing
+  left to crop. The old 3:4 and 4:5 ratios were the same mistake in CSS that
+  `frame()` was making in Python.
+- `raw-team-orig/` holds the uncropped uploads, 908×1671 against the generated
+  480×883 that `raw-team/` had. Same framing at twice the resolution, and the file we
+  should have been using from the start.
+
+The measured result, bottom tenth of the frame:
+
+| Portrait | Cropped (3:4) | Uncropped |
+| --- | --- | --- |
+| `anna-marie-david` | 0.36 | **0.91** |
+| `neil-dane-puno` | 0.35 | **0.91** |
+| `leah-adriano` | 0.68 | **0.95** |
+| `carlo-andreu-tayag` | 0.93 | 0.77 |
+
+The portraits are taller on the page as a consequence. Median page height went 4.3 to
+4.6 screens, still with zero horizontal overflow at every tested width, and the sheet
+still covers 98.7% of the viewport.
+
+### A bug in the orphan report, found by the fix
+
+The build's own asset scanner used `assets/([^"')?#]+)`. That class stops at a quote
+but not at whitespace or a comma, so a `srcset` value was captured as **one glued
+string** containing both candidates. Neither variant registered; only the `src`
+attribute's file did. Every 2x file therefore looked like dead weight.
+
+The "19 present but unreferenced" that §10 and the README recorded as fact was
+entirely this artefact — there were no orphans. It surfaced only because this change
+put 19 more people-images into a `srcset`, doubling the phantom count to 38.
+
+Worth stating plainly: had that walk still been destructive, it would have deleted
+every 800 file while keeping the 400 beside it. It was made report-only in an earlier
+pass for an unrelated reason, and that accident is the only thing that saved the
+assets. The corrected class excludes whitespace and commas; the report is now
+**112 shipped, 0 unreferenced**, and `tools/srcset-check.mjs` — which always parsed
+`srcset` correctly — agrees independently.
+
+The lesson from §14 repeated itself here. A tool that reports success is not evidence
+of success; both times the thing that was wrong was the question being asked.
+
+
 
 

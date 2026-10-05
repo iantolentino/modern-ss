@@ -437,11 +437,11 @@
     "faceFraming": {
       "clipped": 0,
       "masked": 0,
-      "tested": 215,
+      "torsoCut": 0,
+      "tested": 101,
       "tightUnder3pct": 5,
-      "tightNote": "all five are the same asset, trevor-400, at its source limit",
       "softUnder1x": 2,
-      "softNote": "marisol-office 0.82x and connect-q1-q2-2024 0.79x; both source-limited, nothing larger is published upstream"
+      "note": "tight and soft are both source limits; see README Honest limitations"
     }
   },
   "verifiedAfterImagery": {
@@ -465,7 +465,7 @@
     "pagesTotal": 40
   },
   "faceFraming": {
-    "summary": "Every portrait is cropped so the head is in frame. Eleven of 43 were not, because frame() in optimise.py placed the skin-tone centroid at FACE_BIAS and the centroid is dragged down by the neck, hands and warm background.",
+    "summary": "Portraits ship uncropped at the source's own 908x1671. Portrait boxes carry 908/1671 so object-fit: cover has nothing to crop.",
     "detector": "OpenCV Haar cascades, frontal and profile, pooled over nine parameter sets and filtered by shape (height 10-80% of frame, aspect 0.6-1.8). Chosen because the previous YCbCr skin-tone box spanned the whole frame on these photographs at 11-34% coverage and reported 79 clipped faces that were not clipped.",
     "selection": "Highest plausible detection, not largest. Largest chose a torso over the face on team-accountant; \"largest in the upper half\" still admitted a torso centred at 0.502 on carlo-andreu-tayag. Single-subject portraits make the head the topmost face-like blob.",
     "cropRule": "The window still aims at FACE_BIAS but is bounded above by head_top minus 0.55 of a face height. All 31 raw sources keep the head in the top 15% (min 0.024, median 0.097), less than that margin needs, so the bound is always active and the crop is effectively top-anchored. With no detection it also anchors to the top rather than centring, which is the fallback that cut carlo-andreu-tayag.",
@@ -496,6 +496,47 @@
       "tools/_crops.json is keyed by basename and strata-scan/_face-boxes.json by path, so the first join tested 36 of 535 images and announced the site clean.",
       "Density was computed from naturalWidth, which Chrome already divides by the effective srcset density; it invented eleven upscales that were not upscales."
     ],
-    "caveat": "The detector is a heuristic and is wrong on a minority of frames. tools/contact-sheet.py exists so the check can be read rather than trusted."
+    "caveat": "The detector is a heuristic and is wrong on a minority of frames. tools/contact-sheet.py exists so the check can be read rather than trusted.",
+    "previousApproach": "Cropped to 3:4 and 4:5, which keeps the top 72.5% of a 0.543-aspect source and removes the shoulders in the bottom 30%.",
+    "whyItWasWrong": "A face detector answers \"is the face cut?\". Every head was intact, so the check passed while every portrait read as a head on a neck. The fault was below the chin and no face measurement could observe it.",
+    "whatRevealedIt": "Measuring the subject silhouette row by row: subject width per tenth of frame. The shoulders are the bottom 30% of every source.",
+    "sourceRatio": "908/1671 (0.5435)",
+    "cssToken": "--portrait-ra",
+    "croppedByCss": 0,
+    "portraitRendersMeasured": 70,
+    "portraitRendersShowingTheWholeFile": 70,
+    "shoulders": {
+      "guard": "strata-scan/shoulders.py",
+      "method": "subject width per tenth of frame, background from the four corners, shipped file compared against its raw source",
+      "compared": 31,
+      "shippedBottomTenth": {
+        "min": 0.34,
+        "median": 0.93,
+        "max": 0.99
+      },
+      "belowSourceBottom": 0,
+      "tolerance": 0.25,
+      "selfTest": "strata-scan/guard-selftest.py",
+      "selfTestResult": "reproducing the 3:4 crop makes it report 8 portraits losing their shoulders and exit 1; restoring the assets makes it exit 0",
+      "worstCaseUnderTheOldCrop": "patricia-puno 0.95 source -> 0.04 shipped"
+    },
+    "layoutGuard": {
+      "tool": "tools/face-verify.mjs",
+      "reports": "TORSO CUT",
+      "current": "no box cuts the bottom of any portrait",
+      "limitation": "Cannot detect a file-level crop: it measures the file it is handed, so a file that has already lost its shoulders has no shoulder line to miss."
+    },
+    "pageHeightCost": "median page 4.3 -> 4.6 screens; 0 horizontal overflow at 12 widths"
+  },
+  "assetScanning": {
+    "file": "build.mjs",
+    "previousPattern": "assets/([^\"' )?#]+",
+    "fault": "The character class stopped at a quote but not at whitespace or a comma, so a srcset value was captured as one glued string holding both candidates. Neither variant registered and every 2x file looked like dead weight.",
+    "correctedPattern": "assets/([^\"' )?#\\s,]+",
+    "previousReportedOrphans": 38,
+    "actualOrphans": 0,
+    "resultAfterFix": "112 shipped, 0 present but unreferenced",
+    "independentConfirmation": "tools/srcset-check.mjs, which always parsed srcset, reports 0 images pointed at by neither src nor srcset",
+    "consequenceHadTheWalkStayedDestructive": "It would have deleted every 800 while keeping the 400 beside it. It was made report-only earlier for an unrelated reason, and that is the only thing that saved the assets."
   }
 }

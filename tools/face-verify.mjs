@@ -23,6 +23,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const FACES = path.join(ROOT, '..', 'strata-scan', '_face-boxes.json');
+const SILHOUETTE = path.join(ROOT, '..', 'strata-scan', '_silhouette.json');
 
 const strip = s => s.replace(/^\uFEFF/, '');
 
@@ -31,6 +32,11 @@ const crops = strip(await readFile(path.join(ROOT, 'tools', '_crops.json'), 'utf
   .map(l => JSON.parse(l.slice(5)));
 
 const boxes = JSON.parse(await readFile(FACES, 'utf8'));
+
+/* Optional: where the shoulders are. Written by strata-scan/shoulders.py. Absent is
+   tolerated so this still runs on a checkout that has not built it. */
+let silhouette = {};
+try { silhouette = JSON.parse(await readFile(SILHOUETTE, 'utf8')); } catch { /* optional */ }
 
 /* The browser reports the chosen file's basename; the boxes are keyed by path
    relative to assets/. Joining those two directly matched only the files that sit at
@@ -56,7 +62,25 @@ const masked = [];    // the face is behind a non-rectangular mask
 const soft = [];      // rendered larger than the file can support
 const ambiguous = []; // a basename that exists in more than one assets/ folder
 const tight = [];     // inside the rectangle, but with little room above the brow
+const torso = [];     // the bottom of the frame is cut, where the shoulders are
 let checked = 0;
+
+/* A layout-level check on the same fault, and a deliberately weak one.
+
+   The original bug was that portraits were cropped to 3:4 by the producer, which kept
+   the top 72.5% of a 0.543-aspect source and removed the shoulders in the bottom 30%.
+   This check CANNOT catch that, and the attempt to make it do so is instructive: it
+   measures the file it is handed, so once the file has lost its shoulders its own
+   silhouette has no shoulder line to miss and the check passes vacuously. Restoring
+   the old 4:5 CSS did not make it fire either, because a centred 4:5 crop of an
+   uncropped file takes only 3% off the bottom.
+
+   The check that actually catches the bug is strata-scan/shoulders.py, which compares
+   each shipped file against its raw source. This one stays because it is cheap and it
+   does catch a future stylesheet that crops aggressively -- but it is the second line,
+   not the first. */
+const MIN_BOTTOM_SHOWN = 0.95;
+const SHOULDER_BAND = 0.5;   // a bottom tenth this wide is a shoulder line
 
 for (const c of crops) {
   if (!c.nw || !c.nh) continue;
@@ -104,6 +128,20 @@ for (const c of crops) {
   if (fb.w && c.bw && fb.w / c.bw < 1) {
     soft.push({ page: c.page, vw: c.vw, src: c.src, density: fb.w / c.bw, nat: `${fb.w}x${fb.h}`, box: `${c.bw}x${c.bh}` });
   }
+
+  /* Does the box keep the shoulders? Only meaningful where the file has a shoulder
+     line to lose. The silhouette is keyed by assets-relative path; the browser gives
+     a basename, so try both. */
+  const sil = silhouette[c.src] || Object.entries(silhouette)
+    .find(([k]) => k.split('/').pop() === c.src)?.[1];
+  if (sil && sil.bottom >= SHOULDER_BAND && v.y1 < MIN_BOTTOM_SHOWN) {
+    const shown = 1 - v.y1;
+    torso.push({
+      page: c.page, vw: c.vw, src: c.src, cut: shown,
+      bottom: sil.bottom, box: `${c.bw}x${c.bh}`,
+      cropH: c.crop?.h,
+    });
+  }
 }
 
 const pages = [...new Set(crops.map(c => c.page))].length;
@@ -134,6 +172,16 @@ if (tight.length) {
   console.log('    (above 0 a face is not cut; this is the margin, not a failure)');
 }
 
+if (torso.length) {
+  console.log(`\n  ${torso.length} TORSO CUT - the box removes the bottom of the frame, where the shoulders are:`);
+  for (const r of uniq(torso).slice(0, 20)) {
+    console.log(`    ${r.src}  loses the bottom ${(r.cut * 100).toFixed(0)}%  (subject there is ${r.bottom.toFixed(2)} wide)  box ${r.box}  ${r.page} @${r.vw}`);
+  }
+  console.log('    A portrait framed as head-and-shoulders reads as a close-up if this is cut.');
+} else if (Object.keys(silhouette).length) {
+  console.log('\n  no box cuts the bottom of any portrait: every shoulder line is kept.');
+}
+
 if (masked.length) {
   console.log(`\n  ${masked.length} MASKED - shown through a non-rectangular shape:`);
   for (const r of uniq(masked).slice(0, 20)) {
@@ -148,4 +196,4 @@ if (soft.length) {
   }
 }
 
-process.exitCode = clipped.length || masked.length ? 1 : 0;
+process.exitCode = clipped.length || masked.length || torso.length ? 1 : 0;

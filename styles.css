@@ -1,7 +1,7 @@
-@import url('assets/fonts/fonts.css');
+﻿@import url('assets/fonts/fonts.css');
 
 /* ============================================================================
-   STRATA STAFF GLOBAL — "AGENDA"
+   STRATA STAFF GLOBAL â€” "AGENDA"
    A rebuild whose world is the bound AGM notice pack: the document strata
    managers live inside. Sheets on a desk, navy ink, hairline schedules, clause
    numbers in the punch gutter, real rubber stamps, one highlighter sweep per
@@ -9,7 +9,7 @@
 
    Colour strategy: the brand is two colours and nothing else. The logo itself
    is 54% #094BC1 blue and 46% #00544E teal, so every accent here is one of
-   those two — blue drives the live controls and the stamps, teal carries the
+   those two â€” blue drives the live controls and the stamps, teal carries the
    second voice, the highlighter and the accreditation seals. The grounds and
    greys are the values the incumbent site actually ships. There is no third
    accent colour in the build.
@@ -17,7 +17,7 @@
 
 /* ---------------------------------------------------------------- tokens -- */
 :root {
-  /* ground and ink — the incumbent's own values, read off its stylesheet:
+  /* ground and ink â€” the incumbent's own values, read off its stylesheet:
      #00102E navy, #233452 secondary navy, #69727D body grey, #F4F5F7 light
      ground, #D5D8DC border grey. The desk is that same cool grey family taken
      a step deeper, so a white sheet still lifts off it. */
@@ -26,10 +26,10 @@
   --sheet-2:     #F4F5F7;   /* a second sheet / recessed print area */
   --ink:         #00102E;   /* primary ink */
   --ink-2:       #233452;   /* secondary text */
-  --ink-3:       #666F7A;   /* tertiary / annotation — the site's #69727D, one
+  --ink-3:       #666F7A;   /* tertiary / annotation â€” the site's #69727D, one
                                step down so it also clears AA on --sheet-2 */
   --grey:        #D5D8DC;   /* the site's border grey */
-  /* Buttons darken on hover — except the ink one, which is already the darkest
+  /* Buttons darken on hover â€” except the ink one, which is already the darkest
      value in the palette and has nowhere darker to go. It lifts instead. Kept as
      a token so the palette stays closed. */
   --ink-lift:    #041B44;
@@ -50,11 +50,19 @@
   --pad-x:       clamp(20px, 3.2vw, 96px);   /* the sheet's right-hand inset; fluid so the pack fills a wide desk */
   --res-pad-y:   clamp(3.4rem, 6.4vw, 6rem); /* the navy band's vertical inset; a root token so the linter can resolve it */
   /* The twelve-column grids are held together by eleven gaps. At a fixed 30px
-     those gaps alone are 330px wide, which is wider than a 320px phone — the
+     those gaps alone are 330px wide, which is wider than a 320px phone â€” the
      grid would overflow its own sheet. One token, scaling with the viewport,
      keeps every grid valid at every width. */
   --col-gap:     clamp(13px, 2.1vw, 30px);
   --bar-h:       64px;
+
+  /* The incumbent's own portrait format. Every photograph of a person it publishes
+     is 908x1671 -- head, neck and shoulders in one frame -- and that is what we ship,
+     uncropped. Portrait boxes carry this ratio so object-fit: cover has nothing to
+     crop. Forcing these into 3:4 or 4:5 was discarding the bottom third of every
+     photograph, which is where the shoulders are, and the result read as a face too
+     close up. Measured in DESIGN.md 15. */
+  --portrait-ra: 908 / 1671;
 
   /* type */
   --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
@@ -67,7 +75,7 @@
   --lede:        clamp(1.06rem, .98rem + .5vw, 1.34rem);
   --body:        1.0625rem;
 
-  /* motion — one authored easing, exponential ease-out, no bounce */
+  /* motion â€” one authored easing, exponential ease-out, no bounce */
   --ease:        cubic-bezier(.16, 1, .3, 1);
   --dur:         .62s;
 
@@ -82,7 +90,7 @@
 
   /* the document's double rule. Drawn as a real border because that is what a
      double rule is: two hairlines with a one-pixel gap, in the record's own
-     ink. It is not an accent, and it is never on the side of a card — it is the
+     ink. It is not an accent, and it is never on the side of a card â€” it is the
      head-rule of a printed schedule, so every ruled block in the pack opens the
      same way. */
   --rule-head: 3px double var(--rule-ink);
@@ -275,7 +283,7 @@ table { border-collapse: collapse; width: 100%; }
 /* The secondary action, and the site's ordinary "go and read this" link. It is
    set in sentence case deliberately.
 
-   It used to be uppercase, which made a control label of it — but its text is
+   It used to be uppercase, which made a control label of it â€” but its text is
    not a label, it is a sentence: "See all ten roles and both service lines" runs
    to 40 characters. Worse, `.btn2` also carries the solutions email address, and
    uppercase rendered that as SOLUTIONS@STRATASTAFFGLOBAL.COM, which is both
@@ -436,7 +444,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .role-thumb { display: inline-block; width: 40px; margin-right: .7rem; vertical-align: middle; }
 .role-thumb img {
   display: block; width: 100%; height: auto;
-  aspect-ratio: 4 / 5; object-fit: cover;
+  aspect-ratio: var(--portrait-ra); object-fit: cover;
   border: 1px solid var(--rule-mid);
   filter: saturate(.94) contrast(1.03);
 }
@@ -483,7 +491,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   .item--plain .item__wrap { padding-top: 3.8rem; padding-bottom: 3.8rem; }
 }
 
-/* the four clauses of the motion — a ruled sequence, deliberately not cards */
+/* the four clauses of the motion â€” a ruled sequence, deliberately not cards */
 .clauses { padding-top: .4rem; }
 .clause {
   display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 1.35fr);
@@ -495,8 +503,8 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .clause:hover { background: var(--sheet-2); }
 .clause:last-child { border-bottom: 1px solid var(--rule-ink); }
 .clause__no { font-family: var(--mono); font-size: .86rem; font-weight: 600; color: var(--teal); }
-/* A sequence ordered by position rather than by a printed clause reference —
-   the four steps of how it works — so the reference column collapses. */
+/* A sequence ordered by position rather than by a printed clause reference â€”
+   the four steps of how it works â€” so the reference column collapses. */
 .clauses--plain .clause { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
 .clause h3 { font-size: 1.24rem; }
 .clause p { color: var(--ink-2); max-width: 62ch; }
@@ -637,8 +645,8 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   border: 1px solid var(--rule); filter: saturate(.9);
 }
 .stmt blockquote { font-size: 1.05rem; line-height: 1.62; color: var(--ink); max-width: 68ch; }
-.stmt blockquote::before { content: '“'; }
-.stmt blockquote::after { content: '”'; }
+.stmt blockquote::before { content: 'â€œ'; }
+.stmt blockquote::after { content: 'â€'; }
 .stmt__meta { text-align: left; }
 .stmt__name { font-weight: 700; font-stretch: 104%; }
 .stmt__role { color: var(--ink-2); font-size: .9rem; }
@@ -663,7 +671,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 
 /* ================================================================ options = */
-/* a selectable row — the register's unit, and the whole site's list grammar */
+/* a selectable row â€” the register's unit, and the whole site's list grammar */
 .opts { padding-top: .4rem; }
 .opt {
   display: grid; grid-template-columns: 74px minmax(0, 1fr) minmax(0, 1fr) 30px;
@@ -760,7 +768,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 /* The role page header's plate: right-aligned in its column and held to a size
    that keeps the page title, not the photograph, as the largest thing on screen. */
 .phead__plate { max-width: 330px; margin-left: auto; }
-.plate-fig--beside .plate-fig__frame img { aspect-ratio: 3 / 4; object-fit: cover; }
+.plate-fig--beside .plate-fig__frame img { aspect-ratio: var(--portrait-ra); object-fit: cover; }
 
 /* ============================================================== platforms = */
 /* Twelve platforms, so six columns gives two clean rows rather than five and a
@@ -779,12 +787,12 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 /* ============================================================= photographs = */
 /* A portrait is mounted the way this world mounts any other exhibit: a hairline
    frame, a slim mount, and a caption set under the image. No rounding and no
-   shadow — in this world a photograph is an annexure to the document, not a
+   shadow â€” in this world a photograph is an annexure to the document, not a
    card. That is also why there is no card chrome anywhere below: the frame is a
    rule, and the caption carries the identity.
 
    Every portrait was cropped to its final aspect around its own measured face
-   position before it shipped (see DESIGN.md §12), so no CSS here needs to guess
+   position before it shipped (see DESIGN.md Â§12), so no CSS here needs to guess
    at object-position. `object-fit: cover` is a safety net for the responsive
    widths, not the primary framing mechanism. */
 
@@ -813,7 +821,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    that the face belongs to a training manager rather than a stock model. It was
    set in 10.5px uppercase mono, which is the least readable treatment available
    for the most important line on the plate. Sentence case, a real size, and a
-   darker ink — the mono stays, because this world sets its labels in it. */
+   darker ink â€” the mono stays, because this world sets its labels in it. */
 .plate-fig__role {
   margin-top: .25rem;
   font-family: var(--mono); font-size: .78rem;
@@ -832,7 +840,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 .faces img {
   display: block; width: 100%; height: 100%;
-  aspect-ratio: 3 / 4; object-fit: cover;
+  aspect-ratio: var(--portrait-ra); object-fit: cover;
   filter: saturate(.94) contrast(1.03);
 }
 .faces__cap {
@@ -845,7 +853,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    roles themselves, so its strip holds the whole set in one row and drops to four
    across on anything narrower. */
 .faces--eight { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-.faces--eight img { aspect-ratio: 4 / 5; }
+.faces--eight img { aspect-ratio: var(--portrait-ra); }
 
 /* Four roles, shown as four faces rather than four paragraphs. The whole card is
    the link, so the tap target is the photograph rather than a word at the end of
@@ -853,7 +861,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .roles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--col-gap); }
 
 .role-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
-.role-card .plate-fig__frame img { aspect-ratio: 4 / 5; object-fit: cover; transition: filter .25s var(--ease); }
+.role-card .plate-fig__frame img { aspect-ratio: var(--portrait-ra); object-fit: cover; transition: filter .25s var(--ease); }
 .role-card__name {
   margin-top: .8rem; font-family: var(--sans); font-weight: 700;
   font-size: 1rem; letter-spacing: -.014em; line-height: 1.25; color: var(--ink);
@@ -877,7 +885,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    nothing but a line for the captions to crowd. */
 .wall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--grey); border-block: 1px solid var(--grey); }
 .wall figure { margin: 0; background: var(--sheet); padding: .75rem; }
-.wall img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; filter: saturate(.94) contrast(1.03); }
+.wall img { width: 100%; height: auto; aspect-ratio: var(--portrait-ra); object-fit: cover; display: block; filter: saturate(.94) contrast(1.03); }
 .wall figcaption { padding-top: .5rem; }
 .wall .plate-fig__name { margin-top: 0; font-size: .84rem; }
 
@@ -899,7 +907,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 /* Nineteen plates in two columns is ten rows of scrolling: four and a half
    screens of the smallest viewport spent on one section. On a phone the register
-   becomes a list instead — a thumbnail, a name, a role, one line each, which
+   becomes a list instead â€” a thumbnail, a name, a role, one line each, which
    reads better and costs less than half the height. */
 @media (max-width: 640px) {
   .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 13px; row-gap: 1.6rem; }
@@ -911,7 +919,10 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
     padding: .7rem 0; background: none; border-bottom: 1px solid var(--rule);
   }
   .wall figure:last-child { border-bottom: 0; }
-  .wall img { width: 60px; height: 76px; aspect-ratio: auto; }
+  /* 60x76 was a 4:5 box, which cut a 908x1671 portrait down to a horizontal band
+     across the middle of the face. The register thumb keeps the portrait ratio, so
+     it shows the same head-and-shoulders as the full plate, only smaller. */
+  .wall img { width: 44px; height: 81px; aspect-ratio: var(--portrait-ra); }
   .wall figcaption { padding-top: 0; }
   .wall .plate-fig__name { font-size: .92rem; }
 }
@@ -923,7 +934,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   padding: .34rem .62rem; border: 1px solid var(--rule); border-radius: 2px;
   color: var(--ink-2); background: var(--sheet-2);
 }
-.tasks li::after { content: '·'; color: var(--blue); margin-left: .45rem; }
+.tasks li::after { content: 'Â·'; color: var(--blue); margin-left: .45rem; }
 .tasks li:last-child::after { content: ''; }
 
 /* ============================================================ the resolution */
@@ -1080,7 +1091,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   .band__cell + .band__cell { border-top: 1px solid var(--rule); padding-top: 1.2rem; }
 }
 
-/* A ruled list of links whose rows carry no printed reference number — the home
+/* A ruled list of links whose rows carry no printed reference number â€” the home
    page's four lead roles. The reference column collapses. */
 .opts--plain .opt { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) 30px; }
 
@@ -1224,7 +1235,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   :root { --pad-x: 20px; --body: 1rem; }
   /* A four-column schedule cannot hold its columns on a phone. Rather than let
      the sheet scroll sideways, the table is laid out to a fixed width and the
-     cells wrap — the row still reads left to right, it just gets taller. */
+     cells wrap â€” the row still reads left to right, it just gets taller. */
   .sched { table-layout: fixed; }
   .sched th, .sched td { padding: .6rem .4rem; overflow-wrap: anywhere; }
   .sched td.n, .sched th.n { white-space: normal; overflow-wrap: normal; }
