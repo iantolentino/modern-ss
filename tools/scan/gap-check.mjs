@@ -1,10 +1,14 @@
 /* How far apart are the pictures and the words?
  *
  * The complaint is that images and text drift apart in places. That is measurable:
- * for every photograph, find the nearest block of prose above or below it and report
- * the vertical gap in pixels and in line-heights. A gap of one or two lines is a
- * margin; ten lines of empty space between a face and the sentence explaining it is
- * the fault, and it makes a page feel like unrelated slabs rather than an argument.
+ * for every photograph, find the nearest block of prose and report the distance in
+ * pixels and in line-heights. A gap of one or two lines is a margin; ten lines of
+ * empty space between a face and the sentence explaining it is the fault, and it
+ * makes a page feel like unrelated slabs rather than an argument.
+ *
+ * The distance is a true rectangle distance, in both axes. It used to be a vertical
+ * gap to the nearest text whose horizontal band contained the image, and that
+ * produced a defect that did not exist (see the note at `rows` below).
  *
  * Reuses the DevTools approach from overlap-check.mjs. Node 22+ has a global
  * WebSocket, so there are no dependencies.
@@ -75,21 +79,29 @@ const PROBE = `(() => {
     if (r.width < 60 || r.height < 60) continue;
     const src = (img.currentSrc || img.src || '').split('/').pop();
     const top = r.top + window.scrollY, bottom = r.bottom + window.scrollY;
-    const cx = r.left + r.width / 2;
+    const left = r.left, right = r.right;
 
-    /* Only text that shares the image's horizontal band counts: prose in the next
-       column over is not visually adjacent even when it is vertically nearby. */
-    const beside = texts.filter(t => t.left < cx + 40 && t.right > cx - 40);
-
+    /* Nearest prose by true rectangle distance, in both axes.
+       This used to filter the text to blocks sharing the image's horizontal band --
+       in practice, blocks containing its centre column -- and then measure only the
+       vertical gap. On the home page that made the two rightmost faces of a six-up
+       row ignore the link 37px beneath them, because their centre column falls past
+       the end of a 60ch lede, and instead report a full-width list item in the
+       section above, 358px away. The layout was never wrong; the filter was. A
+       defect printed on every run is worse than no report at all, because it teaches
+       the reader to skim past the real ones. Measuring dx and dy to every text block
+       costs nothing and cannot miss the nearer block. */
     let best = null;
-    for (const t of beside) {
-      // vertical gap when they do not overlap
-      let gap = null;
-      if (t.bottom <= top) gap = top - t.bottom;
-      else if (t.top >= bottom) gap = t.top - bottom;
-      else gap = 0;                       // vertically overlapping: adjacent
-      if (gap === null) continue;
-      if (!best || gap < best.gap) best = { gap, text: t.text, lh: t.lh, where: t.bottom <= top ? 'above' : 'below' };
+    for (const t of texts) {
+      const dx = Math.max(0, Math.max(left - t.right, t.left - right));
+      const dy = Math.max(0, Math.max(top - t.bottom, t.top - bottom));
+      const gap = Math.hypot(dx, dy);
+      if (!best || gap < best.gap) {
+        best = {
+          gap, dx: Math.round(dx), dy: Math.round(dy), text: t.text, lh: t.lh,
+          where: dy === 0 ? 'beside' : (t.bottom <= top ? 'above' : 'below'),
+        };
+      }
     }
     if (best) rows.push({ src, w: Math.round(r.width), h: Math.round(r.height), ...best, gap: Math.round(best.gap) });
   }
@@ -145,17 +157,40 @@ function connect(wsUrl) {
   });
 }
 
-const profile = mkdtempSync(path.join(tmpdir(), 'dsh-gap-'));
-const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${PORT}`,
-  `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
-  '--disable-gpu', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-try {
-  let v = null;
-  for (let i = 0; i < 40 && !v; i++) { try { v = await httpJson(`http://127.0.0.1:${PORT}/json/version`); } catch { await sleep(250); } }
-  if (!v) throw new Error('Chrome did not open its debug port');
+/* Prefer a browser that is already listening. Under a confined sandbox a freshly
+   spawned Chrome cannot complete its multi-process launch: it exits at once, having
+   logged only "OpenProcess: Access is denied", so a debug port left open by an
+   earlier run is often the only usable browser here. Start one only when none is
+   live, and say plainly why when that fails -- "did not open its debug port" sends
+   the reader hunting for a port conflict that does not exist. */
+let chrome = null;
+let profile = null;
+let v = null;
+try { v = await httpJson(`http://127.0.0.1:${PORT}/json/version`); } catch { }
+if (v) {
+  console.log(`  reusing the Chrome already listening on ${PORT} (${v.Browser})`);
+} else {
+  profile = mkdtempSync(path.join(tmpdir(), 'dsh-gap-'));
+  chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${PORT}`,
+    `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
+    '--disable-gpu', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
+  for (let i = 0; i < 40 && !v; i++) {
+    if (chrome.exitCode !== null) break;
+    try { v = await httpJson(`http://127.0.0.1:${PORT}/json/version`); } catch { await sleep(250); }
+  }
+  if (!v) {
+    console.error(`  no browser: nothing listens on ${PORT}, and the Chrome started here exited`);
+    console.error(`  immediately${chrome.exitCode !== null ? ` with code ${chrome.exitCode}` : ''}. A confined process sandbox denies Chrome its child`);
+    console.error('  processes, so it cannot launch at all. Reuse a debug port left open by a run');
+    console.error('  that could, or run this where the sandbox is off.');
+    try { chrome.kill(); } catch { }
+    process.exit(1);
+  }
+}
 
+try {
   for (const url of urls) {
     const target = await httpJson(`http://127.0.0.1:${PORT}/json/new?about:blank`, 'PUT');
     const cdp = await connect(target.webSocketDebuggerUrl);
@@ -184,12 +219,12 @@ try {
       console.log(`    total page height: ${res.pageH}px = ${(res.pageH / 900).toFixed(1)} screens`);
     }
     console.log('');
-    console.log(`  photographs with more than 200px of empty space to the nearest prose: ${wide.length}`);
+    console.log(`  photographs more than 200px from the nearest prose: ${wide.length}`);
     if (wide.length) {
       console.log('');
-      console.log('    gap      imgsize   where   nearest text');
+      console.log('    gap    dx    dy  imgsize   where   nearest text');
       for (const r of wide.slice(0, 14)) {
-        console.log(`    ${String(r.gap).padStart(5)}px  ${String(r.w + 'x' + r.h).padEnd(9)} ${r.where.padEnd(7)} "${r.text}"`);
+        console.log(`    ${String(r.gap).padStart(5)}px ${String(r.dx).padStart(4)} ${String(r.dy).padStart(5)}  ${String(r.w + 'x' + r.h).padEnd(9)} ${r.where.padEnd(7)} "${r.text}"`);
       }
       const worst = wide[0];
       console.log('');
@@ -199,7 +234,10 @@ try {
     cdp.close();
   }
 } finally {
-  chrome.kill();
-  await sleep(400);
-  try { rmSync(profile, { recursive: true, force: true }); } catch { }
+  /* close only a browser this run started; a reused one belongs to whoever left it */
+  if (chrome) {
+    chrome.kill();
+    await sleep(400);
+    try { rmSync(profile, { recursive: true, force: true }); } catch { }
+  }
 }

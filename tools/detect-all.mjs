@@ -12,8 +12,8 @@
    Both are required; the script stops with a clear message rather than running
    the wrong binary. Writes _detect.json next to the pages, which
    tools/detect-show.mjs then reads. */
-import { execFileSync } from 'node:child_process';
-import { readdirSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { readdirSync, readFileSync, openSync, closeSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -30,20 +30,27 @@ if (!HOME || !CMD) {
 
 const pages = readdirSync(SITE).filter(f => f.endsWith('.html')).sort();
 const out = path.join(SITE, '_detect.json');
-writeFileSync(out, '');
 
 const bin = path.join(HOME, 'bin', '0.1.6', 'impeccable.exe');
 const env = { ...process.env, IMPECCABLE_HOME: HOME, IMPECCABLE_BIN: bin };
-/* Capture stdout directly. Wrapping this in `cmd /c "... > file 2>&1"` failed
-   with a filename-syntax error under Node's execFileSync, and the detector exits
-   non-zero whenever it finds anything, so read stdout off the error too. */
-const run = () => execFileSync('cmd', ['/c', `${CMD} detect --json ${pages.join(' ')}`], {
-  cwd: SITE, env, encoding: 'utf8', maxBuffer: 1 << 28,
+/* The detector's stdout goes straight onto a file descriptor, never through a
+   pipe. Capturing a pipe needs a named pipe, which a confined sandbox denies:
+   the child dies with EPERM and the JSON arrives empty. Writing to a descriptor
+   sidesteps that. `cmd /c "... > file 2>&1"` is not an alternative — it trips
+   Node's filename parsing. The detector exits non-zero whenever it finds
+   anything, so its status is not the signal; the file it wrote is. */
+const fd = openSync(out, 'w');
+const proc = spawnSync('cmd', ['/c', `${CMD} detect --json ${pages.join(' ')}`], {
+  cwd: SITE, env, stdio: ['ignore', fd, 'inherit'],
 });
-let raw;
-try { raw = run(); }
-catch (e) { raw = (e.stdout || '') + (e.stderr || ''); }
-writeFileSync(out, raw);
+closeSync(fd);
+
+const raw = readFileSync(out, 'utf8');
+if (!raw.trim()) {
+  console.log(`detector wrote nothing (status ${proc.status}${proc.error ? ', ' + proc.error : ''})`);
+  console.log('  a confined sandbox must give the launcher a file descriptor, not a pipe.');
+  process.exit(2);
+}
 
 let data;
 try { data = JSON.parse(raw); }

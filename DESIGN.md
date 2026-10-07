@@ -429,6 +429,17 @@ The home page's seven invented "Motion"/"Schedule" labels are gone, which is why
 `numbered-section-labels` fell by six. It stays high because the other 39 pages
 keep their item numbers deliberately, for the reason in §8.
 
+**Final re-run, after the home page was restructured (§16).** Total: **251
+findings** — 130 `numbered-section-labels`, 74 `all-caps-body`, 40
+`gpt-thin-border-wide-shadow`, 4 `cramped-padding`, 2 `marketing-buzzword`, 1
+`em-dash-overuse`. The rise from 242 is one rule, and the home page is not the
+cause: the second imagery pass added eight genuinely numbered sections to pages
+that had none, so `numbered-section-labels` went 122 → 130. The home page itself
+carries eight findings and **zero** numbered labels. Its eight are the four
+measured `cramped-padding` artefacts above, the two uppercase occurrences of the
+32-character primary CTA, the sheet's border-and-shadow, and a client's verbatim
+"game-changer" — every one of them a deliberate exception recorded in §8.
+
 #### `all-caps-body`: 117 → 74, because the previous exception was not true
 
 §8 previously excused this rule as "button and control labels". Auditing the
@@ -512,11 +523,18 @@ reason; none is an oversight.
    `.btn2` is sentence case, and uppercase is left to the primary action. The
    test applied is now: **no sentence is uppercased anywhere on the site.**
 
-2. **`numbered-section-labels` (121) — the agenda numbers.** The `01`–`08`
+2. **`numbered-section-labels` (130) — the agenda numbers.** The `01`–`08`
    in the punch gutter are the notice pack's own item numbering, and the sequence
-   **carries information**: the proxy form on `contact.html` refers to items by
-   number, and the folio rail tracks position in the pack. This is the exception
-   the craft floor allows — numbering that earns its place. Numbers were *removed*
+   **carries information**: the pack is the design's organising device, the pages
+   read as a set of agenda items in order, and the folio rail tracks position
+   within it. This is the exception the craft floor allows — numbering that earns
+   its place.
+
+   An earlier draft of this exception also claimed that "the proxy form on
+   `contact.html` refers to items by number". That was checked in §16 and is
+   **false**: `contact.html` carries a "Proxy form" reference label above an
+   enquiry form, and nothing across the 40 pages cross-refers to an item number.
+   The exception stands on the organising device, not on that cross-reference. Numbers were *removed*
    where the sequence carried nothing: the home page's sections are now named
    rather than numbered (§11), the "Strata Staff difference" items on
    `about.html` and the four core values on `journey.html` no longer count
@@ -1230,6 +1248,99 @@ assets. The corrected class excludes whitespace and commas; the report is now
 
 The lesson from §14 repeated itself here. A tool that reports success is not evidence
 of success; both times the thing that was wrong was the question being asked.
+
+---
+
+## 16. The home page, restructured around what a visitor needs
+
+§11 gave the home page the incumbent's own order and measured 7.0 screens. The
+feedback after that was not that it was long but that it was still hard to tell
+**what the company does**: the four role cards, the 13-platform logo grid and the
+nineteen-person portrait wall all sat on the overview, so a first-time visitor met
+three catalogues before meeting an argument. This pass removed all three and gave the
+page a sequence that answers the visitor's questions in the order they are asked.
+
+| # | Section | What it answers |
+| --- | --- | --- |
+| 1 | Cover — "Your strata agency, with the capacity to grow." | What this is, with the proof line: since April 2019 · 500+ placements · 98% retention · AU·CA·PH |
+| 2 | What we deliver | Three bounded cells — trained people, not résumés; the roles you are short of; a team that stays — then a link to `solutions.html` |
+| 3 | The figures band | 500+ placements · 98% retention · 10+ specialist roles |
+| 4 | What changes for your agency | Your cost base · your turnaround · your cover |
+| 5 | How It Works | The four steps, unchanged |
+| 6 | Who you will be working with | Six faces, then a link to the full register on `team.html` |
+| 7 | Our Clients Have Spoken | Two statements, then a link to all nine on `testimonials.html` |
+| 8 | Schedule Free Discovery Call | The navy closing band |
+
+The four role cards and the platform grid went to `solutions.html`, which already
+carried both; the portrait wall went to `team.html`, which carries all nineteen. The
+build reports 112 assets shipped and **0 present but unreferenced**, so nothing left
+the site — it changed page.
+
+### What the restructure measured
+
+| | Before this pass | This page |
+| --- | --- | --- |
+| Home page, 1440×900 | 11.7 screens (10515px) | **6.2 screens** (5564px) |
+| Home page, 390×844 | — | **9.8 screens** (8861px) |
+| Images on the home page | 52 | **14** — nine photographs of people, five marks |
+| Numbered section labels on the home page | 0 | **0** |
+
+The cover is the tallest single block, at 1.0 screen on a desktop and 1.7 on a phone.
+That is a deliberate hero and it is the one block whose length has not been argued
+down; every other section is between 0.2 and 0.9 screens.
+
+### Two corrections to my own first draft
+
+**Section numbers were added, then removed.** The first draft numbered the new
+sections 01–05. The sequence carried no information: the original home items were
+unnumbered, and the user had already said the earlier "Schedule 1, 2, 3" labelling
+fed the overwhelm. The craft floor permits numbering only when the reader needs the
+sequence, so it went.
+
+**Two identical three-up card grids sat in a row.** "What we deliver" and "What
+changes for your agency" were both card grids. The second became a ruled list
+(`.points`), which separates it from the first and stops the page reading as one
+container repeated. Cards as page structure are the first thing the craft floor
+names.
+
+### The detector, re-run
+
+All 40 pages: **251 findings** — 130 `numbered-section-labels`, 74 `all-caps-body`,
+40 `gpt-thin-border-wide-shadow`, 4 `cramped-padding`, 2 `marketing-buzzword`, 1
+`em-dash-overuse`. The home page carries eight of them and **zero** numbered labels;
+all eight are in the deliberate-exception set in §8.
+
+### `numbered-section-labels`: the justification was checked, and it was wrong
+
+§8 excused the remaining agenda numbers partly on the claim that "the proxy form on
+`contact.html` refers to items by number". It was checked this pass: **nothing on the
+site cross-refers to an item number.** `contact.html` carries a "Proxy form"
+reference label above an enquiry form, and that is the word's only occurrence in all
+40 pages. The exception still stands — the notice pack numbers its items, and that
+numbering is the design's organising device — but it now stands on the reason that is
+true, and the false one is recorded here rather than quietly deleted.
+
+### The phantom 358px gap
+
+`tools/scan/gap-check.mjs` reports how far each photograph sits from the nearest
+prose. It reported two of the home page's six faces as 358px from any text, which
+matches the user's own complaint that "the image and text are too far". Measuring the
+section's rectangles directly showed all six faces in one row at 209×385 **with the
+link 37px beneath them, and every face 37px from prose**.
+
+The fault was in the tool. It filtered text to blocks whose horizontal band contained
+the image, then measured only the vertical gap. The two rightmost faces fall past the
+end of a 60ch lede, so no text in their own section qualified, and the nearest match
+became a full-width list item in the section *above*. It now measures a true
+rectangle distance in both axes. Re-run over all 40 pages at 1440: **39 pages have
+no photograph more than 200px from prose**, and the home page's single finding is the
+last face of the six-up register, whose nearest prose — CTA links are excluded as
+controls — is the heading 328px to its left, which is what a full-width register
+looks like. At 390 the second row of that grid sits 254px below the lede with the
+first row of faces between them, which is what a stacked gallery looks like.
+
+A tool that reports a defect on every run teaches its reader to skim the report. The
+false positive deserved more attention than the layout, which was never wrong.
 
 
 

@@ -110,17 +110,20 @@ guessing, and it is how three defects were located: role rows rendering at
 220–270px instead of 72px, the figures band stacking into one column, and the
 home page's true height. Both tools are development-only and ship nothing.
 
-The home page is now an overview, on the incumbent's own order (**10.5 screens at
-1440×900**, 17.0 at 390×844, 21.3 at 320×720). The **median page is 4.3 screens**;
-the home page is the tallest on the site by a wide margin, which is the point of it
-being the overview. See `DESIGN.md` §11 and §12.
+The home page is now an overview, on the incumbent's own order: **6.2 screens at
+1440×900** (5564px) and **9.8 at 390×844** (8861px), measured section by section
+with `tools/scan/gap-check.mjs`. The previous full-page plate recorded it at 11.7
+screens (10515px). The **median page is 4.4 screens**, and the home page is no
+longer the tallest on the site: the job pages are, up to 7.5
+(`job-hr-assistant.html`), which is right — a job description is meant to be read
+in full. See `DESIGN.md` §11 and §16.
 
-**It is deliberately longer than the 7.0 screens an earlier revision measured.**
-The request being answered was that the page was *too much text*, not that it was
-too long, and the response was to replace prose with photography: the home page
-now carries **52 images**, of which 19 are named portraits of real people. Text
-density fell; scroll length rose. Both numbers are stated rather than the flattering
-one alone.
+The restructure moved the four role cards and the platform grid to
+`solutions.html`, which already carried both, and the portrait wall to `team.html`,
+which carries all nineteen. The home page carries **14 images** — nine photographs
+of people (six named portraits, two client portraits, one role photograph) and five
+marks. An earlier revision carried 52; both the length and the image count fell,
+because a wall of faces was doing on the overview what the register does better.
 
 Run it with:
 
@@ -332,3 +335,28 @@ not. Every figure and both engines are recorded in `.impeccable/design.json`.
 finding was located rather than guessed at; `tools/detect-json.mjs` parses the
 JSON output without a shell redirect. All need the local `impeccable` binary and
 take its install path from `IMPECCABLE_HOME` / `IMPECCABLE_CMD`.
+
+### Running these tools under a confined sandbox
+
+Two constraints cost real time to find. Neither is a fault in the tools, and both
+fail in ways that point at the wrong thing:
+
+- **A freshly spawned Chrome cannot complete its multi-process launch.** Under a
+  confined process sandbox it exits at once, having logged only `OpenProcess:
+  Access is denied` from crashpad — so a tool that waits for its debug port reports
+  "Chrome did not open its debug port" when the truth is that no Chrome can start.
+  `tools/scan/gap-check.mjs` therefore attaches to a browser that is *already*
+  listening before it tries to start one, and says plainly why when it cannot; a
+  debug port left open by a run that could spawn is a perfectly usable browser.
+  `tools/scan/overlap-check.mjs`, `tools/face-verify.mjs` and the PowerShell
+  runners still spawn, so they need such a port to exist.
+- **A child process's stdout cannot be captured through a pipe.** `tools/detect-all.mjs`
+  gives the detector a file descriptor and reads the file back instead of reading
+  its stdout. The same boundary means a native command's output must never be piped
+  into a PowerShell cmdlet (`| Out-String`, `2>&1`): the program fails to start with
+  "Access is denied", and it looks like the tool is broken.
+
+Finally, `tools/scan/shoulders.py` resolves its sources through the `strata-scan`
+junction, which sits at the **workspace root** — one level above `strata-modern`.
+Run it from there (`python strata-scan/shoulders.py`), not from inside the site
+directory, or it fails with a missing-file error that looks like a broken guard.
