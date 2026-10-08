@@ -21,7 +21,10 @@ const ASSETS = [
   'styles.css',
   'assets/people/anna-marie-david-400.webp',
   'assets/people/anna-marie-david-800.webp',
-  'assets/people/anna-marie-david.webp',
+  /* Not `assets/people/anna-marie-david.webp`: no page references that unsuffixed
+     file and it exists on neither origin, so testing it printed "ABSENT LIVE" on
+     every single run — a live-versus-local difference where there was none, and
+     precisely the sort of line that teaches a reader to skim the report. */
   'assets/portrait/accountant-400.webp',
 ];
 
