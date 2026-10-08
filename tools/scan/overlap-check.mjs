@@ -196,15 +196,23 @@ try {
         continue;
       }
       const name = url.split('/').pop() || url;
-      /* The authoritative overflow test is the document's own scrollWidth: if it
-         equals the viewport there is no horizontal scroll, whatever any single
-         element's rect says. Element rects are listed as supporting detail. */
-      const scrolls = result.docW > result.vw;
+      /* The authoritative overflow test is the document's own scrollWidth against
+         the width we asked for. It used to compare against the viewport the page
+         reported (`result.vw`), and at 320 and 390 this tool emulates a phone --
+         where the browser widens its own layout viewport to fit content that
+         overflows it, so an overflowing page reported a matching viewport and read
+         as "fits". The perforation's right-hand punch hole put 6px of scroll on
+         every one of the 40 pages at 980px and below, and this test called it
+         clean at 390 for as long as it trusted the page's own number. It still
+         prints that number, because a difference between the two is exactly the
+         symptom. */
+      const scrolls = result.docW > width;
       const problem = scrolls || result.overlaps > 0 || result.cropped.length > 0;
       console.log('');
       console.log(`  ${name}${problem ? '  <-- PROBLEM' : '  ok'}`);
-      console.log(`    document scrollWidth ${result.docW} vs viewport ${result.vw}` +
-        `${scrolls ? '  OVERFLOWS' : '  fits'}`);
+      console.log(`    document scrollWidth ${result.docW} vs viewport ${width}px` +
+        `${scrolls ? '  OVERFLOWS' : '  fits'}` +
+        (result.vw !== width ? `  (page reports its own viewport as ${result.vw}px)` : ''));
       console.log(`    images ${result.imageCount}  ` +
         `overlapping ${result.overlaps}  cropped by cover: ${result.cropped.length}`);
       if (result.overflow.length) {

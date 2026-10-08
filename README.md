@@ -103,6 +103,15 @@ Current result: **zero horizontal overflow at 320, 390, 640, 768, 980, 1024, 109
 viewport at every one of them. An earlier revision overflowed on all 40 pages
 below 670px and left up to 560px of dead desk either side on a wide monitor.
 
+One more slipped past this page. The perforation's right-hand punch hole sits 6px
+past the sheet edge, which is invisible above 980px and 6px of sideways scroll at
+980px and below — on all 40 pages. `tools/scan/overlap-check.mjs` called those
+widths clean because it compared the document against the viewport the *page*
+reported, and a page emulated as a phone widens its own viewport to fit what
+overflows it. With that corrected the tool named the perforation, and one
+declaration (`overflow-x: clip` on `.perf`) removed it. The claim above is now
+re-measured at all twelve widths.
+
 `tools/measure-blocks.ps1` measures a single page block by block — how tall each
 section is, and the computed padding and border of any selector's children. It
 was written to find out *which* section was making the home page long instead of

@@ -1336,6 +1336,29 @@ measures every icon SVG against the font size of the element it sits in and fail
 outside `0.5em`–`2em`; over all 40 pages it reports 98 icon instances, all at
 exactly `1.05em`.
 
+### Six pixels of horizontal scroll, and why the check said it fit
+
+`.perf::after` draws the right-hand punch hole at `right: -6px`, straddling the
+sheet's edge. Above 980px the sheet is narrower than the viewport, so that overhang
+lands on the desk: invisible, and no scroll. At 980px and below the sheet fills the
+viewport, so the hole's outer half sat past the screen and **every one of the 40
+pages carried 6px of horizontal scroll** — swipeable sideways, and enough to shift
+the page under a finger.
+
+`tools/scan/overlap-check.mjs` had been reporting those widths as fitting. At 320
+and 390 it emulates a phone, and a phone browser widens its own layout viewport to
+fit the content that overflows it: asked for 390px, the page reported a viewport of
+396px, `scrollWidth` was 396 too, and `docW > vw` was therefore false. The test now
+compares against the width it asked for, and prints the page's own number whenever
+the two disagree — a difference between them is the symptom itself, not a detail.
+
+The fix is one declaration: `overflow-x: clip` on `.perf`. The half being clipped is
+the half nobody can see — off-screen below 980px, and a flat `--desk` disc lying on
+the desk above it. `clip` and not `hidden`, because the punch holes must still hang
+below the strip as they always have. Re-measured with the corrected test at 320,
+390, 640, 768, 980, 1024, 1099, 1180, 1280, 1440, 1920 and 2560px, on six pages
+carrying different layouts: every one fits.
+
 ### The detector, re-run
 
 All 40 pages: **251 findings** — 130 `numbered-section-labels`, 74 `all-caps-body`,

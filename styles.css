@@ -989,6 +989,15 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .perf {
   height: 16px; position: relative; background: var(--sheet);
   border-bottom: 1px dashed var(--rule-mid);
+  /* The two punch holes straddle the sheet's edges, and the right-hand one put 6px
+     of scrollable width on all 40 pages at 980px and below, where the sheet fills
+     the viewport: its outer half sat past the screen and the page could be swiped
+     sideways. Clipping this one strip horizontally takes that back and changes
+     nothing a reader can see — the half being clipped is off-screen there, and on
+     the desk above 980px, where the hole's flat `--desk` disc had nothing to show
+     against. `clip` and not `hidden`: the holes must still hang below the strip,
+     as they always have. */
+  overflow-x: clip;
 }
 .perf::before, .perf::after {
   content: ''; position: absolute; top: 7px; width: 12px; height: 12px;
