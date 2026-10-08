@@ -1280,14 +1280,21 @@ the site — it changed page.
 
 | | Before this pass | This page |
 | --- | --- | --- |
-| Home page, 1440×900 | 11.7 screens (10515px) | **6.2 screens** (5564px) |
-| Home page, 390px wide | — | **9.8 screens** (8861px), same 900px unit |
+| Home page, 1440×900 | 11.7 screens (10515px) | **5.9 screens** (5346px) |
+| Home page, 390px wide | — | **9.5 screens** (8510px), same 900px unit |
 | Images on the home page | 52 | **14** — nine photographs of people, five marks |
 | Numbered section labels on the home page | 0 | **0** |
 
-The cover is the tallest single block, at 1.0 screen on a desktop and 1.7 (1569px)
-on a phone. That is a deliberate hero and it is the one block whose length has not
-been argued down; every other section is between 0.2 and 0.9 screens.
+The cover was the tallest single block — 1.0 screen on a desktop (922px) and 1.7
+(1569px) on a phone — and it was the one block whose length had not been argued
+down. It has now been compressed on both, to 0.8 (704px) and 1.4 (1218px), by
+narrowing the plate from four grid columns to three (and to `15rem` on a phone),
+tightening the cover's own rhythm rather than any other section's, and sizing the
+arrow that sits in its call to action. The portrait is uncropped at every width: an
+uncropped portrait is 1.84 times its own width, so the *picture* was setting the
+height of the whole cover while the text column beside it ran out first, and
+narrowing it is the only lever available. Cropping it is precisely what removed the
+shoulders (§15). Every other section is still between 0.2 and 0.9 screens.
 
 ### Two corrections to my own first draft
 
@@ -1302,6 +1309,32 @@ changes for your agency" were both card grids. The second became a ruled list
 (`.points`), which separates it from the first and stops the page reading as one
 container repeated. Cards as page structure are the first thing the craft floor
 names.
+
+### An SVG with no size is not a small SVG
+
+`.btn2 svg` was sized at `1.05em` and nothing else was. The corner arrow is one
+authored SVG used in four containers, and three of them had no size for it, so each
+depended on its container instead:
+
+| where | unstyled | with the size |
+| --- | --- | --- |
+| `.btn` — the cover's call to action | 339×314, arrow **278×278** | 356×53, arrow 17×17 |
+| `.opt__go` — the "where to go next" rows | 0×28, the arrow's path painting at 11×8 | 18×28, arrow 18×18 |
+
+A `viewBox` of `0 0 16 16` is a 1:1 intrinsic ratio, so in the button's flex row with
+`max-width: 100%` the arrow grew to fill whatever width its label left over, while
+`.opt__go` — a shrink-to-fit grid item in a 30px column — collapsed instead. Eleven
+template sites use the arrow and exactly one is inside a `.btn`, so no page but the
+home page moved; and it moved by 120px inside a column that was not yet setting the
+cover's height, which is why it only became visible once the plate was narrowed.
+
+It survived a full pass over 40 pages and 113 assets because nothing here could see
+an icon: `gap-check` measures section heights and the distance from prose to a
+photograph, `overlap-check` measures images, `face-verify` measures faces, `contrast`
+measures colour. An icon is none of those. **`tools/scan/icon-check.mjs`** now
+measures every icon SVG against the font size of the element it sits in and fails
+outside `0.5em`–`2em`; over all 40 pages it reports 98 icon instances, all at
+exactly `1.05em`.
 
 ### The detector, re-run
 

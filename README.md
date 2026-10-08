@@ -110,14 +110,22 @@ guessing, and it is how three defects were located: role rows rendering at
 220–270px instead of 72px, the figures band stacking into one column, and the
 home page's true height. Both tools are development-only and ship nothing.
 
-The home page is now an overview, on the incumbent's own order: **6.2 screens at
-1440×900** (5564px) and **9.8 screens at 390px wide** (8861px), measured section by
+`tools/scan/icon-check.mjs` measures every icon SVG against the font size of the
+element it sits in, and fails outside `0.5em`–`2em`. It exists because the corner
+arrow had no width or height in three of its four containers, and none of the other
+tools here can see an icon: it is how the cover's call to action was found rendering
+at 339×314 with a 278×278 arrow inside it. Over all 40 pages it now reports 98 icon
+instances, every one of them `1.05em`.
+
+The home page is now an overview, on the incumbent's own order: **5.9 screens at
+1440×900** (5346px) and **9.5 screens at 390px wide** (8510px), measured section by
 section with `tools/scan/gap-check.mjs` and counted in that tool's 900px screen
 unit, so the two figures compare. The previous full-page plate recorded the page at
-11.7 screens (10515px). The **median page is 4.4 screens**, and the home page is no
-longer the tallest on the site: the job pages are, up to 7.5
-(`job-hr-assistant.html`), which is right — a job description is meant to be read
-in full. See `DESIGN.md` §11 and §16.
+11.7 screens (10515px); the restructure took it to 6.2, and compressing the cover
+(922px → 704px) took it to 5.9 — that one block is the whole of the last 218px. The
+**median page is 4.4 screens**, and the home page is no longer the tallest on the
+site: the job pages are, up to 7.5 (`job-hr-assistant.html`), which is right — a
+job description is meant to be read in full. See `DESIGN.md` §11 and §16.
 
 The restructure moved the four role cards and the platform grid to
 `solutions.html`, which already carried both, and the portrait wall to `team.html`,

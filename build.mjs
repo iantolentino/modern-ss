@@ -864,7 +864,7 @@ PAGES['index.html'] = () => {
             </p>
           </div>
           <aside class="cover__aside">
-            ${plateRole('administrative-specialist', 'A Strata Staff Global administrative specialist', '(max-width: 980px) 64vw, 30vw', { role: 'Strata Administrative Specialist', lazy: false })}
+            ${plateRole('administrative-specialist', 'A Strata Staff Global administrative specialist', '(max-width: 420px) 60vw, (max-width: 980px) 15rem, 20vw', { role: 'Strata Administrative Specialist', lazy: false })}
             <p class="note cover__aside-note">
               <img src="assets/flag-au.svg" alt="" width="22" height="16" loading="lazy">
               <img src="assets/flag-ca.svg" alt="" width="22" height="16" loading="lazy">

@@ -1,4 +1,4 @@
-﻿@import url('assets/fonts/fonts.css');
+@import url('assets/fonts/fonts.css');
 
 /* ============================================================================
    STRATA STAFF GLOBAL â€” "AGENDA"
@@ -301,7 +301,19 @@ table { border-collapse: collapse; width: 100%; }
   transition: color .18s var(--ease), border-color .18s var(--ease);
 }
 .btn2:hover { color: var(--teal-ink); border-bottom-color: var(--teal); }
-.btn2 svg { width: 1.05em; height: 1.05em; flex: none; }
+/* The arrow is one authored SVG used in four places, so it is sized in one place
+   and scales with the font size of whatever it sits in.
+
+   `.btn2` carried this rule and the other three did not, and each of the three
+   then depended on its container instead: `.btn` put the arrow in a flex row with
+   `max-width: 100%`, so with no size and a viewBox of 0 0 16 16 (a 1:1 ratio) it
+   filled the space the label left over -- measured at 278x278 inside a 339x314
+   button, against 17x17 inside 356x53 once sized; `.opt__go` is a shrink-to-fit
+   grid item in a 30px column and measured 0x28, with the arrow's own path
+   painting at 11x8. One button on the site was affected, the cover's CTA, so no
+   page but the home page moved -- but no check measured icon geometry, which is
+   how it survived a full pass over all 40 pages and 113 assets. */
+.btn svg, .btn2 svg, .opt__go svg, .role-card__go svg { width: 1.05em; height: 1.05em; flex: none; }
 
 .link {
   color: var(--blue); text-decoration: underline;
@@ -394,14 +406,20 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 
 /* ============================================================== the cover = */
-.cover { padding: clamp(2.6rem, 5vw, 4.6rem) 0 clamp(2.4rem, 4vw, 3.6rem); }
-.cover .wrap { row-gap: clamp(2.6rem, 4vw, 3.4rem); }
+/* The cover is the one screen a visitor is guaranteed to see, so its blocks are
+   spaced tightly rather than generously. The plate sits three columns wide, flush
+   to the right edge: an uncropped portrait is 1.84 times its own width, so at four
+   columns the *picture* was setting the height of the whole cover on a desktop
+   while the text column beside it ran out first. Narrowing it is the only lever
+   available -- cropping it is what removed the shoulders (§15). */
+.cover { padding: clamp(1.9rem, 3.4vw, 3.2rem) 0 clamp(1.8rem, 2.8vw, 2.6rem); }
+.cover .wrap { row-gap: clamp(1.8rem, 2.6vw, 2.4rem); }
 .cover__main { grid-column: 1 / span 7; }
-.cover__aside { grid-column: 9 / span 4; align-self: start; }
-.cover h1 { margin: .5rem 0 1.5rem; }
-.cover__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 1.3rem; margin-top: 2.1rem; }
+.cover__aside { grid-column: 10 / span 3; align-self: start; }
+.cover h1 { margin: .5rem 0 1.1rem; }
+.cover__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 1.3rem; margin-top: 1.5rem; }
 .cover__ref {
-  margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+  margin-top: 1.4rem; padding-top: .8rem; border-top: 1px solid var(--rule);
   display: flex; flex-wrap: wrap; gap: .4rem 1.6rem;
 }
 
@@ -1208,6 +1226,11 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .bar__folio { display: block; margin-left: auto; }
   .wrap, .item__wrap, .duo, .foot__wrap, .resolution__wrap { padding-inline: var(--pad-x); }
   .cover__main, .cover__aside, .phead__main, .phead__aside { grid-column: 1 / -1; }
+  /* On a phone the cover stacks, so the plate is the last block of the first
+     screen rather than a column beside the text -- and a full-width one added
+     626px to a cover that had already used 612. It keeps the same left edge as
+     the text and is set to a plate's width rather than the column's. */
+  .cover__aside { max-width: 15rem; }
   .item__no { grid-column: 1 / -1; color: var(--blue); }
   .item__head, .item__body, .item__aside, .item__body--wide { grid-column: 1 / -1; }
   .phead__ref { grid-column: 1 / -1; }
