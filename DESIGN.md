@@ -1281,13 +1281,13 @@ the site — it changed page.
 | | Before this pass | This page |
 | --- | --- | --- |
 | Home page, 1440×900 | 11.7 screens (10515px) | **6.2 screens** (5564px) |
-| Home page, 390×844 | — | **9.8 screens** (8861px) |
+| Home page, 390px wide | — | **9.8 screens** (8861px), same 900px unit |
 | Images on the home page | 52 | **14** — nine photographs of people, five marks |
 | Numbered section labels on the home page | 0 | **0** |
 
-The cover is the tallest single block, at 1.0 screen on a desktop and 1.7 on a phone.
-That is a deliberate hero and it is the one block whose length has not been argued
-down; every other section is between 0.2 and 0.9 screens.
+The cover is the tallest single block, at 1.0 screen on a desktop and 1.7 (1569px)
+on a phone. That is a deliberate hero and it is the one block whose length has not
+been argued down; every other section is between 0.2 and 0.9 screens.
 
 ### Two corrections to my own first draft
 
