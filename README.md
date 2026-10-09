@@ -55,6 +55,7 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `tools/measure-blocks.html` | Measures one page block by block, with the computed padding and border of any selector's children. `-Upper` dumps every element the stylesheet uppercases. |
 | `tools/measure-blocks.ps1` | The runner for the above. |
 | `tools/render-plates.ps1` | Renders the plates in `.impeccable/plates/`, measuring each page first so a plate ends where the page ends. |
+| `tools/render-plates.mjs` | The same job over the devtools protocol, which is how it runs where Chrome cannot be spawned: it attaches to a browser already listening and captures with `captureBeyondViewport`, one pass per plate instead of two. `--first 704` writes just the first screen — clipped, not captured in a shorter window, so any `vh` in the layout answers the same question the measurement answered. |
 | `tools/contrast.mjs` | Recomputes every text/background ratio from the tokens in `styles.css`, including the composited white-on-navy pairs. |
 | `tools/final-check.mjs` | Fetches all 40 pages, resolves every local reference, confirms no remote dependency, matches emitted tab ids against generated rules, and walks each heading sequence. Needs `serve.mjs` running. |
 | `tools/a11y-check.mjs` | Audits every built page for duplicate ids, dangling fragment links, dangling ARIA references, unnamed controls and missing `alt`. Needs `serve.mjs` running. |
@@ -135,6 +136,12 @@ unit, so the two figures compare. The previous full-page plate recorded the page
 **median page is 4.4 screens**, and the home page is no longer the tallest on the
 site: the job pages are, up to 7.5 (`job-hr-assistant.html`), which is right — a
 job description is meant to be read in full. See `DESIGN.md` §11 and §16.
+
+The plates in `.impeccable/plates/` are rendered against this build, and every one
+of the 26 is the exact height the section-by-section measurement reports — 5346px
+for the home page at 1440, 8510px at 390, 5684 for `team.html`, 6783 for
+`job-hr-assistant.html`. Two independent methods agreeing to the pixel, page after
+page, is the strongest check these figures have had.
 
 The restructure moved the four role cards and the platform grid to
 `solutions.html`, which already carried both, and the portrait wall to `team.html`,
