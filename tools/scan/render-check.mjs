@@ -38,6 +38,23 @@ const PROBE = String.raw`(async () => {
   await goTo(0);
   document.documentElement.style.scrollBehavior = prevBehavior;
   const fam = el => s(el).fontFamily.split(',')[0].replace(/["']/g, '');
+  /* the surface pass: is the ground flat, are the photographic boxes rounded to
+     the field's value, and does the bar only raise itself once the page moves? */
+  const surf = {};
+  {
+    const sheet = document.querySelector('.sheet');
+    const frame = document.querySelector('.plate-fig__frame');
+    const bar = document.querySelector('.bar');
+    surf.desk = getComputedStyle(document.body).backgroundColor;
+    surf.sheetShadow = sheet ? getComputedStyle(sheet).boxShadow : 'no .sheet';
+    surf.frame = frame ? getComputedStyle(frame).borderRadius + ' / img ' + getComputedStyle(frame.querySelector('img')).borderRadius : 'no .plate-fig__frame';
+    if (bar) {
+      surf.barAtTop = getComputedStyle(bar).boxShadow;
+      await goTo(320);
+      surf.barScrolled = getComputedStyle(bar).boxShadow;
+      await goTo(0);
+    }
+  }
   const out = {
     families: fams,
     h1: fam(h1) + ' ' + s(h1).fontWeight + ' ' + px(s(h1).fontSize) + 'px lh ' + s(h1).lineHeight + ' ls ' + s(h1).letterSpacing,
@@ -52,6 +69,7 @@ const PROBE = String.raw`(async () => {
       const mk = ff => { const e = document.createElement('span'); e.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font-size:64px;font-weight:700;font-family:' + ff; e.textContent = 'Your strata agency'; document.body.appendChild(e); const w = Math.round(e.getBoundingClientRect().width); e.remove(); return w; };
       return mk("'Plus Jakarta Sans'") + ' vs arial ' + mk('Arial');
     })(),
+    surfaces: surf,
     sections: secs.length,
     /* WCAG 2.2 SC 2.5.8 (AA): pointer targets at least 24x24 CSS px, OR spaced so
        that a 24px circle centred on each undersized target does not intersect a
@@ -64,7 +82,19 @@ const PROBE = String.raw`(async () => {
     targets: (() => {
       const ws = /\s+/g;
       const live = [];
+      /* A target the pointer cannot see is not a target the pointer can hit. The
+         tab radios are the classic visually-hidden control -- 1x1, clipped, with a
+         full-size label doing the work -- so counting them as 1x1 targets reported
+         eleven failures on team.html that no visitor could ever encounter. Skip the
+         standard hidden patterns; the rule is about what a pointer can hit. */
+      const hidden = el => {
+        const c = getComputedStyle(el);
+        if (c.visibility === 'hidden' || c.opacity === '0' || c.display === 'none') return true;
+        if (/rect\(\s*0(px)?[\s,]/.test(c.clip)) return true;
+        return false;
+      };
       for (const el of document.querySelectorAll('a[href], button, input, select, textarea, summary')) {
+        if (hidden(el)) continue;
         const r = el.getBoundingClientRect();
         if (r.width === 0 || r.height === 0) continue;
         live.push({ el, r, inline: getComputedStyle(el).display === 'inline' });
@@ -127,6 +157,9 @@ for (const url of PAGES) {
     console.log(`  face       check=${d.fontCheck}  ${d.faceStatus}`);
     console.log(`  glyphs     ${d.glyphWidth}`);
     console.log(`  targets    ${d.targets}`);
+    console.log(`  surfaces   desk ${d.surfaces.desk}, sheet shadow ${d.surfaces.sheetShadow}`);
+    console.log(`             frame ${d.surfaces.frame}`);
+    console.log(`             bar at top ${d.surfaces.barAtTop} / scrolled ${d.surfaces.barScrolled}`);
     console.log(`  layout     cover ${d.heroBottom}px, doc ${d.docH}px, overflow ${d.overflow}px`);
   } catch (e) { console.log(`\n=== ${url}\n  FAILED ${e.message}`); } finally { cdp.close(); }
 }

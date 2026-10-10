@@ -57,7 +57,8 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `tools/render-plates.ps1` | Renders the plates in `.impeccable/plates/`, measuring each page first so a plate ends where the page ends. |
 | `tools/render-plates.mjs` | The same job over the devtools protocol, which is how it runs where Chrome cannot be spawned: it attaches to a browser already listening and captures with `captureBeyondViewport`, one pass per plate instead of two. `--first 704` writes just the first screen — clipped, not captured in a shorter window, so any `vh` in the layout answers the same question the measurement answered. |
 | `tools/scan/reference.mjs` | Measures how peer sites actually render, through a real browser, when raw HTML and stylesheets are blocked. This is where every sector figure in `DESIGN.md` §17 comes from. Reads only, stores nothing. |
-| `tools/scan/render-check.mjs` | Checks the three things a stylesheet cannot be trusted to have got right: that the webfont loaded instead of silently falling back, that no section is left invisible by the scroll-driven reveal, and that pointer targets meet WCAG 2.2 SC 2.5.8. |
+| `tools/scan/render-check.mjs` | Checks what a stylesheet cannot be trusted to have got right: that the webfont loaded instead of silently falling back, that the ground is flat and the boxes carry the field's radius with the photograph nested inside it, that the bar only raises itself once the page moves, that nothing is left invisible at any scroll position, and that pointer targets meet WCAG 2.2 SC 2.5.8 — without counting controls no pointer can reach. |
+| `tools/scan/spacing-check.mjs` | Measures the craft floor's spacing rule — more room above a heading than below it — against the rendered gaps rather than the declarations, since a sibling margin that collapses looks applied and is not. Exits non-zero on an inversion. |
 | `tools/contrast.mjs` | Recomputes every text/background ratio from the tokens in `styles.css`, including the composited white-on-navy pairs. |
 | `tools/final-check.mjs` | Fetches all 40 pages, resolves every local reference, confirms no remote dependency, matches emitted tab ids against generated rules, and walks each heading sequence. Needs `serve.mjs` running. |
 | `tools/a11y-check.mjs` | Audits every built page for duplicate ids, dangling fragment links, dangling ARIA references, unnamed controls and missing `alt`. Needs `serve.mjs` running. |
@@ -143,12 +144,12 @@ unit, so the two figures compare. The previous full-page plate recorded the page
 11.7 screens (10515px); the restructure took it to 6.2, compressing the cover
 (922px → 704px) took it to 5.9, and setting the display type at the field's own
 scale instead of 86px took it to 5.8. The home page is not the tallest on the site:
-the job pages are, up to 7.3 (`job-hr-assistant.html`, 6548px), which is right — a
+the job pages are, up to 7.3 (`job-hr-assistant.html`, 6560px), which is right — a
 job description is meant to be read in full. See `DESIGN.md` §11, §16 and §17.
 
 The plates in `.impeccable/plates/` are rendered against this build, and every one
 of the 28 is the exact height the section-by-section measurement reports — 5245px
-for the home page at 1440, 8649px at 390, 5575 for `team.html`, 6548 for
+for the home page at 1440, 8649px at 390, 5581 for `team.html`, 6560 for
 `job-hr-assistant.html`. Two independent methods agreeing to the pixel, page after
 page, is the strongest check these figures have had.
 

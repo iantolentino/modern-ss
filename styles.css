@@ -21,7 +21,7 @@
      #00102E navy, #233452 secondary navy, #69727D body grey, #F4F5F7 light
      ground, #D5D8DC border grey. The desk is that same cool grey family taken
      a step deeper, so a white sheet still lifts off it. */
-  --desk:        #E4E8ED;   /* the desk the sheets sit on */
+  --desk:        #EDEFF3;   /* the desk the sheets sit on */
   --sheet:       #FFFFFF;   /* an office-white sheet */
   --sheet-2:     #F4F5F7;   /* a second sheet / recessed print area */
   --ink:         #00102E;   /* primary ink */
@@ -91,6 +91,10 @@
      Neutral black rather than tinted navy, so the shadow reads as ambient
      light on a desk and never as a coloured glow. */
   --lift:        0 1px 2px rgba(0, 0, 0, .10), 0 20px 30px -24px rgba(0, 0, 0, .40);
+  /* The sheet is the page, not a card floating above one. A 20px-offset shadow
+     under the main surface of all 40 pages was the single most dated thing left
+     here; the ground itself now separates it. --lift stays for overlays. */
+  --lift-sheet:  0 1px 2px rgba(0, 0, 0, .05);
   --lift-tab:    0 2px 4px rgba(0, 0, 0, .10), 0 10px 18px -14px rgba(0, 0, 0, .40);
 
   /* the document's double rule. Drawn as a real border because that is what a
@@ -176,7 +180,7 @@ table { border-collapse: collapse; width: 100%; }
   width: calc(100% - 26px);
   margin: 0 auto;
   background: var(--sheet);
-  box-shadow: var(--lift);
+  box-shadow: var(--lift-sheet);
   min-height: 100vh;
 }
 .sheet--flat { box-shadow: none; }
@@ -1066,7 +1070,14 @@ h3 { font-size: var(--h3); font-weight: 700; letter-spacing: -.012em; line-heigh
 .phead__ref { grid-column: 1 / span 12; }
 .phead__main { grid-column: 1 / span 7; }
 .phead__aside { grid-column: 9 / span 4; align-self: end; }
-.phead h1 { margin-bottom: 1rem; }
+/* Measured against the floor's spacing rule, which asks for more room above a
+   heading than below it so the heading groups with its own text. It was 14px above
+   (to the breadcrumb) and 16px below (to the lede): the page title sat as close to
+   its navigation as to the line it introduces, on all 40 pages. The first attempt
+   at this set 12.8px and changed nothing, because the breadcrumb's own 14px bottom
+   margin collapses with a sibling's top margin and wins -- max(14, 12.8) = 14. This
+   value is above that, so it is the one that survives the collapse. */
+.phead h1 { margin: 1.6rem 0 1rem; }
 .crumbs { display: flex; flex-wrap: wrap; gap: .5rem; font-family: var(--mono); font-size: .78rem; letter-spacing: .05em; color: var(--ink-3); text-transform: uppercase; }
 .crumbs a { color: var(--ink-2); text-decoration: none; }
 .crumbs a:hover { color: var(--blue); text-decoration: underline; text-underline-offset: .18em; }
@@ -1378,20 +1389,52 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
    in the field are Civium 64px, Jamesons 50px, PICA 35px, and our own 86px was
    the largest of the four while saying less than any of them.
 
-   Rows arrive on scroll with opacity alone, which is how Civium's AOS fade does
-   it. Opacity rather than a rise: a transform makes its section the containing
-   block for sticky descendants, and this pack has a folio rail. It is a scroll
-   timeline rather than a listener, so it is a function of where the page is, not
-   of an event having fired -- the cover is already past its range at load and is
-   simply visible, and with scripting off or motion reduced, nothing is hidden at
-   all. Verified by measuring every section's opacity at nine scroll positions. */
-@supports (animation-timeline: view()) {
+   The uniform scroll entrance that stood here was removed. It applied one single
+   opacity fade to every section of every page, and the craft floor names that
+   case directly: motion is "one authored moment, not scattered effects and not
+   one identical entrance on every section", reached from an already-visible
+   default. This pack already has its authored moments -- the highlighter stroke
+   drawing itself across the operative words of the cover, and the stamp settling
+   as the closing band arrives. A fade underneath all of them was the page's
+   resting state rather than an event, and it also meant content existed in a
+   hidden state at all, which is one more way for a page to lose its text.
+
+   The measurement that justified it was real, and is kept so that deleting the
+   feature does not delete the record that it was checked: every section reached
+   opacity 1.00 from nine scroll positions, once the probe stopped fighting
+   scroll-behavior: smooth. The feature worked. It was the wrong feature. */
+
+/* ============================== surfaces, rounded to the field's own value ===
+   Measured, not decorative: Civium ships --radius-button: 4px and --radius-box:
+   8px, and applies the box value to images, cards, tags and its quote slider. This
+   pack had controls at 4px and every photographic box square, which is a pair
+   nobody in the field uses. Boxes move to 8px.
+
+   The photographs inside stay square on purpose. Material's rule for nesting is
+   that an inner radius is the outer radius minus the padding, floored at zero, and
+   .plate-fig__frame carries 7px of padding plus a 1px border -- so 8 - 8 = 0. A
+   rounded mat with a square print inside is what that rule produces, and it is why
+   the frame rounds while the picture does not. The wall and drawer frames carry
+   more padding than that and land on zero the same way.
+
+   The bar takes a hairline shadow only once the page has moved. A sticky header is
+   one of the few surfaces where current guidance still expects a shadow, because it
+   genuinely floats over content -- but it should not look raised while it is still
+   sitting on the top of the page. A scroll timeline does it with no listener, and a
+   browser without scroll-driven animations simply never draws it. */
+.plate-fig__frame, .wall figure, .role-thumb, .tab-role__fig, .post-fig { border-radius: 8px; }
+.drawer, .cookies { border-radius: 8px; }
+
+.btn svg { transition: transform .2s var(--ease); }
+.btn:hover svg, .btn:focus-visible svg { transform: translateX(3px); }
+
+@supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    main > section {
-      animation: sheet-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 16%;
+    .bar {
+      animation: bar-lift linear both;
+      animation-timeline: scroll();
+      animation-range: 0 140px;
     }
   }
 }
-@keyframes sheet-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bar-lift { from { box-shadow: none; } to { box-shadow: 0 1px 3px rgba(0, 0, 0, .07); } }

@@ -1516,8 +1516,8 @@ Nothing needed fixing, and now that is a measurement rather than a hope.
 | --- | --- | --- |
 | home, 1440×900 | 5.9 screens (5346px) | **5.8 screens** (5245px) |
 | home, 390px wide | 9.5 screens (8510px) | **9.6 screens** (8649px) |
-| `team.html` 1440 | 5684px | 5575px |
-| `job-hr-assistant.html` 1440 | 6783px | 6548px |
+| `team.html` 1440 | 5684px | 5575px → **5581px** |
+| `job-hr-assistant.html` 1440 | 6783px | 6548px → **6560px** |
 | webfont payload | 172kb | **48kb** |
 
 Desktop got shorter and the phone got slightly *taller*, which is worth stating
@@ -1529,8 +1529,10 @@ been re-measured since the type change, and a stale median is worse than none.
 
 All 28 plates in `.impeccable/plates/` were re-rendered against this build, and every
 plate height still matches `gap-check`'s own DOM measurement to the pixel — 5245 for
-the home page at 1440, 8649 at 390, 5575 for `team.html`, 6548 for
-`job-hr-assistant.html`.
+the home page at 1440, 8649 at 390, 5581 for `team.html`, 6560 for
+`job-hr-assistant.html`. §18's spacing fix added 6–12px to every page that carries a
+page header, which is why those two are 6px and 12px taller than §17 recorded; the home
+page has no page header and did not move at all.
 
 ### The one cost, stated rather than waived
 
@@ -1547,6 +1549,124 @@ a brand font — and it has deliberately **not** been silenced, because a clean 
 would record the outcome without the cost. If the agency would rather be the one firm in
 the field whose type is its own, the revert is a single commit: `--sans`,
 `assets/fonts/fonts.css`, and the two Archivo files.
+
+## 18. The surface pass, and one thing the floor refused
+
+The sector pass fixed the type. What it left behind were the three most dated surfaces
+in the pack, plus a fourth thing it had just introduced.
+
+### The ground was a card floating above itself
+
+`.sheet` — the white page surface of all 40 pages — carried
+`0 1px 2px rgba(0,0,0,.10), 0 20px 30px -24px rgba(0,0,0,.40)`: a 30px-blur shadow
+offset 20px down. That is a floating-card shadow, and it sat under the main surface of
+every page in the site. The field has nothing like it — Civium, the best-built
+competitor measured, has exactly **one** `box-shadow` in its entire stylesheet — and
+current guidance puts hairline borders and tints ahead of card shadows, reserving
+elevation for things that genuinely overlay content.
+
+So the lift was split in two. `--lift` keeps its offset and blur for the one element
+that actually floats over the page, the fixed cookie notice. `--lift-sheet`
+(`0 1px 2px rgba(0, 0, 0, .05)`) is what the sheet gets, and the ground separating it
+from the desk lightened from `#E4E8ED` to `#EDEFF3`. Measured after: desk
+`rgb(237, 239, 243)`, sheet shadow `rgba(0, 0, 0, .05) 0px 1px 2px`.
+
+### Boxes moved to the field's second value
+
+§17 recorded Civium's token pair — `--radius-button: 4px`, `--radius-box: 8px` — and
+this pack had adopted only the first of them, leaving every photographic box square.
+Nobody in the field ships that pair. `.plate-fig__frame`, `.wall figure`, `.role-thumb`,
+`.tab-role__fig`, `.post-fig`, `.drawer` and `.cookies` take the 8px box value; controls
+stay at 4px.
+
+**The photographs inside stay square, and that is the rule rather than an oversight.**
+Material's nesting rule is that an inner radius is the outer radius minus the padding,
+floored at zero. `.plate-fig__frame` carries 7px of padding plus a 1px border, so
+8 − 8 = 0. The check reports it as `frame 8px / img 0px` deliberately.
+
+### Micro-interactions, and the one shadow a header earns
+
+The primary button's arrow slides 3px on hover and focus — `transform: translateX(3px)`
+on an authored `.2s` ease — which points at the action without moving the button.
+
+The bar takes a hairline shadow only once the page has moved, with
+`animation-timeline: scroll()` over its first 140px, guarded by `@supports` and
+`prefers-reduced-motion`. A sticky header is one of the few surfaces where guidance
+still expects elevation, because it genuinely floats over content — but not while it is
+still sitting at the top of the page. Measured: `rgba(0, 0, 0, 0) 0px 0px 0px` at rest,
+`rgba(0, 0, 0, .07) 0px 1px 3px` at scroll 320.
+
+### The floor refused something the previous commit had shipped
+
+Loading the skill's craft floor — which belonged **before** the sector pass, not after
+it — turned up a rule that pass had broken. The floor asks for motion that is "one
+authored moment, not scattered effects and not one identical entrance on every
+section", reached from an already-visible default.
+
+The scroll entrance added in §17 was exactly the refused shape: one identical opacity
+fade on every `main > section` of all 40 pages, from a hidden default. It is removed.
+This pack's authored moments are already the highlighter stroke drawing itself across
+the operative words of the cover and the stamp settling as the closing band arrives; a
+uniform fade underneath them was the page's resting state rather than an event. Nothing
+is hidden at any scroll position or script state now, which is one fewer way for content
+to go missing.
+
+The measurement that justified it stays on the record, because the check was real:
+every section reached opacity 1.00 from nine scroll positions. **The feature worked. It
+was the wrong feature** — and a quality floor is only worth having if a pass over your
+own work can fail it.
+
+### A check that was reporting failures no visitor could encounter
+
+`render-check`'s target-size test counted the tab radios on `team.html` as eleven
+failing 1×1 targets with zero spacing between them. They are the classic
+visually-hidden control: a 1×1 clipped input whose full-size label is the thing a
+pointer actually hits. SC 2.5.8 is about targets a pointer can reach, so the test now
+skips the standard hidden patterns (`opacity: 0`, `visibility: hidden`, `display: none`,
+`clip: rect(0 …)`) and reports `team.html` the way it reports every other page: **every
+non-inline undersized target more than 24px from its nearest neighbour.** Same verdict,
+honest count — and the live-target total on the home page fell from 91 to 53, which is
+the number of things a visitor can actually click with the drawer shut.
+
+### The floor's spacing rule, and a margin that collapsed to nothing
+
+The floor also asks that a heading carry more room above it than below, so that it
+groups with its own text. Nothing in the suite measured that, so `tools/scan/spacing-check.mjs`
+now does: for every `h1`–`h3` it finds the nearest rendered box above and below, and
+flags a heading that owns the space beneath it but has more of it below than above.
+
+The first run was wrong twice, in the two ways §16 already records. It read only the
+immediate parent's `padding-top`, so a heading at the top of a section appeared to have
+**zero** space above it when the real space was the wrapper's 44.8–89.6px of padding:
+21 inversions that did not exist. And it measured "below" on headings that are one cell
+of a grid row, where the paragraph sits *beside* the heading and "below" is therefore
+the next row. A third class turned up on the role pages: a `.trio` cell holds a
+reference number and a heading and **nothing else** — `<div><span class="trio__n">A.2.1</span><h3>…</h3></div>`
+— so the nearest box below the heading is a different item's cell, 41px away. Item
+separation is not a heading's leading. All three are excluded now: section tops measure
+to the section edge, row cells are reported as `row`, and a heading's "below" is scoped
+to its own container, so a heading that ends its group is reported as such rather than
+scored against the item that follows it.
+
+What survived is real, and it was on **all 40 pages**: the page title sat **14px below
+its breadcrumb and 16px above its own lede**. The tightening was the title's own
+`margin-bottom: 1rem`; the 14px above was the breadcrumb's bottom margin.
+
+The first fix set the title's top margin to `12.8px` and changed *nothing*, because
+sibling margins collapse and `max(14, 12.8) = 14`. The rule survived the change, the
+measurement did not move, and the only reason that was caught rather than shipped is
+that the check reads the rendered gap instead of trusting the declaration. At `1.6rem`
+(25.6px) it clears the collapsible margin and takes effect: **26px above against 16px
+below**, on every page with a page header. Across six pages and 31 headings that own
+the space beneath them, inversions are now zero.
+
+### What this pass deliberately did not touch
+
+The 21 rules that uppercase a label — the 74 `all-caps-body` findings — are the
+record's label system, and the field sets its own labels the same way (Jamesons renders
+every CTA in uppercase). Dismantling that system to quiet a rule would cost the one
+thing that makes this pack not look like the others. It stands, as §8 records, and it
+stands on purpose.
 
 
 
