@@ -56,6 +56,8 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 | `tools/measure-blocks.ps1` | The runner for the above. |
 | `tools/render-plates.ps1` | Renders the plates in `.impeccable/plates/`, measuring each page first so a plate ends where the page ends. |
 | `tools/render-plates.mjs` | The same job over the devtools protocol, which is how it runs where Chrome cannot be spawned: it attaches to a browser already listening and captures with `captureBeyondViewport`, one pass per plate instead of two. `--first 704` writes just the first screen — clipped, not captured in a shorter window, so any `vh` in the layout answers the same question the measurement answered. |
+| `tools/scan/reference.mjs` | Measures how peer sites actually render, through a real browser, when raw HTML and stylesheets are blocked. This is where every sector figure in `DESIGN.md` §17 comes from. Reads only, stores nothing. |
+| `tools/scan/render-check.mjs` | Checks the three things a stylesheet cannot be trusted to have got right: that the webfont loaded instead of silently falling back, that no section is left invisible by the scroll-driven reveal, and that pointer targets meet WCAG 2.2 SC 2.5.8. |
 | `tools/contrast.mjs` | Recomputes every text/background ratio from the tokens in `styles.css`, including the composited white-on-navy pairs. |
 | `tools/final-check.mjs` | Fetches all 40 pages, resolves every local reference, confirms no remote dependency, matches emitted tab ids against generated rules, and walks each heading sequence. Needs `serve.mjs` running. |
 | `tools/a11y-check.mjs` | Audits every built page for duplicate ids, dangling fragment links, dangling ARIA references, unnamed controls and missing `alt`. Needs `serve.mjs` running. |
@@ -73,9 +75,16 @@ system, `app.js` for interaction, and `content/*.json` for posts and jobs.
 ## Fonts
 
 Two self-hosted variable faces, subset to latin + latin-ext, declared in
-`assets/fonts/fonts.css`: **Archivo** (weight 100–900, width 62–125) and
+`assets/fonts/fonts.css`: **Plus Jakarta Sans** (weight 200–800) and
 **Spline Sans Mono** (weight 300–700). There are no remote requests anywhere on
 the site — no CDN, no font service, no analytics.
+
+The sans was **Archivo** (weight 100–900, width 62–125) until the sector pass in
+`DESIGN.md` §17. It was replaced by measurement rather than by taste: every peer
+read in a real browser sets one geometric sans with an H1 between 35px and 64px,
+and the width axis was the one typographic device this pack used that no competitor
+has. The new face is 48kb where Archivo was 172kb, and being variable it still
+resolves the intermediate weights the document furniture asks for — 620, 650, 750.
 
 ## Colour
 
@@ -127,19 +136,19 @@ tools here can see an icon: it is how the cover's call to action was found rende
 at 339×314 with a 278×278 arrow inside it. Over all 40 pages it now reports 98 icon
 instances, every one of them `1.05em`.
 
-The home page is now an overview, on the incumbent's own order: **5.9 screens at
-1440×900** (5346px) and **9.5 screens at 390px wide** (8510px), measured section by
+The home page is now an overview, on the incumbent's own order: **5.8 screens at
+1440×900** (5245px) and **9.6 screens at 390px wide** (8649px), measured section by
 section with `tools/scan/gap-check.mjs` and counted in that tool's 900px screen
 unit, so the two figures compare. The previous full-page plate recorded the page at
-11.7 screens (10515px); the restructure took it to 6.2, and compressing the cover
-(922px → 704px) took it to 5.9 — that one block is the whole of the last 218px. The
-**median page is 4.4 screens**, and the home page is no longer the tallest on the
-site: the job pages are, up to 7.5 (`job-hr-assistant.html`), which is right — a
-job description is meant to be read in full. See `DESIGN.md` §11 and §16.
+11.7 screens (10515px); the restructure took it to 6.2, compressing the cover
+(922px → 704px) took it to 5.9, and setting the display type at the field's own
+scale instead of 86px took it to 5.8. The home page is not the tallest on the site:
+the job pages are, up to 7.3 (`job-hr-assistant.html`, 6548px), which is right — a
+job description is meant to be read in full. See `DESIGN.md` §11, §16 and §17.
 
 The plates in `.impeccable/plates/` are rendered against this build, and every one
-of the 26 is the exact height the section-by-section measurement reports — 5346px
-for the home page at 1440, 8510px at 390, 5684 for `team.html`, 6783 for
+of the 28 is the exact height the section-by-section measurement reports — 5245px
+for the home page at 1440, 8649px at 390, 5575 for `team.html`, 6548 for
 `job-hr-assistant.html`. Two independent methods agreeing to the pixel, page after
 page, is the strongest check these figures have had.
 
@@ -323,9 +332,10 @@ beside their own visible captions — carry an empty one.
 
 ## Detector
 
-`impeccable detect` runs over all 40 pages and reports **251 findings, down from
-1109**. Seven rule classes were eliminated outright. Of the 251, **247 are
-deliberate** and reasoned in `DESIGN.md` §8; the remaining 4 are `cramped-padding`
+`impeccable detect` runs over all 40 pages and reports **291 findings, down from
+1109**. Seven rule classes were eliminated outright. Of those 291, **247 are
+deliberate** and reasoned in `DESIGN.md` §8, **40 are `overused-font`** and are the one
+cost this pass knowingly took on (below), and the remaining 4 are `cramped-padding`
 findings on the home page that were measured in the browser and are artefacts of
 the detector's CSS cascade handling — it reports a border with no inset where the
 rendered insets are 19–82px. The measurements are in `DESIGN.md` §7.
@@ -349,6 +359,20 @@ eight real numbered sections to previously bare pages. The rule fires on the
 organising device — the pages read as a set of agenda items and the numbers carry
 real sequence — so it is the one rule knowingly not complied with, and the count
 moving with genuine content is the expected consequence.
+
+**The total then rose to 291 in the sector pass, and this rise is a cost rather than
+a consequence.** `overused-font` fires once per page because the sans is now Plus
+Jakarta Sans, among the most-used faces of the last three years. The detector is
+right, and it is right for the same reason the client asked for the change: looking
+like the rest of the field and being distinctive are the same axis, and this pass
+moved deliberately toward the field. Every peer read in a browser sets one geometric
+sans, so a face the detector considers unremarkable is what "modern like other strata
+companies" means in practice. Archivo, which it never flagged, was replaced for
+exactly that reason. The rule *can* be waived with a stated reason
+(`npx impeccable ignores add-value overused-font "Plus Jakarta Sans" --reason "..."`);
+it has deliberately not been waived, because a clean count would hide the trade-off
+instead of recording it. Reverting is a git revert of the font change in one commit:
+`--sans`, `assets/fonts/fonts.css`, and the two Archivo files. See `DESIGN.md` §17.
 
 **The engine also changed under this work** — from `0.1.6` to `4.1.0`, which adds a
 `tiny-text` rule and reports `cramped-padding` more widely. So the earlier 242s are

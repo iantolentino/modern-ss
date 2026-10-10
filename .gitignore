@@ -2,6 +2,7 @@
 _probe-result.txt
 _probe*.html
 _p-*.html
+_scratch-*.mjs
 
 # detector scratch output
 _d*.json

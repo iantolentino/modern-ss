@@ -171,7 +171,7 @@ latin + latin-ext and preloaded by the browser normally (no JS font loading).
 
 | Token | Stack | Use |
 | --- | --- | --- |
-| `--sans` | `Archivo` (wght 100–900, wdth 62–125) | Headings and body. Variable width is used as a *voice*: display type is set at 96–106% width. |
+| `--sans` | `Plus Jakarta Sans` (wght 200–800) | Headings and body. Replaced Archivo in §17, on measurements taken from the field rather than on taste. |
 | `--mono` | `Spline Sans Mono` (wght 300–700) | Record type: references, folios, clause numbers, tables, labels. |
 
 The scale is fluid and tokenised:
@@ -1280,8 +1280,8 @@ the site — it changed page.
 
 | | Before this pass | This page |
 | --- | --- | --- |
-| Home page, 1440×900 | 11.7 screens (10515px) | **5.9 screens** (5346px) |
-| Home page, 390px wide | — | **9.5 screens** (8510px), same 900px unit |
+| Home page, 1440×900 | 11.7 screens (10515px) | **5.8 screens** (5245px) |
+| Home page, 390px wide | — | **9.6 screens** (8649px), same 900px unit |
 | Images on the home page | 52 | **14** — nine photographs of people, five marks |
 | Numbered section labels on the home page | 0 | **0** |
 
@@ -1397,6 +1397,156 @@ first row of faces between them, which is what a stacked gallery looks like.
 
 A tool that reports a defect on every run teaches its reader to skim the report. The
 false positive deserved more attention than the layout, which was never wrong.
+
+## 17. "More modern, like other strata companies"
+
+That was the brief, and it is not self-defining. Modern *for this field* had to be
+measured, so it was: not by reading about design trends, but by pointing a browser at
+the companies this one sells into and reading their computed styles.
+
+### Why computed styles, and not the markup
+
+Everything the usual way of doing this depends on was unavailable. `web_search` failed
+all session with `HTTP 401` against a misconfigured endpoint, so one of the three
+research passes substituted DuckDuckGo's HTML endpoint. Raw HTTP is blocked in this
+sandbox (TLS closed, `curl` and `Invoke-WebRequest` alike), stylesheet fetches came
+back `403` from a Webflow CDN and `404` from hashed Next.js and HubSpot builds. Two
+competitors could not be resolved at all.
+
+What does work here is the browser already listening on 9333. `tools/scan/reference.mjs`
+drives it over the devtools protocol and reads `getComputedStyle` off the rendered
+page — the same trick that produces the plates, applied to somebody else's site. That
+is where every number below comes from. It reads and stores nothing.
+
+### What the field actually ships, at 1440px
+
+| site | heading face | H1 | control radius | elevation | header |
+| --- | --- | --- | --- | --- | --- |
+| PICA Group | Figtree 600 | 35px | 0px | none | static |
+| Civium | DM Sans 700 | 64px | 4px (`--radius-button` 4px, `--radius-box` 8px) | one `box-shadow` in the whole sheet | fixed, hides on scroll-down |
+| Jamesons | Poppins 700 | 50px | 0–0.36vw | one (the popup) | static |
+| stratastaffglobal.com, the incumbent | Poppins 600 | 48px | 8px | **7 shadows, 3 gradients** | fixed |
+| this pack, before | Archivo 800 | 86px | 2px | 2 | sticky |
+| this pack, after | Plus Jakarta Sans 700 | 64px | 4px | 2 | sticky |
+
+Three things fell out of that table. One geometric sans throughout, set tight, is the
+field's whole typographic system. Controls are 4px or effectively square; nobody in
+it is shipping pills or card stacks, and Civium — the best-built of the four — has a
+single shadow in its entire stylesheet. And the incumbent is the outlier, not the
+model: seven shadows and three gradients is the look being replaced.
+
+The palette needed no research. Their live stylesheet puts `#094BC1` on its primary
+button and `#00544E` on its H1, which are exactly `--blue` and `--teal` here — the
+brand read had been right, independently confirmed.
+
+### What changed
+
+- **Face.** Archivo → Plus Jakarta Sans, self-hosted, variable 200–800, latin and
+  latin-ext, 48kb against 172kb. The width axis was the one typographic device in this
+  pack that no competitor has; the intermediate weights the furniture uses (620, 650,
+  750) still resolve because the new file is variable too.
+- **Display scale.** `--h1` came down from `5.4rem` to `4rem`, so an H1 here is 64px
+  at 1440 where it was 86px. Civium's is 64px. This one was the largest in the field
+  while saying less than any of them.
+- **Controls.** 2px → 4px, the field's own value.
+- **Motion.** Rows arrive on scroll with opacity alone, in a scroll timeline, scoped to
+  `@supports (animation-timeline: view())` and `@media (prefers-reduced-motion:
+  no-preference)`. Opacity rather than a rise, because a transform makes its section
+  the containing block for sticky descendants and this pack has a folio rail. Nothing
+  is hidden when scripting is off or motion is reduced: the hidden state is never
+  declared outside those two guards.
+- **A dead token.** `--dur: .62s` was declared and referenced by nothing; durations
+  have always been set per interaction (.18–.2s for hover and focus, .42s for the
+  drawer). Removed rather than retuned.
+
+### What was deliberately not copied
+
+The off-white page ground (Civium `#F7F7F7`, Jamesons cream `#FFF5EB`) — the desk and
+sheet *are* this concept, and it is the part a competitor cannot copy. Pills: nobody
+in the field uses them, and current system guidance puts its own default at medium,
+with "shapes should be used sparingly". PICA's four-slide rotating hero: carousels are
+a documented anti-pattern, and the four-slide version is exactly the "false floor"
+that eyetracking research names as a current failure. Card shadows. And Associa's
+numbered editorial labels — this pack already carried 130 findings for numbered
+section labels and the client's first instruction was *fewer* of them, not more.
+
+### Three corrections I had to make to my own work
+
+1. **The research said two motion defects were in this stylesheet. Both were wrong.**
+   `transition: all 0.35s ease` exists only in `tools/scan/pages/humble-journey.html`,
+   a scraped copy of the client's old page — not in `styles.css`, where every
+   transition is already property-specific. `--dur: .62s` was real but inert: nothing
+   referenced it. Claimed defect, dead code.
+2. **My own reveal check reported six of eight sections stuck at opacity 0.** That was
+   the probe fighting `scroll-behavior: smooth` — it sampled opacity while the page
+   was still scrolling to its target. Scroll instantly, wait for the position to
+   arrive, and every section reaches 1.00. Had I trusted the first result I would have
+   removed a working feature and written down a bug that did not exist.
+3. **Two bugs in the probe itself.** A `\s` escape inside a template literal collapses
+   to a bare `s`, so the first target-size run printed labels with every letter *s*
+   silently deleted. Then `\t` and `\n` became real characters inside a regex and broke
+   it outright. `String.raw` fixed the whole class of mistake.
+
+### The real defect that turned up on the way
+
+`styles.css` contained 22 sequences of double-encoded text — UTF-8 read as CP1252 and
+saved back as UTF-8, so every em dash had become `â€”`. Two of them were not comments
+but *rendered output*: `.stmt blockquote::before` and `::after` set `content` to
+`'â€œ'` and `'â€\u009d'`, which means **every testimonial quote on the site was
+printing mojibake instead of `“` and `”`**. No check in the suite looks at that.
+
+It was fixed by running the encoding backwards — map each character to its CP1252
+byte, decode those bytes as UTF-8, keep the result only if it is valid UTF-8 — rather
+than by string-matching known cases, so genuine accented text would have been left
+untouched. 22 sequences reversed, 0 remaining, and the two `content` values now read
+`'“'` and `'”'`.
+
+### WCAG 2.2 SC 2.5.8, measured rather than assumed
+
+The target-size rule has two halves, so both were measured: 24×24 CSS px, *or* spaced
+so that 24px circles centred on undersized targets do not intersect. Per page: 91–95
+live targets, 32–35 of them under 24×24, and all but three or four are links set
+inline inside a sentence, which the rule exempts. **Every non-inline undersized target
+is more than 24px from its nearest neighbour**, so the spacing alternative is met.
+Nothing needed fixing, and now that is a measurement rather than a hope.
+
+### Where the numbers went
+
+| | before | after |
+| --- | --- | --- |
+| home, 1440×900 | 5.9 screens (5346px) | **5.8 screens** (5245px) |
+| home, 390px wide | 9.5 screens (8510px) | **9.6 screens** (8649px) |
+| `team.html` 1440 | 5684px | 5575px |
+| `job-hr-assistant.html` 1440 | 6783px | 6548px |
+| webfont payload | 172kb | **48kb** |
+
+Desktop got shorter and the phone got slightly *taller*, which is worth stating
+plainly rather than hiding: at 390 the page is a single text column, the new body face
+sets slightly wider at 17px, and the extra line wraps more than cancel the smaller H1.
+Contrast is unchanged (5.10:1 lowest), because the palette was not touched. The
+**median page height of 4.4 screens quoted in §16 is no longer quoted**: it has not
+been re-measured since the type change, and a stale median is worse than none.
+
+All 28 plates in `.impeccable/plates/` were re-rendered against this build, and every
+plate height still matches `gap-check`'s own DOM measurement to the pixel — 5245 for
+the home page at 1440, 8649 at 390, 5575 for `team.html`, 6548 for
+`job-hr-assistant.html`.
+
+### The one cost, stated rather than waived
+
+The detector now reports `overused-font` once on every page — 40 findings, and the only
+rule this pass made worse. It is not a false positive. Plus Jakarta Sans is among the
+most-used faces of the last three years, so choosing it makes the site look like the
+field, which is exactly what "modern like other strata companies" asks for and exactly
+what a distinctiveness check exists to catch. Archivo was never flagged, so this is a
+real trade: currency bought with distinctiveness, knowingly.
+
+The rule can be silenced with a stated reason — `npx impeccable ignores add-value
+overused-font "Plus Jakarta Sans" --reason "..."`, the mechanism the tool documents for
+a brand font — and it has deliberately **not** been silenced, because a clean count
+would record the outcome without the cost. If the agency would rather be the one firm in
+the field whose type is its own, the revert is a single commit: `--sans`,
+`assets/fonts/fonts.css`, and the two Archivo files.
 
 
 

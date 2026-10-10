@@ -1,7 +1,7 @@
 @import url('assets/fonts/fonts.css');
 
 /* ============================================================================
-   STRATA STAFF GLOBAL â€” "AGENDA"
+   STRATA STAFF GLOBAL — "AGENDA"
    A rebuild whose world is the bound AGM notice pack: the document strata
    managers live inside. Sheets on a desk, navy ink, hairline schedules, clause
    numbers in the punch gutter, real rubber stamps, one highlighter sweep per
@@ -9,7 +9,7 @@
 
    Colour strategy: the brand is two colours and nothing else. The logo itself
    is 54% #094BC1 blue and 46% #00544E teal, so every accent here is one of
-   those two â€” blue drives the live controls and the stamps, teal carries the
+   those two — blue drives the live controls and the stamps, teal carries the
    second voice, the highlighter and the accreditation seals. The grounds and
    greys are the values the incumbent site actually ships. There is no third
    accent colour in the build.
@@ -17,7 +17,7 @@
 
 /* ---------------------------------------------------------------- tokens -- */
 :root {
-  /* ground and ink â€” the incumbent's own values, read off its stylesheet:
+  /* ground and ink — the incumbent's own values, read off its stylesheet:
      #00102E navy, #233452 secondary navy, #69727D body grey, #F4F5F7 light
      ground, #D5D8DC border grey. The desk is that same cool grey family taken
      a step deeper, so a white sheet still lifts off it. */
@@ -26,10 +26,10 @@
   --sheet-2:     #F4F5F7;   /* a second sheet / recessed print area */
   --ink:         #00102E;   /* primary ink */
   --ink-2:       #233452;   /* secondary text */
-  --ink-3:       #666F7A;   /* tertiary / annotation â€” the site's #69727D, one
+  --ink-3:       #666F7A;   /* tertiary / annotation — the site's #69727D, one
                                step down so it also clears AA on --sheet-2 */
   --grey:        #D5D8DC;   /* the site's border grey */
-  /* Buttons darken on hover â€” except the ink one, which is already the darkest
+  /* Buttons darken on hover — except the ink one, which is already the darkest
      value in the palette and has nowhere darker to go. It lifts instead. Kept as
      a token so the palette stays closed. */
   --ink-lift:    #041B44;
@@ -50,7 +50,7 @@
   --pad-x:       clamp(20px, 3.2vw, 96px);   /* the sheet's right-hand inset; fluid so the pack fills a wide desk */
   --res-pad-y:   clamp(3.4rem, 6.4vw, 6rem); /* the navy band's vertical inset; a root token so the linter can resolve it */
   /* The twelve-column grids are held together by eleven gaps. At a fixed 30px
-     those gaps alone are 330px wide, which is wider than a 320px phone â€” the
+     those gaps alone are 330px wide, which is wider than a 320px phone — the
      grid would overflow its own sheet. One token, scaling with the viewport,
      keeps every grid valid at every width. */
   --col-gap:     clamp(13px, 2.1vw, 30px);
@@ -65,19 +65,24 @@
   --portrait-ra: 908 / 1671;
 
   /* type */
-  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Spline Sans Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   --measure:     68ch;
-  --h1:          clamp(2.55rem, 1.1rem + 5.4vw, 5.4rem);
+  --h1:          clamp(2.3rem, 1.05rem + 3.5vw, 4rem);
   --h2:          clamp(1.85rem, 1.05rem + 2.9vw, 3.15rem);
   --h3:          clamp(1.18rem, 1.02rem + .6vw, 1.45rem);
   --lede:        clamp(1.06rem, .98rem + .5vw, 1.34rem);
   --body:        1.0625rem;
 
-  /* motion â€” one authored easing, exponential ease-out, no bounce */
+  /* motion — one authored easing, exponential ease-out, no bounce */
   --ease:        cubic-bezier(.16, 1, .3, 1);
-  --dur:         .62s;
+
+  /* Durations are set per interaction rather than from one token: the hover and
+     focus pairs run .18-.2s and the drawer .42s, which is the short-to-medium
+     band current guidance puts micro-interactions in. A lone --dur: .62s used to
+     sit here and was referenced by nothing at all, so it read as a floor for
+     motion the stylesheet never used. Removed rather than retuned. */
 
   /* paper grain, used by the stamped impression and the highlighter field */
   --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -90,7 +95,7 @@
 
   /* the document's double rule. Drawn as a real border because that is what a
      double rule is: two hairlines with a one-pixel gap, in the record's own
-     ink. It is not an accent, and it is never on the side of a card â€” it is the
+     ink. It is not an accent, and it is never on the side of a card — it is the
      head-rule of a printed schedule, so every ruled block in the pack opens the
      same way. */
   --rule-head: 3px double var(--rule-ink);
@@ -244,7 +249,7 @@ table { border-collapse: collapse; width: 100%; }
 .bar__cta { flex: none; }
 .bar__menu {
   display: none; margin-left: auto;
-  background: none; border: 1px solid var(--rule-mid); border-radius: 2px;
+  background: none; border: 1px solid var(--rule-mid); border-radius: 4px;
   padding: .42rem .7rem; cursor: pointer;
   font: 600 .74rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
 }
@@ -259,9 +264,9 @@ table { border-collapse: collapse; width: 100%; }
   display: inline-flex; align-items: center; justify-content: center; gap: .6em;
   padding: .95rem 1.5rem .92rem;
   background: var(--btn-bg); color: var(--btn-fg);
-  border: 0; border-radius: 2px; cursor: pointer;
+  border: 0; border-radius: 4px; cursor: pointer;
   font-family: var(--sans); font-weight: 700; font-size: .93rem;
-  font-stretch: 96%; letter-spacing: .045em; text-transform: uppercase;
+  letter-spacing: .045em; text-transform: uppercase;
   text-decoration: none; line-height: 1;
   transition: background .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
 }
@@ -283,7 +288,7 @@ table { border-collapse: collapse; width: 100%; }
 /* The secondary action, and the site's ordinary "go and read this" link. It is
    set in sentence case deliberately.
 
-   It used to be uppercase, which made a control label of it â€” but its text is
+   It used to be uppercase, which made a control label of it — but its text is
    not a label, it is a sentence: "See all ten roles and both service lines" runs
    to 40 characters. Worse, `.btn2` also carries the solutions email address, and
    uppercase rendered that as SOLUTIONS@STRATASTAFFGLOBAL.COM, which is both
@@ -333,13 +338,13 @@ table { border-collapse: collapse; width: 100%; }
 
 /* ================================================================= type === */
 .display {
-  font-weight: 800; font-stretch: 112%;
-  letter-spacing: -.028em; line-height: .99;
+  font-weight: 700;
+  letter-spacing: -.025em; line-height: .99;
   text-wrap: balance;
 }
 h1.display { font-size: var(--h1); }
 h2.display { font-size: var(--h2); }
-h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing: -.012em; line-height: 1.2; }
+h3 { font-size: var(--h3); font-weight: 700; letter-spacing: -.012em; line-height: 1.2; }
 
 .lede { font-size: var(--lede); line-height: 1.48; color: var(--ink-2); max-width: 58ch; }
 .prose { max-width: var(--measure); color: var(--ink-2); }
@@ -401,7 +406,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .field-marker p {
   position: relative; z-index: 1;
   font-size: clamp(1.24rem, .95rem + 1.5vw, 2.05rem);
-  font-weight: 700; font-stretch: 106%; letter-spacing: -.018em; line-height: 1.32;
+  font-weight: 700; letter-spacing: -.018em; line-height: 1.32;
   max-width: 34ch;
 }
 
@@ -454,7 +459,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .sched a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule-mid); }
 .sched a:hover { border-bottom-color: var(--blue); color: var(--blue); }
 .sched tr.is-link:hover { background: var(--sheet-2); }
-.sched .role { font-weight: 650; font-stretch: 103%; }
+.sched .role { font-weight: 650; }
 
 /* A role's photograph beside its name, in the two service-line tables. Inline
    rather than flex so the cell stays a table cell: `display: flex` on a td
@@ -509,7 +514,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   .item--plain .item__wrap { padding-top: 3.8rem; padding-bottom: 3.8rem; }
 }
 
-/* the four clauses of the motion â€” a ruled sequence, deliberately not cards */
+/* the four clauses of the motion — a ruled sequence, deliberately not cards */
 .clauses { padding-top: .4rem; }
 .clause {
   display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 1.35fr);
@@ -521,8 +526,8 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .clause:hover { background: var(--sheet-2); }
 .clause:last-child { border-bottom: 1px solid var(--rule-ink); }
 .clause__no { font-family: var(--mono); font-size: .86rem; font-weight: 600; color: var(--teal); }
-/* A sequence ordered by position rather than by a printed clause reference â€”
-   the four steps of how it works â€” so the reference column collapses. */
+/* A sequence ordered by position rather than by a printed clause reference —
+   the four steps of how it works — so the reference column collapses. */
 .clauses--plain .clause { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
 .clause h3 { font-size: 1.24rem; }
 .clause p { color: var(--ink-2); max-width: 62ch; }
@@ -540,7 +545,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   cursor: pointer; position: relative;
   padding: .78rem 1.3rem .72rem;
   border: 1px solid var(--rule); border-bottom-color: var(--rule-mid);
-  border-radius: 3px 3px 0 0;
+  border-radius: 4px 4px 0 0;
   background: var(--sheet-2); color: var(--ink-2);
   font-family: var(--mono); font-size: .75rem; font-weight: 600;
   letter-spacing: .085em; text-transform: uppercase;
@@ -571,9 +576,9 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
   gap: .12em; padding: .68em 1.05em .74em;
   color: var(--blue); background: transparent;
-  border: 2px solid currentColor; border-radius: 3px;
+  border: 2px solid currentColor; border-radius: 4px;
   box-shadow: inset 0 0 0 3px var(--sheet), inset 0 0 0 4px currentColor;
-  font-family: var(--sans); font-weight: 800; font-stretch: 84%;
+  font-family: var(--sans); font-weight: 800;
   font-size: .84rem; letter-spacing: .1em; text-transform: uppercase;
   line-height: .98; text-align: center;
   transform: rotate(var(--rot, -3.4deg));
@@ -638,7 +643,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .reg-table { margin-top: .2rem; }
 .reg-table td { padding: .58rem .55rem; font-size: .95rem; }
 .reg-table td.n { color: var(--ink-3); font-size: .8rem; width: 58px; }
-.reg-table td.role { font-weight: 620; font-stretch: 102%; }
+.reg-table td.role { font-weight: 620; }
 .reg-table td.task { color: var(--ink-2); font-size: .9rem; }
 .reg-table td.ref { font-family: var(--mono); font-size: .72rem; letter-spacing: .05em; color: var(--ink-3); text-align: right; white-space: nowrap; }
 .reg-table tbody tr.is-new { animation: rowin .42s var(--ease) both; }
@@ -663,10 +668,10 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   border: 1px solid var(--rule); filter: saturate(.9);
 }
 .stmt blockquote { font-size: 1.05rem; line-height: 1.62; color: var(--ink); max-width: 68ch; }
-.stmt blockquote::before { content: 'â€œ'; }
-.stmt blockquote::after { content: 'â€'; }
+.stmt blockquote::before { content: '“'; }
+.stmt blockquote::after { content: '”'; }
 .stmt__meta { text-align: left; }
-.stmt__name { font-weight: 700; font-stretch: 104%; }
+.stmt__name { font-weight: 700; }
 .stmt__role { color: var(--ink-2); font-size: .9rem; }
 .stmt__org { font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; color: var(--ink-3); margin-top: .3rem; }
 .stmt__stamp { margin-top: .9rem; }
@@ -689,7 +694,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 
 /* ================================================================ options = */
-/* a selectable row â€” the register's unit, and the whole site's list grammar */
+/* a selectable row — the register's unit, and the whole site's list grammar */
 .opts { padding-top: .4rem; }
 .opt {
   display: grid; grid-template-columns: 74px minmax(0, 1fr) minmax(0, 1fr) 30px;
@@ -705,7 +710,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    the cost of reflowing the whole row. */
 .opt:hover { background: var(--sheet-2); }
 .opt__no { font-family: var(--mono); font-size: .8rem; color: var(--ink-3); }
-.opt__name { font-weight: 650; font-stretch: 104%; font-size: 1.1rem; }
+.opt__name { font-weight: 650; font-size: 1.1rem; }
 .opt__desc { color: var(--ink-2); font-size: .95rem; }
 .opt__go { justify-self: end; color: var(--ink-3); transition: transform .2s var(--ease), color .2s var(--ease); }
 .opt:hover .opt__go { transform: translateX(4px); color: var(--blue); }
@@ -805,12 +810,12 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 /* ============================================================= photographs = */
 /* A portrait is mounted the way this world mounts any other exhibit: a hairline
    frame, a slim mount, and a caption set under the image. No rounding and no
-   shadow â€” in this world a photograph is an annexure to the document, not a
+   shadow — in this world a photograph is an annexure to the document, not a
    card. That is also why there is no card chrome anywhere below: the frame is a
    rule, and the caption carries the identity.
 
    Every portrait was cropped to its final aspect around its own measured face
-   position before it shipped (see DESIGN.md Â§12), so no CSS here needs to guess
+   position before it shipped (see DESIGN.md §12), so no CSS here needs to guess
    at object-position. `object-fit: cover` is a safety net for the responsive
    widths, not the primary framing mechanism. */
 
@@ -839,7 +844,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
    that the face belongs to a training manager rather than a stock model. It was
    set in 10.5px uppercase mono, which is the least readable treatment available
    for the most important line on the plate. Sentence case, a real size, and a
-   darker ink â€” the mono stays, because this world sets its labels in it. */
+   darker ink — the mono stays, because this world sets its labels in it. */
 .plate-fig__role {
   margin-top: .25rem;
   font-family: var(--mono); font-size: .78rem;
@@ -925,7 +930,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 }
 /* Nineteen plates in two columns is ten rows of scrolling: four and a half
    screens of the smallest viewport spent on one section. On a phone the register
-   becomes a list instead â€” a thumbnail, a name, a role, one line each, which
+   becomes a list instead — a thumbnail, a name, a role, one line each, which
    reads better and costs less than half the height. */
 @media (max-width: 640px) {
   .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 13px; row-gap: 1.6rem; }
@@ -949,10 +954,10 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .tasks { display: flex; flex-wrap: wrap; gap: .4rem .5rem; margin-top: 1.6rem; }
 .tasks li {
   font-family: var(--mono); font-size: .79rem; letter-spacing: .04em;
-  padding: .34rem .62rem; border: 1px solid var(--rule); border-radius: 2px;
+  padding: .34rem .62rem; border: 1px solid var(--rule); border-radius: 4px;
   color: var(--ink-2); background: var(--sheet-2);
 }
-.tasks li::after { content: 'Â·'; color: var(--blue); margin-left: .45rem; }
+.tasks li::after { content: '·'; color: var(--blue); margin-left: .45rem; }
 .tasks li:last-child::after { content: ''; }
 
 /* ============================================================ the resolution */
@@ -1044,7 +1049,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
 .cookies {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
   bottom: 18px; width: min(760px, calc(100% - 32px));
-  background: var(--sheet); border: 1px solid var(--rule-ink); border-radius: 3px;
+  background: var(--sheet); border: 1px solid var(--rule-ink); border-radius: 4px;
   box-shadow: var(--lift);
   padding: 1.15rem 1.3rem;
   display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.5rem;
@@ -1118,7 +1123,7 @@ h3 { font-size: var(--h3); font-weight: 700; font-stretch: 104%; letter-spacing:
   .band__cell + .band__cell { border-top: 1px solid var(--rule); padding-top: 1.2rem; }
 }
 
-/* A ruled list of links whose rows carry no printed reference number â€” the home
+/* A ruled list of links whose rows carry no printed reference number — the home
    page's four lead roles. The reference column collapses. */
 .opts--plain .opt { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) 30px; }
 
@@ -1132,14 +1137,14 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .field label .req { color: var(--blue); }
 .field input[type='text'], .field input[type='email'], .field input[type='tel'],
 .field input[type='date'], .field input[type='file'], .field select, .field textarea {
-  background: var(--sheet-2); border: 1px solid var(--rule-mid); border-radius: 2px;
+  background: var(--sheet-2); border: 1px solid var(--rule-mid); border-radius: 4px;
   padding: .74rem .8rem; font-size: .98rem; width: 100%;
   transition: border-color .18s var(--ease), background .18s var(--ease);
 }
 .field input[type='file'] { padding: .6rem .7rem; font-family: var(--mono); font-size: .82rem; color: var(--ink-2); }
 .field input[type='file']::file-selector-button {
   font: inherit; margin-right: .9rem; padding: .38rem .7rem; cursor: pointer;
-  background: var(--sheet); color: var(--ink); border: 1px solid var(--rule-mid); border-radius: 2px;
+  background: var(--sheet); color: var(--ink); border: 1px solid var(--rule-mid); border-radius: 4px;
 }
 .field input[type='file']::file-selector-button:hover { border-color: var(--ink); }
 .field input::placeholder, .field textarea::placeholder { color: var(--ink-3); opacity: 1; }
@@ -1179,12 +1184,12 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 }
 .choice input { accent-color: var(--blue); width: 16px; height: 16px; }
 .form__acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem; margin-top: .6rem; }
-.form__status { grid-column: 1 / -1; border: 1px solid var(--rule-ink); border-radius: 2px; padding: 1.1rem 1.2rem; background: var(--sheet-2); }
+.form__status { grid-column: 1 / -1; border: 1px solid var(--rule-ink); border-radius: 4px; padding: 1.1rem 1.2rem; background: var(--sheet-2); }
 .form__status[hidden] { display: none; }
 .form__status h3 { margin-bottom: .4rem; }
 
 /* ================================================================ bib ==== */
-.doc-body h2 { margin: 2.6rem 0 .9rem; font-size: 1.5rem; font-weight: 750; font-stretch: 104%; }
+.doc-body h2 { margin: 2.6rem 0 .9rem; font-size: 1.5rem; font-weight: 750; }
 .doc-body h3 { margin: 1.9rem 0 .6rem; }
 .doc-body p, .doc-body li { max-width: 74ch; color: var(--ink-2); }
 .doc-body p + p { margin-top: .9rem; }
@@ -1267,7 +1272,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   :root { --pad-x: 20px; --body: 1rem; }
   /* A four-column schedule cannot hold its columns on a phone. Rather than let
      the sheet scroll sideways, the table is laid out to a fixed width and the
-     cells wrap â€” the row still reads left to right, it just gets taller. */
+     cells wrap — the row still reads left to right, it just gets taller. */
   .sched { table-layout: fixed; }
   .sched th, .sched td { padding: .6rem .4rem; overflow-wrap: anywhere; }
   .sched td.n, .sched th.n { white-space: normal; overflow-wrap: normal; }
@@ -1319,7 +1324,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .drawer__top img { height: 24px; }
 .drawer__close {
   margin-left: auto; background: none; border: 1px solid var(--rule-mid);
-  border-radius: 2px; padding: .42rem .7rem; cursor: pointer;
+  border-radius: 4px; padding: .42rem .7rem; cursor: pointer;
   font: 600 .74rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
 }
 .drawer__close:hover { border-color: var(--ink); background: var(--sheet-2); }
@@ -1337,7 +1342,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   content: counter(d, decimal-leading-zero);
   font-family: var(--mono); font-size: .74rem; color: var(--ink-3);
 }
-.drawer ol li a span { font-weight: 600; font-stretch: 103%; }
+.drawer ol li a span { font-weight: 600; }
 .drawer ol li a em { display: block; font-style: normal; font-weight: 400; font-size: .87rem; color: var(--ink-2); }
 .drawer ol li a:hover span { color: var(--blue); }
 .drawer__cta { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
@@ -1355,3 +1360,38 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   .sheet { box-shadow: none; width: 100%; }
   .bar, .drawer, .cookies, .punch { display: none; }
 }
+
+/* ==================================== shape and motion, set by measurement ===
+   Not assumed. Read out of the field at 1440px with getComputedStyle, because
+   raw HTML and stylesheet fetches are blocked in this environment but a browser
+   is not: PICA Group draws its controls at a 0px radius on a flat panel with no
+   elevation at all; Civium ships --radius-button: 4px and --radius-box: 8px with
+   a single box-shadow in the entire stylesheet; Jamesons rounds at 0.26vw and
+   keeps its one shadow for a popup. Nobody selling into this sector is building
+   2019 card stacks with coloured glows, and this pack already agreed with them
+   on the important parts -- flat surfaces, one saturated accent, no gradients.
+   Only the controls move, from the 2px they were drawn at to the 4px the field
+   ships. The rules, plates and punch rail stay exactly as they are: that is the
+   part of this record a competitor cannot copy.
+
+   The cover's H1 came down from 5.4rem to 4rem in the same pass. Measured H1s
+   in the field are Civium 64px, Jamesons 50px, PICA 35px, and our own 86px was
+   the largest of the four while saying less than any of them.
+
+   Rows arrive on scroll with opacity alone, which is how Civium's AOS fade does
+   it. Opacity rather than a rise: a transform makes its section the containing
+   block for sticky descendants, and this pack has a folio rail. It is a scroll
+   timeline rather than a listener, so it is a function of where the page is, not
+   of an event having fired -- the cover is already past its range at load and is
+   simply visible, and with scripting off or motion reduced, nothing is hidden at
+   all. Verified by measuring every section's opacity at nine scroll positions. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main > section {
+      animation: sheet-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 16%;
+    }
+  }
+}
+@keyframes sheet-in { from { opacity: 0; } to { opacity: 1; } }
