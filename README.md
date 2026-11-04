@@ -8,9 +8,65 @@ Standalone PHP 8 site with a built-in content portal. No database and no WordPre
 
 ## Local
 
-http://localhost/strata-landing-page/strata-modern/
+http://localhost/strata-modern/
+
+This folder is separate from the WordPress copy of the live site (`htdocs/strata-landing-page`). It is the site planned for next year.
 
 On the first visit to `/admin/` from localhost, you are asked to create the first admin account. Add more users under **Users & security**.
+
+## Folder structure
+
+Each folder has one job, so a bug usually points to one place.
+
+```
+index.php            Front controller: every request comes here (see .htaccess)
+backend/
+  bootstrap.php      Paths, config and loading of everything below
+  router.php         URL -> page file map, sitemap.xml, robots.txt
+  helpers.php        Escaping, URLs, media paths, markdown, dates
+  security.php       Sessions, CSRF, rate limiting, input cleaning
+  mail.php           Outgoing notification email
+  plugins.php        Loads plugins/*/plugin.php and their CSS/JS
+  forms/contact.php  Contact form handling (validate, save, email)
+  admin/             Admin portal at /admin/ (controller, UI, collection schemas)
+  config.php         Your local/server settings (git-ignored; copy config.sample.php)
+frontend/
+  layout.php         <head>, header, nav menus, footer, SEO schema, page hero
+  pages/             Home, About, Team, Solutions, Service, Learning, Clients, Contact, Privacy, 404
+  partials/          Person card, role card
+careers/
+  list.php           /careers
+  job.php            /careers/{slug}
+  apply.php          Job application handling (resume upload, save, email HR)
+insights/
+  list.php           /insights
+  post.php           /insights/{slug}
+  post-card.php      Article card used on Home, Insights and article pages
+database/
+  store.php          JSON store: load(), save(), settings(), items(), find_by_slug()
+  seed.php           First-run content from the live site
+  privacy-default.md Default privacy policy
+  data/              Live content JSON + private/ (rate limits, resumes). Git-ignored.
+plugins/
+  capacity-calculator/  /capacity-calculator page, homepage widget, its JS and CSS
+  gsap-motion/          GSAP animation layer (motion.js, motion.css)
+assets/
+  css/site.css       Site styles
+  js/site.js         Menus, reveals, counters, sliders, filters
+  admin/             Admin portal CSS and JS
+  media/             Built-in images
+uploads/             Images uploaded through the admin (git-ignored)
+```
+
+`backend/`, `frontend/` and `database/` are blocked from the web, as is any `.php` inside `plugins/`. `careers/` and `insights/` URLs always go through the router.
+
+### Debugging tips
+
+- **A page looks wrong:** find its file through the `switch` in `backend/router.php`.
+- **A form fails:** see `backend/forms/contact.php` or `careers/apply.php`.
+- **Content is wrong:** check the JSON in `database/data/`. Delete a file there to re-seed it from `database/seed.php`.
+- **An animation misbehaves:** set `'enabled' => false` in `plugins/gsap-motion/plugin.php`. The site then falls back to its CSS animations.
+- **Plugins:** each one has a `plugin.php` manifest listing its CSS and JS. Turning one off removes its assets, and for the calculator also its page, menu item and homepage section.
 
 ## What the portal manages
 
@@ -29,23 +85,23 @@ Images are resized in the browser (max 800–1800px, depending on the field), co
 
 ## Data
 
-- `data/*.json`: all content. Created from `inc/seed.php` on the first run. Blocked from the web.
-- `data/private/resumes/`: uploaded CVs. Blocked from the web and downloadable only by signed-in admins.
+- `database/data/*.json`: all content. Created from `database/seed.php` on the first run. Blocked from the web.
+- `database/data/private/resumes/`: uploaded CVs. Blocked from the web and downloadable only by signed-in admins.
 - `uploads/`: images uploaded through the portal. PHP and script execution is blocked in this folder.
 - `assets/media/`: built-in images taken from stratastaffglobal.com in Nov 2026, resized to WebP (about 3.5 MB total). They appear in the media library and can be swapped out, but not deleted.
-- `inc/privacy-default.md`: the live site's privacy policy, copied as-is. It still describes the WordPress setup (Contact Form 7, Turnstile, Microsoft Bookings), so have it reviewed before launch. It is editable under **Logo & settings → Privacy policy**.
+- `database/privacy-default.md`: the live site's privacy policy, copied as-is. It still describes the WordPress setup (Contact Form 7, Turnstile, Microsoft Bookings), so have it reviewed before launch. It is editable under **Logo & settings → Privacy policy**.
 
-**Back up `data/` and `uploads/`.** They are the site's content and are git-ignored.
+**Back up `database/data/` and `uploads/`.** They are the site's content and are git-ignored.
 
 ## Deploying to cPanel
 
 1. Upload the folder's contents to the target directory (for example `public_html/` or a staging subdomain).
-2. Copy `config.sample.php` to `config.php`. Set `site_url`, the notification emails, and a temporary `setup_token`.
+2. Copy `backend/config.sample.php` to `backend/config.php`. Set `site_url`, the notification emails, and a temporary `setup_token`.
 3. Visit `/admin/?token=YOUR_TOKEN`, create your account, then clear `setup_token`.
-4. To carry local content across, upload your local `data/` and `uploads/` folders as well.
+4. To carry local content across, upload your local `database/data/` and `uploads/` folders as well.
 
 ## Animation
 
-- **GSAP 3.13** (free, including ScrollTrigger and SplitText) loads from the jsDelivr CDN. `assets/js/motion.js` drives it: masked headline reveals, image wipes, hero parallax, staggered scroll reveals, the "How it works" progress line, magnetic buttons, and a header that hides on scroll.
-- The CSS keyframe animations in `assets/css/site.css` are the fallback when GSAP can't load. Visitors with *reduced motion* switched on get no animation.
-- The official GSAP agent skills are installed in this project's `.claude/skills/` folder, sourced from greensock/gsap-skills.
+- **GSAP 3.13** (free, including ScrollTrigger and SplitText) loads from the jsDelivr CDN. `plugins/gsap-motion/motion.js` drives it: masked headline reveals, image wipes, hero parallax, staggered scroll reveals, the "How it works" progress line, magnetic buttons, and a header that hides on scroll.
+- The CSS keyframe animations in `assets/css/site.css` are the fallback when GSAP can't load or the plugin is switched off. Visitors with *reduced motion* switched on get no animation.
+- The official GSAP agent skills are in `.claude/skills/` in this folder, sourced from greensock/gsap-skills.

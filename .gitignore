@@ -1,4 +1,4 @@
 # Live content, admin accounts, applications and resumes — never commit
-data/
+database/data/
 uploads/
-config.php
+backend/config.php

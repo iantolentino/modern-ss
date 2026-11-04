@@ -80,7 +80,6 @@ p { margin: 0 0 1em; }
 .nav-toggle { display: none; background: none; border: 0; padding: 8px; color: var(--navy); cursor: pointer; }
 .nav-toggle .i { width: 28px; height: 28px; }
 
-
 /* Dropdown menus */
 .main-nav > ul > li { position: relative; display: flex; align-items: center; }
 /* Items with a dropdown: highlight the whole pill (label + arrow), not just the link */
@@ -184,7 +183,6 @@ p { margin: 0 0 1em; }
 .stat:last-child { border-right: 0; }
 .stat-num, .stat-suf { font-size: clamp(2rem, 1.4rem + 1.8vw, 3rem); font-weight: 800; letter-spacing: -.04em; color: var(--navy); line-height: 1; font-variant-numeric: tabular-nums; }
 .stat-label { display: block; margin-top: 10px; color: var(--ink-3); font-weight: 600; font-size: .93rem; }
-
 
 /* Split image + text */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
@@ -467,7 +465,6 @@ a.member:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); bord
 .office .i { color: var(--green); margin-top: .25em; }
 .form-card { position: static; padding: clamp(24px, 4vw, 40px); }
 
-
 /* Testimonials page */
 .quote-grid { columns: 3 300px; column-gap: 22px; }
 .quote-grid .quote-card { break-inside: avoid; margin-bottom: 22px; }
@@ -483,28 +480,6 @@ a.member:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); bord
 .modules li { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 12px 0; border-top: 1px solid var(--line); color: var(--ink); font-weight: 600; }
 .modules li span { font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
 
-
-/* Capacity calculator */
-.calc-card { background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 24px; padding: clamp(22px, 3vw, 32px); box-shadow: var(--shadow-lg); }
-.calc-title { font-size: 1.45rem; margin-bottom: 4px; color: var(--ink); }
-.calc-intro { color: var(--ink-3); font-size: .9rem; margin-bottom: 18px; }
-.calc-fields { display: grid; gap: 14px; }
-.calc-fields.compact { grid-template-columns: 1fr 1fr; }
-.calc-fields label { display: grid; gap: 6px; font-weight: 700; font-size: .86rem; color: var(--ink); }
-.calc-input { display: flex; align-items: stretch; border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; background: #fbfcfe; transition: border-color .2s, box-shadow .2s; }
-.calc-input:focus-within { border-color: var(--blue-light); box-shadow: 0 0 0 4px rgba(9, 75, 193, .12); background: #fff; }
-.calc-input input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 12px 14px; font: inherit; font-size: 1.1rem; font-weight: 700; color: var(--ink); outline: 0; }
-.calc-input em { display: flex; align-items: center; padding: 0 12px; font-style: normal; font-size: .8rem; color: var(--ink-3); background: var(--tint); white-space: nowrap; }
-.calc-result { margin: 20px 0 16px; padding: 20px 22px; border-radius: 18px; background: radial-gradient(circle at 90% 10%, rgba(58, 165, 151, .25), transparent 50%), var(--navy); color: #fff; }
-.calc-result small { color: #b8c6e0; font-size: .82rem; }
-.calc-result strong { display: block; margin: 4px 0; font-size: clamp(2rem, 1.6rem + 1.4vw, 2.6rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.calc-result p { margin: 0; color: #c4d0e6; font-size: .9rem; }
-.calc-hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-.calc-hero h1 { max-width: 16ch; }
-.calc-note { display: flex; align-items: center; gap: 8px; color: #b8c6e0; font-size: .92rem; font-weight: 600; margin: 0; }
-.calc-note .i { color: var(--green-light); }
-.calc-teaser { background: var(--tint); }
-.calc-teaser-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
 .benefit-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .benefit-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; transition: transform .35s var(--ease), box-shadow .35s; }
 .benefit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
@@ -520,11 +495,10 @@ a.member:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); bord
 .quote-feature { max-width: 760px; margin: 0 auto; }
 .quote-feature blockquote { font-size: 1.2rem; }
 @media (max-width: 960px) {
-  .calc-hero, .calc-teaser-grid { grid-template-columns: 1fr; }
   .benefit-cards, .role-links { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
-  .calc-fields.compact, .benefit-cards, .role-links { grid-template-columns: 1fr; }
+  .benefit-cards, .role-links { grid-template-columns: 1fr; }
 }
 
 /* Reveal on scroll (content stays visible without JS) */
@@ -533,17 +507,6 @@ a.member:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); bord
 .js .split-img.reveal { transform: translateX(-30px) scale(.98); }
 .js .split.reverse .split-img.reveal { transform: translateX(30px) scale(.98); }
 .js .split-img.reveal.in { transform: none; }
-
-
-/* GSAP motion layer (assets/js/motion.js adds .gsap when it takes over) */
-.gsap .hero-copy > *, .gsap .hv-card, .gsap .float-chip, .gsap .hero-portrait,
-.gsap .page-hero .wrap > *, .gsap .hero-media-grid > div:first-child > * { animation: none !important; }
-.gsap .hv-card, .gsap .float-chip { will-change: transform; }
-.gsap .reveal { opacity: 1; transform: none; }
-.gsap .reveal:not(.revealed) { transition: none !important; }
-.gsap .reveal.revealed { transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s, background .3s, color .3s; }
-.gsap .chips.reveal li { opacity: 1; transform: none; transition: background .25s, border-color .25s, transform .25s var(--ease); }
-.gsap .steps::before { opacity: .5; transform: scaleX(var(--progress, 0)); transform-origin: left center; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

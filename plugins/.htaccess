@@ -1,0 +1,4 @@
+# Plugin PHP is included by the site, never served directly
+<FilesMatch "\.php$">
+  Require all denied
+</FilesMatch>
