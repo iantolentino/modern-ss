@@ -43,3 +43,9 @@ Images are resized in the browser (max 800–1800px, depending on the field), co
 2. Copy `config.sample.php` to `config.php`. Set `site_url`, the notification emails, and a temporary `setup_token`.
 3. Visit `/admin/?token=YOUR_TOKEN`, create your account, then clear `setup_token`.
 4. To carry local content across, upload your local `data/` and `uploads/` folders as well.
+
+## Animation
+
+- **GSAP 3.13** (free, including ScrollTrigger and SplitText) loads from the jsDelivr CDN. `assets/js/motion.js` drives it: masked headline reveals, image wipes, hero parallax, staggered scroll reveals, the "How it works" progress line, magnetic buttons, and a header that hides on scroll.
+- The CSS keyframe animations in `assets/css/site.css` are the fallback when GSAP can't load. Visitors with *reduced motion* switched on get no animation.
+- The official GSAP agent skills are installed in this project's `.claude/skills/` folder, sourced from greensock/gsap-skills.

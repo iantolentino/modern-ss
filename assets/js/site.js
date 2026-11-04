@@ -132,6 +132,9 @@
         el.hidden = !show;
         if (show) el.classList.add('in');
       });
+      // Cards moved: let GSAP's scroll triggers recalculate (motion.js)
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+      if (window.ssgRevealVisible) window.ssgRevealVisible();
     };
     tabs.addEventListener('click', function (e) {
       var b = e.target.closest('button[data-filter]');

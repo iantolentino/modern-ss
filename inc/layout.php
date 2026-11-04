@@ -248,6 +248,11 @@ function layout_foot(): void {
   </div>
 </footer>
 <script src="<?= e(url('assets/js/site.js')) ?>?v=<?= @filemtime(ROOT_DIR . '/assets/js/site.js') ?>" defer></script>
+<?php // GSAP (free, incl. plugins) drives the richer motion; the CSS animations remain the fallback if it fails to load ?>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+<script src="<?= e(url('assets/js/motion.js')) ?>?v=<?= @filemtime(ROOT_DIR . '/assets/js/motion.js') ?>" defer></script>
 </body>
 </html>
 <?php
