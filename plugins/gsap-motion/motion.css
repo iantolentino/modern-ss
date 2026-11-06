@@ -1,0 +1,9 @@
+/* GSAP motion layer: motion.js adds .gsap to <html> when it takes over from the CSS animations in site.css. */
+.gsap .hero-copy > *, .gsap .hv-card, .gsap .float-chip, .gsap .hero-portrait,
+.gsap .page-hero .wrap > *, .gsap .hero-media-grid > div:first-child > * { animation: none !important; }
+.gsap .hv-card, .gsap .float-chip { will-change: transform; }
+.gsap .reveal { opacity: 1; transform: none; }
+.gsap .reveal:not(.revealed) { transition: none !important; }
+.gsap .reveal.revealed { transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s, background .3s, color .3s; }
+.gsap .chips.reveal li { opacity: 1; transform: none; transition: background .25s, border-color .25s, transform .25s var(--ease); }
+.gsap .steps::before { opacity: .5; transform: scaleX(var(--progress, 0)); transform-origin: left center; }
