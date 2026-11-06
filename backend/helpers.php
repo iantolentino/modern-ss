@@ -22,6 +22,8 @@ function site_origin(): string {
 
 function abs_url(string $path = ''): string {
     if (preg_match('#^https?://#i', $path)) return $path;
+    // Paths from url()/media() already carry the install folder; don't add it twice
+    if (APP_BASE !== '' && strpos($path, APP_BASE . '/') === 0) $path = substr($path, strlen(APP_BASE));
     return site_origin() . '/' . ltrim($path, '/');
 }
 
