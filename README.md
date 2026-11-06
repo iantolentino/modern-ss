@@ -56,9 +56,12 @@ assets/
   admin/             Admin portal CSS and JS
   media/             Built-in images
 uploads/             Images uploaded through the admin (git-ignored)
+tools/
+  build_preview.py   Builds and publishes the static GitHub Pages preview
+docs/                Work summaries
 ```
 
-`backend/`, `frontend/` and `database/` are blocked from the web, as is any `.php` inside `plugins/`. `careers/` and `insights/` URLs always go through the router.
+`backend/`, `frontend/`, `database/`, `tools/` and `docs/` are blocked from the web, as is any `.php` inside `plugins/`. `careers/` and `insights/` URLs always go through the router.
 
 ### Debugging tips
 
@@ -92,6 +95,20 @@ Images are resized in the browser (max 800–1800px, depending on the field), co
 - `database/privacy-default.md`: the live site's privacy policy, copied as-is. It still describes the WordPress setup (Contact Form 7, Turnstile, Microsoft Bookings), so have it reviewed before launch. It is editable under **Logo & settings → Privacy policy**.
 
 **Back up `database/data/` and `uploads/`.** They are the site's content and are git-ignored.
+
+## Online preview (GitHub Pages)
+
+https://iantolentino.github.io/modern-ss/ is a static copy of the site, so people can view it without XAMPP. GitHub Pages can't run PHP, so in the preview the forms are disabled and there is no admin. Pages are marked noindex, so Google won't list the preview.
+
+It is served from the `gh-pages` branch and doesn't update by itself. After changing the site, with XAMPP running:
+
+```
+python tools/build_preview.py --publish
+```
+
+This saves every page from http://localhost/strata-modern/, copies the files those pages use, then commits and pushes to `gh-pages`. Pages refreshes within a minute or two. To check a build without publishing, use `--out SOME_EMPTY_FOLDER`.
+
+The preview shows your local content (`database/data/`), including anything you've edited in the local admin.
 
 ## Deploying to cPanel
 

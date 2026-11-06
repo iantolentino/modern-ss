@@ -6,7 +6,7 @@ DirectorySlash Off
 <IfModule mod_rewrite.c>
 RewriteEngine On
 # Code and data folders are never served directly (each also has its own deny .htaccess)
-RewriteRule ^(backend|database|frontend)(/|$) - [F,L]
+RewriteRule ^(backend|database|frontend|tools|docs)(/|$) - [F,L]
 RewriteRule ^plugins/.+\.php$ - [F,L]
 # careers/ and insights/ hold page code; their URLs belong to the router
 RewriteRule ^(careers|insights)(/.*)?$ index.php [L]
