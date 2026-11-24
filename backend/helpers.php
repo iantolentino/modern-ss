@@ -77,7 +77,7 @@ function md(string $text): string {
         if (preg_match('/^(#{2,4})\s+(.*)$/', $t, $m)) {
             $flushPara(); $flushList();
             $lvl = strlen($m[1]);
-            $html .= "<h$lvl>" . inline_md($m[2]) . "</h$lvl>\n";
+            $html .= "<h$lvl id=\"" . e(slugify(strip_tags(inline_md($m[2])))) . "\">" . inline_md($m[2]) . "</h$lvl>\n";
             continue;
         }
         if (preg_match('/^(?:[-*]|(\d+)\.)\s+(.*)$/', $t, $m)) {
@@ -98,6 +98,17 @@ function md(string $text): string {
     }
     $flushPara(); $flushList();
     return $html;
+}
+
+/** Level-2 headings of a markdown text as [id => title], for an on-page contents list. */
+function md_toc(string $text): array {
+    preg_match_all('/^##\s+(.+)$/m', $text, $m);
+    $toc = [];
+    foreach ($m[1] as $h) {
+        $title = trim(strip_tags(inline_md(trim($h))));
+        $toc[slugify($title)] = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
+    }
+    return $toc;
 }
 
 function plain(string $text, int $len = 160): string {

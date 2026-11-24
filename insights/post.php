@@ -22,18 +22,20 @@ $more = array_slice(array_filter(items('insights'), function ($p) use ($post) { 
 ?>
 <article>
   <header class="page-hero post-hero">
-    <div class="wrap narrow">
+    <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('insights')) ?>">Insights</a></li><li><span aria-current="page"><?= e($post['category'] ?? 'Article') ?></span></li></ol></nav>
       <p class="post-meta light"><span class="tag tag-light"><?= e($post['category'] ?? 'News') ?></span><time datetime="<?= e($post['date']) ?>"><?= e(fdate($post['date'], 'j F Y')) ?></time></p>
       <h1><?= e($post['title']) ?></h1>
       <?php if (!empty($post['excerpt'])): ?><p class="lede"><?= e($post['excerpt']) ?></p><?php endif; ?>
     </div>
   </header>
-  <?php if (!empty($post['cover'])): ?>
-  <div class="wrap narrow post-cover"><div class="post-cover-frame" style="--bg: url('<?= e(media($post['cover'])) ?>')"><img src="<?= e(media($post['cover'])) ?>" alt="<?= e($post['title']) ?>" width="960" height="540" fetchpriority="high"></div></div>
-  <?php endif; ?>
-  <div class="section"><div class="wrap narrow prose"><?= md($post['body'] ?? '') ?>
-    <?php if (!empty($post['gallery'])): ?><div class="gallery"><?php foreach (lines($post["gallery"]) as $gi => $g): ?><a href="<?= e(media($g)) ?>" target="_blank" rel="noopener"><img src="<?= e(media($g)) ?>" alt="<?= e($post["title"]) ?>, page <?= $gi + 2 ?>" loading="lazy"></a><?php endforeach; ?></div><?php endif; ?>
+  <div class="section post-section"><div class="wrap doc-layout<?= empty($post['cover']) ? ' no-aside' : '' ?>">
+    <?php if (!empty($post['cover'])): ?>
+    <aside class="doc-aside post-cover"><div class="post-cover-frame" style="--bg: url('<?= e(media($post['cover'])) ?>')"><img src="<?= e(media($post['cover'])) ?>" alt="<?= e($post['title']) ?>" width="960" height="540" fetchpriority="high"></div></aside>
+    <?php endif; ?>
+    <div class="doc-main prose"><?= md($post['body'] ?? '') ?>
+      <?php if (!empty($post['gallery'])): ?><div class="gallery"><?php foreach (lines($post["gallery"]) as $gi => $g): ?><a href="<?= e(media($g)) ?>" target="_blank" rel="noopener"><img src="<?= e(media($g)) ?>" alt="<?= e($post["title"]) ?>, page <?= $gi + 2 ?>" loading="lazy"></a><?php endforeach; ?></div><?php endif; ?>
+    </div>
   </div></div>
 </article>
 <?php if ($more): ?>
