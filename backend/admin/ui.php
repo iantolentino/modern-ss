@@ -254,9 +254,7 @@ function settings_sections(): array {
             'hero.title' => ['Headline', 'text', ['required' => true]],
             'hero.note' => ['Small note under the buttons', 'text', []],
             'hero.subtitle' => ['Sub-headline', 'textarea', ['rows' => 2]],
-            'hero.image' => ['Main hero photo', 'image', ['max' => 1200]],
-            'hero.image_2' => ['Second photo', 'image', ['max' => 800]],
-            'hero.image_3' => ['Third photo', 'image', ['max' => 800]],
+            'hero.image' => ['Hero building photo (tall)', 'image', ['max' => 1800]],
         ]],
         'stats' => ['Stats', $stats],
         'careers' => ['Careers page', [

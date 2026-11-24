@@ -142,14 +142,15 @@ function layout_head(array $meta, string $active = ''): void {
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:image" content="<?= e($img) ?>">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#061a40">
+<meta name="theme-color" content="#094bc1">
 <?php if ($fav): ?><link rel="icon" href="<?= e($fav) ?>"><?php endif; ?>
 <?php if (!empty($meta['preload'])): ?><link rel="preload" as="image" href="<?= e($meta['preload']) ?>" fetchpriority="high"><?php endif; ?>
 <meta property="og:locale" content="en_AU">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
 <link rel="stylesheet" href="<?= e(url('assets/css/site.css')) ?>?v=<?= @filemtime(ROOT_DIR . '/assets/css/site.css') ?>">
+<link rel="stylesheet" href="<?= e(url('assets/css/facade.css')) ?>?v=<?= @filemtime(ROOT_DIR . '/assets/css/facade.css') ?>">
 <?php plugin_styles(); ?>
 <?php foreach ($schema as $s): ?>
 <script type="application/ld+json"><?= json_encode($s, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?></script>
@@ -202,15 +203,18 @@ function layout_foot(): void {
 </main>
 <section class="cta-band">
   <div class="wrap"><div class="cta-inner reveal">
-    <div class="cta-mark" aria-hidden="true" style="--mark: url(<?= e(url('assets/media/brand/strata-staff-mark-white.png')) ?>)"><span class="cta-badge"><img src="<?= e(url('assets/media/brand/strata-staff-mark.png')) ?>" alt="" width="88" height="88" loading="lazy"></span></div>
     <div>
       <h2>Schedule a free discovery call</h2>
       <p>Tell us about your agency and the work piling up. We'll show you where an offshore team fits. No obligation.</p>
     </div>
     <div class="cta-actions">
-      <a class="btn btn-light" href="<?= e(url('contact')) ?>">Talk to us <?= icon('arrow') ?></a>
+      <a class="btn btn-light" href="<?= e(url('contact')) ?>">Book a discovery call <?= icon('arrow') ?></a>
       <?php if (!empty($c['scorecard_url'])): ?><a class="btn btn-ghost-light" href="<?= e($c['scorecard_url']) ?>">Take the capacity test</a><?php endif; ?>
     </div>
+    <figure class="cta-photo" aria-hidden="true">
+      <img src="<?= e(url('assets/media/stock/balcony-rows.webp')) ?>" alt="" width="2000" height="1288" loading="lazy">
+      <span class="cta-badge"><img src="<?= e(url('assets/media/brand/strata-staff-mark.png')) ?>" alt="" width="88" height="88" loading="lazy"></span>
+    </figure>
   </div></div>
 </section>
 <footer class="site-footer">

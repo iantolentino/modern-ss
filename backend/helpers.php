@@ -111,6 +111,17 @@ function md_toc(string $text): array {
     return $toc;
 }
 
+/** Whole sentences of a text up to about $len characters (at least the first sentence). */
+function sentences(string $text, int $len = 260): string {
+    $parts = preg_split('/(?<=[.!?])\s+/', trim(preg_replace('/\s+/', ' ', $text)));
+    $out = '';
+    foreach ($parts as $s) {
+        if ($out !== '' && mb_strlen($out . ' ' . $s) > $len) break;
+        $out = $out === '' ? $s : $out . ' ' . $s;
+    }
+    return $out;
+}
+
 function plain(string $text, int $len = 160): string {
     $t = trim(preg_replace('/\s+/', ' ', preg_replace('/[#*>\[\]]|\(https?:[^)]+\)/', '', $text)));
     if (mb_strlen($t) <= $len) return $t;

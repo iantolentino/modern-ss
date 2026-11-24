@@ -79,33 +79,23 @@
     nums.forEach(function (n) { co.observe(n); });
   }
 
-  // Rotating role names in the hero
-  var rot = document.querySelector('.rotator-words');
-  if (rot && !reduce) {
-    var words = [];
-    try { words = JSON.parse(rot.getAttribute('data-words')); } catch (e) {}
-    var idx = 0;
-    if (words.length > 1) setInterval(function () {
-      idx = (idx + 1) % words.length;
-      var span = document.createElement('span');
-      span.className = 'rotator-word';
-      span.textContent = words[idx];
-      rot.replaceChildren(span);
-    }, 2600);
-  }
-
-  // Gentle parallax on the hero photos (pointer devices only)
-  var visual = document.querySelector('.hero-visual');
-  if (visual && !reduce && window.matchMedia('(pointer: fine)').matches) {
-    var layers = visual.querySelectorAll('.hv-card');
-    visual.closest('.hero').addEventListener('mousemove', function (e) {
-      var r = visual.getBoundingClientRect();
-      var x = (e.clientX - r.left - r.width / 2) / r.width, y = (e.clientY - r.top - r.height / 2) / r.height;
-      layers.forEach(function (l, i) {
-        var d = (i + 1) * 6;
-        l.style.translate = (-x * d) + 'px ' + (-y * d) + 'px';
-      });
-    });
+  // Role directory: the photo beside the board shows the role you point at or tab to
+  var board = document.querySelector('[data-board]');
+  var boardImg = document.querySelector('[data-board-img]');
+  if (board && boardImg) {
+    var show = function (a) {
+      board.querySelectorAll('a.is-on').forEach(function (x) { x.classList.remove('is-on'); });
+      a.classList.add('is-on');
+      var src = a.getAttribute('data-img');
+      if (!src || boardImg.getAttribute('src') === src) return;
+      boardImg.classList.add('is-swapping');
+      var next = new Image();
+      next.onload = next.onerror = function () { boardImg.src = src; boardImg.classList.remove('is-swapping'); };
+      next.src = src;
+    };
+    board.addEventListener('mouseover', function (e) { var a = e.target.closest('a[data-img]'); if (a) show(a); });
+    board.addEventListener('focusin', function (e) { var a = e.target.closest('a[data-img]'); if (a) show(a); });
+    window.ssgBoardFirst = function () { var a = board.querySelector('li:not([hidden]) a[data-img]'); if (a) show(a); };
   }
 
   // Filter tabs (roles, jobs)
@@ -122,6 +112,7 @@
       // Cards moved: let GSAP's scroll triggers recalculate (plugins/gsap-motion/motion.js)
       if (window.ScrollTrigger) window.ScrollTrigger.refresh();
       if (window.ssgRevealVisible) window.ssgRevealVisible();
+      if (window.ssgBoardFirst) window.ssgBoardFirst();
     };
     tabs.addEventListener('click', function (e) {
       var b = e.target.closest('button[data-filter]');
