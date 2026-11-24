@@ -21,7 +21,7 @@ page_hero('Solutions', 'Offshore specialists for strata and property management'
     if (!$rows) continue; ?>
 <section class="section<?= $key === 'pm' ? ' section-tint' : '' ?>" id="<?= $key === 'pm' ? 'property-management' : 'strata-management' ?>">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow"><?= e($g[0]) ?></p><h2><?= e($g[1]) ?></h2><p class="lede"><?= e($g[2]) ?></p></div>
+    <div class="section-head reveal"><p class="meta-line"><?= e($g[0]) ?></p><h2><?= e($g[1]) ?></h2><p class="lede"><?= e($g[2]) ?></p></div>
     <div class="roles"><?php foreach ($rows as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?></div>
   </div>
 </section>

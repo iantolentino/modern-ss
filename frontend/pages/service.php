@@ -23,7 +23,7 @@ $contactUrl = url('contact?role=' . rawurlencode($item['title']));
       <nav class="crumbs" aria-label="Breadcrumb"><ol>
         <li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('solutions')) ?>">Solutions</a></li><li><span aria-current="page"><?= e($item['title']) ?></span></li>
       </ol></nav>
-      <p class="eyebrow"><?= $item['category'] === 'pm' ? 'Strata Staff Plus · Property management' : 'Strata Services · Strata management' ?></p>
+      <p class="meta-line"><?= $item['category'] === 'pm' ? 'Strata Staff Plus · Property management' : 'Strata Services · Strata management' ?></p>
       <h1><?= e($item['title']) ?></h1>
       <p class="lede"><?= e($item['summary']) ?></p>
       <a class="btn btn-primary btn-lg" href="<?= e($contactUrl) ?>">Enquire about this role <?= icon('arrow') ?></a>

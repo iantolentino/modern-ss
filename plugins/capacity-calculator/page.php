@@ -21,7 +21,6 @@ layout_head([
   <div class="wrap calc-hero">
     <div>
       <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('about')) ?>">About</a></li><li><span aria-current="page">Capacity calculator</span></li></ol></nav>
-      <p class="eyebrow">The hidden capacity inside your business</p>
       <h1>How much time could you give back to your strata managers?</h1>
       <p class="lede">Your managers are valuable. If they spend hours every week on administration, routine accounting and customer enquiries, you're paying manager-level salaries for work that can often be delegated.</p>
       <p class="calc-note"><?= icon('clock') ?> Takes less than 30 seconds · No obligation</p>
@@ -33,7 +32,6 @@ layout_head([
 <section class="section">
   <div class="wrap">
     <div class="section-head center reveal">
-      <p class="eyebrow">The opportunity</p>
       <h2>What if your managers got those hours back?</h2>
       <p class="lede">The goal isn't simply to add cheaper staff. It's to move the right work to the right level of resource, and free your experienced people to do the work only they can do.</p>
     </div>
@@ -52,7 +50,6 @@ layout_head([
 <section class="section section-dark">
   <div class="wrap">
     <div class="section-head center reveal">
-      <p class="eyebrow light">Purpose-built for strata</p>
       <h2>A dedicated extension of your team, not a generic VA</h2>
       <p class="lede">Strata-trained offshore support built around your systems, processes and portfolio.</p>
     </div>
@@ -67,7 +64,6 @@ layout_head([
 <section class="section">
   <div class="wrap narrow">
     <div class="section-head center reveal">
-      <p class="eyebrow">A different way to scale</p>
       <h2>Don't hire your next manager just to solve an admin problem</h2>
       <p class="lede">Before adding another onshore position, look at the workload underneath the role. Some of it may be better handled by dedicated offshore capacity.</p>
     </div>

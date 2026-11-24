@@ -35,8 +35,7 @@
     var hero = $('.hero');
     if (hero) {
       var heroTl = gsap.timeline({ defaults: { duration: 1, ease: 'power4.out' } });
-      heroTl.addLabel('copy', 0.1)
-        .from('.hero-kicker', { autoAlpha: 0, y: 16 }, 'copy');
+      heroTl.addLabel('copy', 0.1);
 
       SplitText.create('.hero h1', {
         type: 'lines, words', mask: 'lines', autoSplit: true,
@@ -49,19 +48,18 @@
         .addLabel('photos', 0.2)
         .fromTo('.hv-card', { clipPath: 'inset(100% 0% 0% 0% round 26px)' }, { clipPath: 'inset(0% 0% 0% 0% round 26px)', duration: 1.3, ease: 'expo.out', stagger: 0.15 }, 'photos')
         .from('.hv-card img', { scale: 1.25, duration: 1.6, ease: 'expo.out', stagger: 0.15 }, 'photos')
-        .from('.float-chip', { autoAlpha: 0, y: 20, scale: 0.8, ease: 'back.out(1.8)', duration: 0.7, stagger: 0.12 }, 'photos+=0.9');
+        .from('.float-chip', { autoAlpha: 0, y: 12, scale: 0.95, ease: 'expo.out', duration: 0.6, stagger: 0.08 }, 'photos+=0.9');
 
       // Chips drift gently once they have landed
       $$('.float-chip').forEach(function (chip, i) {
-        gsap.to(chip, { y: -10, duration: 2.6 + i * 0.4, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2 + i * 0.3 });
+        gsap.to(chip, { y: -8, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: 1, delay: 1.8 + i * 0.25 });
       });
 
       // Depth on scroll: photos move at different speeds
       gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1 } })
         .to('.hv-main', { yPercent: -8, ease: 'none' }, 0)
         .to('.hv-a', { yPercent: -22, ease: 'none' }, 0)
-        .to('.hv-b', { yPercent: -36, ease: 'none' }, 0)
-        .to('.hero-copy', { yPercent: 10, autoAlpha: 0.4, ease: 'none' }, 0);
+        .to('.hv-b', { yPercent: -36, ease: 'none' }, 0);
     }
 
     /* ---------- Inner page heroes ---------- */
@@ -82,20 +80,6 @@
       }
     }
 
-    /* ---------- Section headings: masked line reveal on scroll ---------- */
-    $$('main h2').forEach(function (h) {
-      if (h.closest('.hero, .page-hero, .calc-card, .featured-post') || h.classList.contains('platforms-label')) return;
-      SplitText.create(h, {
-        type: 'lines, words', mask: 'lines', autoSplit: true,
-        onSplit: function (self) {
-          return gsap.from(self.words, {
-            yPercent: 110, duration: 0.9, ease: 'power4.out', stagger: 0.035,
-            scrollTrigger: { trigger: h, start: 'top 88%', once: true }
-          });
-        }
-      });
-    });
-
     /* ---------- Generic reveals, batched so neighbours stagger together ---------- */
     var revealIn = function (batch) {
       // data-rv marks "reveal started"; .revealed (added on finish) re-enables CSS hover transitions
@@ -103,12 +87,12 @@
       if (!batch.length) return;
       batch.forEach(function (el) { el.dataset.rv = '1'; });
       gsap.to(batch, {
-        autoAlpha: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.1, overwrite: true,
+        autoAlpha: 1, y: 0, duration: 0.6, ease: 'expo.out', stagger: 0.06, overwrite: true,
         clearProps: 'transform',
         onComplete: function () { batch.forEach(function (el) { el.classList.add('revealed'); }); }
       });
     };
-    gsap.set('.reveal', { autoAlpha: 0, y: 48 });
+    gsap.set('.reveal', { autoAlpha: 0, y: 16 });
     ScrollTrigger.batch('.reveal', { start: 'top 90%', once: true, interval: 0.1, onEnter: revealIn });
 
     // Filters (team departments, role tabs) move cards into view without scrolling;
@@ -140,7 +124,7 @@
     var chips = $('.chips');
     if (chips) {
       gsap.from($$('li', chips), {
-        autoAlpha: 0, y: 18, scale: 0.85, duration: 0.6, ease: 'back.out(1.7)',
+        autoAlpha: 0, y: 10, scale: 0.95, duration: 0.45, ease: 'expo.out',
         stagger: { each: 0.035, from: 'random' }, clearProps: 'transform',
         scrollTrigger: { trigger: chips, start: 'top 85%', once: true }
       });
@@ -150,7 +134,7 @@
     var cta = $('.cta-mark');
     if (cta) {
       gsap.from(cta, {
-        autoAlpha: 0, scale: 0.5, rotation: -25, duration: 1.2, ease: 'back.out(1.6)',
+        autoAlpha: 0, scale: 0.9, rotation: -8, duration: 0.8, ease: 'expo.out',
         scrollTrigger: { trigger: '.cta-inner', start: 'top 85%', once: true }
       });
     }

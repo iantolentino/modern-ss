@@ -30,7 +30,6 @@ layout_head([
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="hero-kicker"><?= e($hero['eyebrow'] ?? '') ?></p>
       <h1><?= e($hero['title'] ?? '') ?></h1>
       <?php if ($rotating): ?>
       <p class="rotator">Hire a dedicated <span class="rotator-words" data-words="<?= e(json_encode(array_values($rotating))) ?>"><span class="rotator-word"><?= e($rotating[0]) ?></span></span></p>
@@ -43,7 +42,7 @@ layout_head([
       <?php if ($testimonials): ?>
       <div class="hero-trust">
         <div class="stack"><?php foreach (array_slice($testimonials, 0, 4) as $t): ?><?= avatar($t, 'stack-img') ?><?php endforeach; ?></div>
-        <p><strong>Trusted by strata agencies</strong> across Australia &amp; Canada</p>
+        <p><?= e($hero['eyebrow'] ?? '') ?></p>
       </div>
       <?php endif; ?>
     </div>
@@ -86,7 +85,6 @@ layout_head([
 <section class="section calc-teaser">
   <div class="wrap calc-teaser-grid">
     <div class="reveal">
-      <p class="eyebrow">Capacity calculator</p>
       <h2>How much manager time is tied up in admin?</h2>
       <p class="lede">Enter two numbers to see the back-office hours your strata managers could get back each year.</p>
       <a class="text-link" href="<?= e(url('capacity-calculator')) ?>">See the full capacity calculator <?= icon('arrow') ?></a>
@@ -103,7 +101,6 @@ layout_head([
       <div class="img-badge"><span class="big">Since 2019</span> serving strata agencies</div>
     </div>
     <div class="reveal">
-      <p class="eyebrow">The Strata Staff difference</p>
       <h2>High-performing teams, trained for strata</h2>
       <p class="lede">Our staff are not generalists. They are trained specifically in strata operations and familiar with Australian and Canadian strata legislation.</p>
       <div class="mini-features">
@@ -123,7 +120,6 @@ layout_head([
   <div class="wrap">
     <div class="section-head row reveal">
       <div>
-        <p class="eyebrow">Roles built for strata</p>
         <h2>Meet the team behind your team</h2>
         <p class="lede">Skilled professionals, trained in strata workflows and ready to support your agency.</p>
       </div>
@@ -141,7 +137,6 @@ layout_head([
 <section class="section">
   <div class="wrap">
     <div class="section-head center reveal">
-      <p class="eyebrow">How it works</p>
       <h2>From first call to a working offshore team</h2>
     </div>
     <ol class="steps">
@@ -160,7 +155,6 @@ layout_head([
 <section class="section section-dark">
   <div class="wrap tasks-grid">
     <div class="reveal">
-      <p class="eyebrow light">Day-to-day strata work</p>
       <h2>200,000+ strata tasks a month</h2>
       <p class="lede">From archiving and levy queries to Section 184 certificates and AGM agendas, this is the work our teams process every day.</p>
       <a class="btn btn-light" href="<?= e(url('solutions')) ?>">See all solutions <?= icon('arrow') ?></a>
@@ -177,7 +171,7 @@ layout_head([
 <section class="section" id="clients">
   <div class="wrap">
     <div class="section-head row reveal">
-      <div><p class="eyebrow">Our clients have spoken</p><h2>What strata agencies say</h2></div>
+      <div><h2>What strata agencies say</h2></div>
       <div class="slider-nav">
         <a class="text-link" href="<?= e(url('clients')) ?>">All testimonials <?= icon('arrow') ?></a>
         <button type="button" class="round-btn" data-slide="-1" aria-label="Previous testimonials"><?= str_replace('<svg', '<svg style="transform:rotate(180deg)"', icon('arrow')) ?></button>
@@ -203,7 +197,6 @@ layout_head([
 <section class="members" aria-labelledby="members-title">
   <div class="wrap">
     <div class="section-head center reveal">
-      <p class="eyebrow">Industry memberships</p>
       <h2 id="members-title">Part of the strata industry in Australia and Canada</h2>
       <p class="lede">We are members of the associations that set standards for strata and property management.</p>
     </div>
@@ -226,7 +219,7 @@ layout_head([
 <section class="section section-tint">
   <div class="wrap">
     <div class="section-head row reveal">
-      <div><p class="eyebrow">Insights</p><h2>News from Strata Staff</h2></div>
+      <div><h2>News from Strata Staff</h2></div>
       <a class="text-link" href="<?= e(url('insights')) ?>">All insights <?= icon('arrow') ?></a>
     </div>
     <div class="post-grid">
@@ -240,7 +233,6 @@ layout_head([
 <section class="section">
   <div class="wrap faq-grid">
     <div class="reveal">
-      <p class="eyebrow">FAQ</p>
       <h2>Common questions</h2>
       <p class="lede">Anything else? <a href="<?= e(url('contact')) ?>">Ask our solutions team.</a></p>
     </div>

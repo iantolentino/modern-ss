@@ -13,7 +13,6 @@ page_hero('Learning', 'Trained for strata before day one', 'Strata Staff invests
   <div class="wrap split">
     <div class="split-img reveal"><img src="<?= e(media($m . 'foundation-training-program-1.webp')) ?>" alt="Strata Staff Foundation Training Program" width="560" height="560" loading="lazy"></div>
     <div class="reveal">
-      <p class="eyebrow">Foundation Training Program</p>
       <h2>Industry-ready from the first placement</h2>
       <p class="lede">The Foundation Training Program (FTP), run by our Learning Delivery Team, trains aspiring strata professionals in the foundation skills they need before they're endorsed to a strata agency partner.</p>
       <h3 class="list-sub">What it builds in our people</h3>
@@ -27,7 +26,6 @@ page_hero('Learning', 'Trained for strata before day one', 'Strata Staff invests
   <div class="wrap split reverse">
     <div class="split-img reveal"><img src="<?= e(media($m . 'foundation-training-program-2.webp')) ?>" alt="Strata Staff training session" width="560" height="560" loading="lazy"></div>
     <div class="reveal">
-      <p class="eyebrow">For our agency partners</p>
       <h2>What the FTP means for your agency</h2>
       <ul class="checklist">
         <?php foreach (['Processes aligned with your internal agency metrics', 'Quality assurance and client satisfaction', 'A high compliance ratio', 'Task management tailored to each agency'] as $x): ?><li><?= icon('check') ?> <?= e($x) ?></li><?php endforeach; ?>
@@ -37,7 +35,7 @@ page_hero('Learning', 'Trained for strata before day one', 'Strata Staff invests
 </section>
 <section class="section" id="academy">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow">Ongoing learning</p><h2>Our learning programs</h2></div>
+    <div class="section-head reveal"><h2>Our learning programs</h2></div>
     <div class="program">
       <article class="program-card reveal">
         <h3>Strata Staff Academy</h3>

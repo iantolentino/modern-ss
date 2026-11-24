@@ -15,7 +15,7 @@ page_hero('Our people', 'Our awesome team', 'The management and leadership team 
 <?php if ($leaders): ?>
 <section class="section" id="executives">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow">Leadership</p><h2>Executives</h2></div>
+    <div class="section-head reveal"><h2>Executives</h2></div>
     <div class="people people-lg"><?php foreach ($leaders as $p) require FRONTEND_DIR . '/partials/person.php'; ?></div>
   </div>
 </section>
@@ -23,7 +23,7 @@ page_hero('Our people', 'Our awesome team', 'The management and leadership team 
 <?php if ($crew): ?>
 <section class="section section-tint" id="team">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow">Management &amp; team leaders</p><h2>The people behind your team</h2></div>
+    <div class="section-head reveal"><h2>The people behind your team</h2></div>
     <?php if (count($depts) > 1): ?>
     <div class="tabs tabs-scroll reveal" role="tablist" aria-label="Department">
       <button role="tab" aria-selected="true" data-filter="all">All</button>

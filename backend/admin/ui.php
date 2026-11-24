@@ -250,7 +250,7 @@ function settings_sections(): array {
             'og_image' => ['Social share image', 'image', ['help' => 'Shown when the site is shared on LinkedIn/Facebook. 1200×630 is ideal.', 'max' => 1200]],
         ]],
         'homepage' => ['Homepage hero', [
-            'hero.eyebrow' => ['Small label', 'text', []],
+            'hero.eyebrow' => ['Trust line (under the buttons)', 'text', []],
             'hero.title' => ['Headline', 'text', ['required' => true]],
             'hero.note' => ['Small note under the buttons', 'text', []],
             'hero.subtitle' => ['Sub-headline', 'textarea', ['rows' => 2]],

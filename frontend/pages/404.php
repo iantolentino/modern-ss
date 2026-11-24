@@ -3,7 +3,6 @@ layout_head(['title' => 'Page not found | Strata Staff Global', 'description' =>
 ?>
 <section class="page-hero">
   <div class="wrap narrow">
-    <p class="eyebrow">404</p>
     <h1>Page not found</h1>
     <p class="lede">The page you're looking for has moved or no longer exists.</p>
     <div class="hero-actions">

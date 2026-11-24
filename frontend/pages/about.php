@@ -17,7 +17,6 @@ page_hero('About us', 'Strata offshoring, built by people who know strata', 'Str
       <img src="<?= e(media($m . 'about-strata-staff-office.webp')) ?>" alt="The Strata Staff office" width="400" height="510" loading="lazy">
     </div>
     <div class="prose reveal">
-      <p class="eyebrow">Humble beginnings</p>
       <h2>Three computers and a water dispenser</h2>
       <p>Owners and co-founders Trevor McGuinness and Paul Miller wanted to test a business idea in the Philippines. After several trips and a lot of deliberation, they started beta testing strata administration work offshore, and Strata Staff launched in April 2019 in a small office in Mabalacat, Pampanga.</p>
       <p>The team started with three computers and a water dispenser, and spent countless hours documenting every strata admin task while servicing a few agencies on casual hours. Dan Fabros joined in late 2020 to help with operations and scaling. The business kept going through earthquakes, lockdowns and the COVID-19 pandemic.</p>
@@ -28,7 +27,7 @@ page_hero('About us', 'Strata offshoring, built by people who know strata', 'Str
 
 <section class="section section-tint" id="journey">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow">Our journey</p><h2>2019 to today</h2></div>
+    <div class="section-head reveal"><h2>2019 to today</h2></div>
     <img class="timeline-img reveal" src="<?= e(media($m . 'strata-staff-timeline-2019-2025.webp')) ?>" alt="Strata Staff timeline from 2019 to 2025" width="1400" height="693" loading="lazy">
   </div>
 </section>
@@ -36,7 +35,6 @@ page_hero('About us', 'Strata offshoring, built by people who know strata', 'Str
 <section class="section" id="values">
   <div class="wrap">
     <div class="section-head reveal">
-      <p class="eyebrow">Core values</p>
       <h2>Enjoy the journey</h2>
       <p class="lede">We keep an inclusive, intentional workplace guided by our values. Our people shape the quality of every engagement, and we keep improving our service levels to strengthen our partnerships.</p>
     </div>
@@ -52,7 +50,7 @@ page_hero('About us', 'Strata offshoring, built by people who know strata', 'Str
 <section class="section section-tint">
   <div class="wrap">
     <div class="section-head row reveal">
-      <div><p class="eyebrow">Leadership</p><h2>Executives</h2><p class="lede">Experience across strata, corporate finance and business development.</p></div>
+      <div><h2>Executives</h2><p class="lede">Experience across strata, corporate finance and business development.</p></div>
       <a class="text-link" href="<?= e(url('team')) ?>">Meet the whole team <?= icon('arrow') ?></a>
     </div>
     <div class="people people-lg">

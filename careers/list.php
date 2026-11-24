@@ -14,7 +14,6 @@ layout_head([
   <div class="wrap hero-media-grid">
     <div>
       <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><span aria-current="page">Careers</span></li></ol></nav>
-      <p class="eyebrow">Careers</p>
       <h1><?= e($cr['headline'] ?? 'Join our team') ?></h1>
       <p class="lede"><?= e($cr['intro'] ?? '') ?></p>
       <a class="btn btn-primary btn-lg" href="#openings"><?= count($jobs) ?> open <?= count($jobs) === 1 ? 'role' : 'roles' ?> <?= icon('arrow') ?></a>
@@ -24,7 +23,7 @@ layout_head([
 </section>
 <section class="section">
   <div class="wrap">
-    <div class="section-head reveal"><p class="eyebrow">Working at Strata Staff</p><h2>Benefits</h2><p class="lede">Our team works from the Marisol Office in Angeles City, Pampanga. Every new hire goes through our Foundation Training Program.</p></div>
+    <div class="section-head reveal"><h2>Benefits</h2><p class="lede">Our team works from the Marisol Office in Angeles City, Pampanga. Every new hire goes through our Foundation Training Program.</p></div>
     <ul class="benefits reveal">
       <?php foreach (lines((string) ($cr['benefits'] ?? '')) as $b): ?><li><?= icon('check') ?> <?= e($b) ?></li><?php endforeach; ?>
     </ul>
@@ -33,7 +32,7 @@ layout_head([
 <section class="section section-tint" id="openings">
   <div class="wrap">
     <div class="section-head row reveal">
-      <div><p class="eyebrow">Open positions</p><h2>Find your next role</h2></div>
+      <div><h2>Find your next role</h2></div>
       <?php if (count($depts) > 1): ?>
       <div class="tabs" role="tablist" aria-label="Department">
         <button role="tab" aria-selected="true" data-filter="all">All</button>

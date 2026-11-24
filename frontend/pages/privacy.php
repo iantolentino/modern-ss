@@ -6,7 +6,7 @@ page_hero('Legal', 'Privacy Policy', '', [['', 'Home'], ['privacy', 'Privacy Pol
 <section class="section"><div class="wrap doc-layout<?= $toc ? '' : ' no-aside' ?>">
   <?php if ($toc): ?>
   <aside class="doc-aside">
-    <nav class="doc-toc" aria-label="On this page"><p class="eyebrow">On this page</p><ol>
+    <nav class="doc-toc" aria-label="On this page"><p class="doc-toc-title">On this page</p><ol>
       <?php foreach ($toc as $id => $title): ?><li><a href="#<?= e($id) ?>"><?= e($title) ?></a></li><?php endforeach; ?>
     </ol></nav>
   </aside>

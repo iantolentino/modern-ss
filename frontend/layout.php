@@ -265,7 +265,6 @@ function page_hero(string $eyebrow, string $title, string $lede = '', array $cru
       <?php endforeach; ?>
     </ol></nav>
     <?php endif; ?>
-    <p class="eyebrow"><?= e($eyebrow) ?></p>
     <h1><?= e($title) ?></h1>
     <?php if ($lede): ?><p class="lede"><?= e($lede) ?></p><?php endif; ?>
   </div>
