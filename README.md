@@ -4,7 +4,7 @@ Standalone PHP 8 site with a built-in content portal. No database and no WordPre
 
 - **Public site:** `/` · `/about` · `/solutions` (+ one page per role) · `/team` · `/careers` (+ one page per job, with an apply form) · `/insights` (+ articles) · `/contact` · `/privacy`
 - **Admin portal:** `/admin/`
-- **SEO:** a unique title, description and canonical URL on every page. Open Graph and Twitter cards. JSON-LD for Organization, WebSite, FAQPage, BreadcrumbList, Service, JobPosting (Google for Jobs) and NewsArticle. Dynamic `/sitemap.xml` and `/robots.txt`. Clean URLs, one H1 per page, lazy-loaded images.
+- **SEO:** a unique title, description and canonical URL on every page. Open Graph and Twitter cards. JSON-LD for Organization, WebSite, FAQPage, BreadcrumbList, Service, JobPosting (Google for Jobs) and NewsArticle. Dynamic `/sitemap.xml` and `/robots.txt`. Clean URLs, one H1 per page, lazy-loaded images. 
 
 ## Local
 
