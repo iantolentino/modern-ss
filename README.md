@@ -7,7 +7,7 @@ Standalone PHP 8 site with a built-in content portal. No database and no WordPre
 - **SEO:** a unique title, description and canonical URL on every page. Open Graph and Twitter cards. JSON-LD for Organization, WebSite, FAQPage, BreadcrumbList, Service, JobPosting (Google for Jobs) and NewsArticle. Dynamic `/sitemap.xml` and `/robots.txt`. Clean URLs, one H1 per page, lazy-loaded images. 
 
 ## Local
-
+ 
 http://localhost/strata-modern/
 
 This folder is separate from the WordPress copy of the live site (`htdocs/strata-landing-page`). It is the site planned for next year.
