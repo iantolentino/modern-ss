@@ -658,6 +658,22 @@ input, textarea { caret-color: var(--blue); }
 .prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: rgba(9, 75, 193, .35); transition: text-decoration-color .2s; }
 .prose a:hover { text-decoration-color: currentColor; }
 
+/* Featured client story above the testimonial slider */
+.quote-feature-lg { margin: 0 0 40px; padding: clamp(28px, 4vw, 48px); background: var(--tint); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.quote-feature-lg blockquote { margin: 0; }
+.quote-feature-lg p { font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); font-weight: 600; line-height: 1.4; letter-spacing: -.01em; color: var(--ink); max-width: 60ch; }
+.quote-feature-lg figcaption { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
+.quote-feature-lg figcaption strong { display: block; }
+.quote-feature-lg figcaption small { color: var(--ink-3); }
+
+/* Header: links and the call-to-action stay on one line */
+.main-nav ul a, .nav-cta { white-space: nowrap; }
+@media (min-width: 961px) and (max-width: 1180px) {
+  .main-nav { gap: 12px; }
+  .main-nav ul a { padding: 8px 8px; font-size: .9rem; }
+  .main-nav > ul > li.has-menu { padding-right: 4px; }
+}
+
 /* Interaction polish */
 h1, h2, h3 { text-wrap: balance; }
 p, li { text-wrap: pretty; }

@@ -29,10 +29,10 @@ function ensure_seeded(): void {
         ],
         'hero' => [
             'eyebrow'  => 'Serving strata agencies in Australia & Canada since 2019',
-            'title'    => 'Offshore teams trained for strata agencies',
+            'title'    => 'Build Your Strata Staff Global Offshore Team',
             'subtitle' => 'Strata-trained professionals who expand your capacity, streamline daily operations, and help your business grow with confidence.',
             'note'     => 'No obligation. See where your team can unlock capacity.',
-            'image'    => $m . 'stock/hero-tower.webp',
+            'image'    => $m . 'roles/strata-administrative-specialist.webp',
             'image_2'  => $m . 'roles/strata-accountant.webp',
             'image_3'  => $m . 'roles/strata-executive-assistant.webp',
         ],
