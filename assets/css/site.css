@@ -1323,3 +1323,6 @@ html, body { overflow-x: clip; } /* slide-in and zoom animations start off to th
   .site-footer p:last-child { margin-bottom: 0; }
   .footer-bottom { justify-content: space-between; align-items: center; padding-top: 18px; }
 }
+
+/* Homepage: on wide screens the content sits a little in from the edges (1440px and below is unchanged) */
+body.is-home { --wrap: 1640px; }
