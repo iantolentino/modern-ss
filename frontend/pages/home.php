@@ -40,8 +40,8 @@ $title = (string) ($hero['title'] ?? '');
 $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
 ?>
 <section class="hero hero-test">
-  <?php $heroVideo = setting('hero.video') ?: 'https://stratastaffglobal.com/wp-content/uploads/2026/11/ssg-hero-video-720.mp4'; ?>
-  <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1" poster="https://stratastaffglobal.com/wp-content/uploads/2026/11/ssg-hero-video-poster.jpg"><source src="<?= e($heroVideo) ?>" type="video/mp4"></video>
+  <?php $heroVideo = media(setting('hero.video') ?: 'assets/media/site/hero-video-720.mp4'); // the live site's hero clip, copied into the project ?>
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1" poster="<?= e(media('assets/media/site/hero-video-poster.jpg')) ?>"><source src="<?= e($heroVideo) ?>" type="video/mp4"></video>
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">

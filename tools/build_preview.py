@@ -15,7 +15,7 @@ commits and pushes. GitHub Pages (Settings -> Pages, source: gh-pages) rebuilds 
 import argparse, pathlib, re, shutil, subprocess, sys, tempfile, urllib.error, urllib.parse, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-ASSET_EXT = r'css|js|webp|png|jpe?g|svg|gif|ico|pdf|woff2?'
+ASSET_EXT = r'css|js|webp|png|jpe?g|svg|gif|ico|pdf|woff2?|mp4'
 NOTICE = ('<div style="position:fixed;left:12px;bottom:12px;z-index:9999;background:#061a40;color:#fff;'
           'font:600 12px/1.4 Manrope,system-ui,sans-serif;padding:8px 12px;border-radius:10px;'
           'box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:.92">Preview build: forms and admin are disabled</div>'
@@ -65,7 +65,7 @@ def build(local_url, pages_url, out):
     out.mkdir(parents=True, exist_ok=True)
 
     assets = set()
-    asset_re = re.compile(r'(?:src|href|content)="(' + re.escape(base_local) + r'[^"?#]+\.(?:' + ASSET_EXT + r'))(?:\?[^"]*)?"')
+    asset_re = re.compile(r'(?:src|href|content|poster)="(' + re.escape(base_local) + r'[^"?#]+\.(?:' + ASSET_EXT + r'))(?:\?[^"]*)?"')
     url_re = re.compile(r'url\((?:&quot;|["\'])?(' + re.escape(base_local) + r'[^)"\'&]+)')
     srcset_re = re.compile(r'srcset="([^"]+)"')
 

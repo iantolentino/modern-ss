@@ -73,4 +73,5 @@ From your review as a visitor, a full re-read of the competitive review deck (in
 - [x] **D1.** Check every page at 1895, 1280 and 375. No sideways scroll, and no console errors.
   **Done:** All 39 pages return 200 with no PHP errors. No sideways scroll at 375px on 20 key pages, every tap target is at least 38px, and no text is under 12.5px. Visual check at 1440 and 375 on home, test, role, about, team, learning, careers, job and case study pages.
 - [x] **D2.** Commit, push, republish the preview.
-- [ ] **D3.** Ask: copy the two live videos into the project instead of streaming them from stratastaffglobal.com? The hero video is 1.6 MB; the client video is 165 MB, which is too big for the repo.
+- [x] **D3.** Ask: copy the two live videos into the project instead of streaming them from stratastaffglobal.com? The hero video is 1.6 MB; the client video is 165 MB, which is too big for the repo.
+  **Done (your answer: copy it):** The hero video (1.6 MB) and its poster (117 KB) are now in `assets/media/site/`, and the homepage uses them. The preview builder now also copies video files and `poster` images. The 165 MB client video still streams from the live site.
