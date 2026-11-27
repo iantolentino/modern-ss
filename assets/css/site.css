@@ -673,7 +673,7 @@ input, textarea { caret-color: var(--blue); }
 .menu-wide { min-width: 640px; }
 .menu-wide:has(.menu-col:nth-child(3)) { min-width: 760px; }
 /* The last menu (About) opens towards the left so it never runs off the screen */
-@media (min-width: 961px) {
+@media (min-width: 1181px) {
   .main-nav > ul > li:last-child > .menu { left: auto; right: 0; transform: translate(0, 8px); }
   .main-nav > ul > li:last-child:hover > .menu,   .main-nav > ul > li:last-child:focus-within > .menu,   .main-nav > ul > li.open:last-child > .menu { transform: translate(0, 0); }
 }
@@ -1256,3 +1256,55 @@ html, body { overflow-x: clip; } /* slide-in and zoom animations start off to th
   .people-lg .person h3 { align-self: end; }
   .people-lg .person-title { align-self: start; margin-top: 2px; }
 }
+
+/* Round 6b: tablets and small laptops */
+/* E3/E4 the phone-style menu up to 1180px: the full menu needs about 1,160px, so below that it squashed the logo and its dropdowns ran off screen */
+.brand { flex-shrink: 0; }
+@media (max-width: 1180px) {
+  .nav-toggle { display: block; }
+  .main-nav { position: fixed; inset: 76px 0 auto 0; background: #fff; flex-direction: column; align-items: stretch; gap: 16px; padding: 16px clamp(16px, 4vw, 32px) 24px; border-bottom: 1px solid var(--line); box-shadow: 0 20px 40px rgba(13, 27, 51, .1); transform: translateY(-12px); opacity: 0; visibility: hidden; transition: all .25s var(--ease); max-height: calc(100vh - 76px); overflow-y: auto; }
+  .main-nav.open { transform: none; opacity: 1; visibility: visible; }
+  .main-nav ul { flex-direction: column; }
+  .main-nav ul a { padding: 14px 12px; font-size: 1.05rem; border-radius: 12px; }
+  .main-nav > ul > li { flex-wrap: wrap; }
+  .main-nav > ul > li.has-menu { padding-right: 0; border-radius: 12px; }
+  .main-nav > ul > li.has-menu:hover, .main-nav > ul > li.has-menu:focus-within { background: none; }
+  .main-nav > ul > li > a { flex: 1; }
+  .menu-toggle { width: 44px; height: 44px; margin: 0; }
+  .menu-toggle .i { width: 20px; height: 20px; }
+  .menu, .menu-wide, .menu-wide:has(.menu-col:nth-child(3)) { position: static; display: none; flex-direction: column; width: 100%; min-width: 0; margin: 0; padding: 0 0 8px 8px; border: 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+  .has-menu:hover .menu, .has-menu:focus-within .menu { display: none; transform: none; }
+  .has-menu.open .menu { display: flex; transform: none; }
+  .has-menu:hover .menu-toggle .i { transform: none; }
+  .has-menu.open .menu-toggle .i { transform: rotate(180deg); }
+}
+
+/* E1/E2 room under the hero; the Strata Choice chip sits under the card, not over its link */
+.hero.hero-test { padding-bottom: clamp(72px, 6vw, 96px); }
+.hero-float-b { top: 100%; bottom: auto; margin-top: -12px; }
+
+/* E5 proof bar: members get their own row when stats and logos don't fit side by side */
+@media (max-width: 1100px) {
+  .proof-bar-inner, .proof-bar .proof-bar-inner { flex-wrap: wrap; }
+  .proof-members { flex: 1 1 100%; justify-content: flex-start; }
+  .members-viewport { width: min(100%, calc(5 * 96px + 4 * 16px)); }
+}
+
+/* E6 roles: the arrows stay on the tab row */
+@media (min-width: 701px) {
+  .roles-bar { flex-wrap: nowrap; }
+  .roles-bar .tabs { min-width: 0; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+  .roles-bar .tabs button { white-space: nowrap; }
+  .roles-bar .hs-nav { flex: none; }
+}
+
+/* E7 news: swipeable row on tablets too */
+@media (min-width: 701px) and (max-width: 960px) {
+  .home-posts .post-grid { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 20px) / 2.15); grid-template-columns: none; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 6px; }
+  .home-posts .post-grid > * { scroll-snap-align: start; }
+}
+
+/* E8 role cards: a work scene for each role, shown whole (no portrait zoom or blur) */
+.role-card .role-img--scene { aspect-ratio: 6 / 5; background: var(--tint); }
+.role-card .role-img--scene::before { display: none; }
+.role-card .role-img--scene img { width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: center; -webkit-mask-image: none; mask-image: none; }

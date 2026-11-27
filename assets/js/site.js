@@ -39,7 +39,7 @@
     });
   });
   document.addEventListener('click', function (e) {
-    if (window.innerWidth <= 960) return;
+    if (window.innerWidth <= 1180) return; // the phone-style menu is used up to 1180px
     document.querySelectorAll('.has-menu.open').forEach(function (li) { if (!li.contains(e.target)) li.classList.remove('open'); });
   });
 
