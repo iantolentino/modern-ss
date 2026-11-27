@@ -75,7 +75,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     </dl>
     <?php if ($members): ?>
     <div class="proof-members">
-      <p class="members-label">Proud members of</p>
+      <span>Members</span>
       <div class="members-viewport"><ul class="members-track" data-members><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul></div>
     </div>
     <?php endif; ?>

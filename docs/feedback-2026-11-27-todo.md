@@ -55,3 +55,9 @@ Your review of the competitive-review build (commit `f260ec4`), as a checklist.
 - [x] **21. Homepage roles:** four role cards in view, the rest reached with prev/next arrows (or swipe). Switching between Strata Services and Strata Staff Plus starts from the first card.
 - [x] **22. Hidden Capacity Test page was confusing:** rebuilt as three numbered plain-English questions with hints, and a "Your result" card beside them that explains the answer in a sentence and holds the book-a-call button, the email option and "How we work this out".
 - [x] **23. Mobile:** checked at 375px; no sideways scroll on the homepage or the test page.
+
+## Round 4 (same day)
+- [x] **24. Proof bar:** went back to the earlier one-row design (stats left, four member logos sliding on the right). The two-row version was too big.
+- [x] **25. Proof bar on the first screen:** the hero is shorter (less padding, test fields stacked), so the proof bar shows without scrolling on a 1895×947 screen.
+- [x] **26. Hero photo:** it was a thin strip half covered by the test card. Now a tall photo beside the card, so the team's faces show.
+- [x] **27. Role photos zoomed out:** the crop is taller (6:5 instead of 16:11), so more of each person shows.
