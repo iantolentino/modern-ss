@@ -49,3 +49,9 @@ Your review of the competitive-review build (commit `f260ec4`), as a checklist.
 ## Finish
 - [x] **19.** Check every page at desktop and mobile, commit, push and republish the preview.
   **Done:** All 39 pages are error-free and every internal link resolves. No sideways scroll at 375px on 9 key pages.
+
+## Round 3 (same day)
+- [x] **20. Proof bar still not showing properly:** it rendered, but with tiny logos and cramped stats. Now two rows: four large stats across, then "Proud members of" with four logo tiles at a time that slide along (two at a time on phones).
+- [x] **21. Homepage roles:** four role cards in view, the rest reached with prev/next arrows (or swipe). Switching between Strata Services and Strata Staff Plus starts from the first card.
+- [x] **22. Hidden Capacity Test page was confusing:** rebuilt as three numbered plain-English questions with hints, and a "Your result" card beside them that explains the answer in a sentence and holds the book-a-call button, the email option and "How we work this out".
+- [x] **23. Mobile:** checked at 375px; no sideways scroll on the homepage or the test page.

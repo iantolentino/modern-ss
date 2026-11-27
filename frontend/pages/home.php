@@ -75,7 +75,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     </dl>
     <?php if ($members): ?>
     <div class="proof-members">
-      <span>Members</span>
+      <p class="members-label">Proud members of</p>
       <div class="members-viewport"><ul class="members-track" data-members><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul></div>
     </div>
     <?php endif; ?>
@@ -103,12 +103,18 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
       </div>
       <a class="text-link" href="<?= e(url('pricing')) ?>">Compare all <?= count($services) ?> roles <?= icon('arrow') ?></a>
     </div>
-    <div class="tabs" role="tablist" aria-label="Role category">
-      <button role="tab" aria-selected="true" data-filter="strata">Strata Services · <?= $countCat('strata') ?> roles</button>
-      <button role="tab" aria-selected="false" data-filter="pm">Strata Staff Plus · property management · <?= $countCat('pm') ?> roles</button>
+    <div class="roles-bar">
+      <div class="tabs" role="tablist" aria-label="Role category">
+        <button role="tab" aria-selected="true" data-filter="strata">Strata Services · <?= $countCat('strata') ?> roles</button>
+        <button role="tab" aria-selected="false" data-filter="pm">Strata Staff Plus · property management · <?= $countCat('pm') ?> roles</button>
+      </div>
+      <div class="hs-nav">
+        <button type="button" class="round-btn" data-hs-prev aria-controls="roles-home" aria-label="Previous roles"><?= str_replace('<svg', '<svg style="transform:rotate(180deg)"', icon('arrow')) ?></button>
+        <button type="button" class="round-btn" data-hs-next aria-controls="roles-home" aria-label="Next roles"><?= icon('arrow') ?></button>
+      </div>
     </div>
     <?php if (ph($offer['strata_plus'] ?? '') !== ''): ?><p class="roles-note"><?= ph($offer['strata_plus']) ?></p><?php endif; ?>
-    <div class="roles" data-filter-target>
+    <div class="roles roles-track" id="roles-home" data-filter-target data-hs-track>
       <?php foreach ($services as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?>
     </div>
   </div>

@@ -110,14 +110,15 @@
 
   // Membership logos: a window of four that steps along by one, like a phone home screen
   document.querySelectorAll('[data-members]').forEach(function (track) {
-    if (reduce || track.children.length <= 4) return;
+    if (reduce || track.children.length < 2) return;
     var paused = false;
     track.parentElement.addEventListener('mouseenter', function () { paused = true; });
     track.parentElement.addEventListener('mouseleave', function () { paused = false; });
     track.addEventListener('focusin', function () { paused = true; });
     track.addEventListener('focusout', function () { paused = false; });
     setInterval(function () {
-      if (paused || document.hidden) return;
+      // Only slide when there are more logos than fit (four on desktop, two on phones)
+      if (paused || document.hidden || track.scrollWidth <= track.parentElement.clientWidth + 2) return;
       var first = track.firstElementChild;
       var step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0);
       track.style.transition = 'transform .6s cubic-bezier(.23, 1, .32, 1)';
@@ -149,8 +150,8 @@
 
   // Horizontal sliders (Solutions role groups): previous/next move by one card
   document.querySelectorAll('[data-hs-track]').forEach(function (track) {
-    var head = track.previousElementSibling;
-    var prev = head && head.querySelector('[data-hs-prev]'), next = head && head.querySelector('[data-hs-next]');
+    var prev = document.querySelector('[data-hs-prev][aria-controls="' + track.id + '"]');
+    var next = document.querySelector('[data-hs-next][aria-controls="' + track.id + '"]');
     if (!prev || !next) return;
     var step = function () { var c = track.firstElementChild; return c ? c.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : 300; };
     var sync = function () {
@@ -209,6 +210,8 @@
         el.hidden = !show;
         if (show) el.classList.add('in');
       });
+      // A role slider starts again from the first card of the chosen category
+      if (target.hasAttribute('data-hs-track')) { target.scrollLeft = 0; target.dispatchEvent(new Event('scroll')); }
       // Cards moved: let GSAP's scroll triggers recalculate (plugins/gsap-motion/motion.js)
       if (window.ScrollTrigger) window.ScrollTrigger.refresh();
       if (window.ssgRevealVisible) window.ssgRevealVisible();
