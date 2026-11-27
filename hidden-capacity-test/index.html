@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/modern-ss/assets/css/site.css?v=1795749565">
+<link rel="stylesheet" href="/modern-ss/assets/css/site.css?v=1795750359">
 <link rel="stylesheet" href="/modern-ss/plugins/capacity-calculator/calculator.css?v=1795738774">
 <link rel="stylesheet" href="/modern-ss/plugins/gsap-motion/motion.css?v=1793830578">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://iantolentino.github.io/modern-ss/#org","name":"Strata Staff Global","url":"https://iantolentino.github.io/modern-ss/","logo":"https://iantolentino.github.io/modern-ss/assets/media/brand/strata-staff-global-logo.png","email":"solutions@stratastaffglobal.com","sameAs":["https://www.linkedin.com/company/stratastaff/","https://www.facebook.com/officialstratastaff","https://www.instagram.com/stratastaff/"],"foundingDate":"2019-04","description":"Premium offshore capacity solutions for strata agencies in Australia and Canada. Since 2019.","address":[{"@type":"PostalAddress","streetAddress":"PO Box 109","addressLocality":"Ivanhoe","addressRegion":"VIC","postalCode":"3079","addressCountry":"AU"},{"@type":"PostalAddress","streetAddress":"777 Hornby Street, Suite 600","addressLocality":"Vancouver","addressRegion":"BC","postalCode":"V6Z 1S4","addressCountry":"CA"}],"areaServed":["Australia","Canada"],"memberOf":[{"@type":"Organization","name":"Strata Community Association NSW","url":"https://nsw.strata.community/"},{"@type":"Organization","name":"Strata Community Association SA","url":"https://www.strata.community/"},{"@type":"Organization","name":"Strata Community Association WA"},{"@type":"Organization","name":"Real Estate Institute of NSW","url":"https://www.reinsw.com.au/"},{"@type":"Organization","name":"Canadian Condominium Institute BC","url":"https://www.cci.ca/"}],"contactPoint":[{"@type":"ContactPoint","telephone":"+61 3 9133 3255","contactType":"sales","areaServed":"AU"},{"@type":"ContactPoint","telephone":"+1 236 312 1669","contactType":"sales","areaServed":"CA"}]}</script>
@@ -137,65 +137,72 @@
 <section class="page-hero hct-hero">
   <div class="wrap">
     <h1>The Hidden Capacity Test</h1>
-    <p class="lede">How many hours are your managers spending on work that doesn't need their experience, and what is it costing you? Enter a few numbers and see what it adds up to.</p>
+    <p class="lede">Answer three quick questions to see how much of your strata managers' time goes on routine admin, and what that time is worth. It takes under a minute.</p>
   </div>
 </section>
 
 <section class="section hct-section">
-  <div class="wrap">
-    <form class="calc-card calc-full" data-calc onsubmit="return false" aria-labelledby="calc-main-title"
-      data-year-au="" data-year-ca="">
-    <h2 id="calc-main-title" class="sr-only">Hidden Capacity Test</h2>
-  <div class="calc-in">
-  <div class="calc-currency" role="radiogroup" aria-label="Country">
-    <label><input type="radio" name="currency" value="AUD" checked> Australia · A$</label>
-    <label><input type="radio" name="currency" value="CAD"> Canada · C$</label>
-  </div>
-    <div class="calc-fields">
-    <label>Strata managers
-      <span class="calc-input"><input type="number" name="managers" min="1" max="500" value="6" inputmode="numeric"></span>
-    </label>
-    <label>Routine hours each, per day
-      <span class="calc-input"><input type="number" name="hours" min="0" max="10" step="0.5" value="2" inputmode="decimal"></span>
-    </label>
-    <label>Hourly cost <small>(optional)</small>
-      <span class="calc-input"><em data-calc-symbol>A$</em><input type="number" name="cost" min="0" max="1000" step="1" placeholder="60" inputmode="decimal"></span>
-    </label>
-  </div>
-    <p class="calc-help">Think reconciliations, invoice processing, data updates, archiving and routine correspondence.</p>
-  <button type="button" class="btn btn-primary btn-lg calc-run" data-calc-run><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Calculate</button>
-  </div>
-  <div class="calc-out">
-    <div class="calc-result" aria-live="polite">
-    <strong><span data-calc-hours>2,880</span> hours a year</strong>
-    <p>on routine work: about <span data-calc-weeks>72</span> full working weeks of manager time</p>
-    <p class="calc-money" data-calc-money hidden>At <span data-calc-rate></span> an hour, that is <span data-calc-cost></span> a year.</p>
-  </div>
-    <div class="calc-extra">
-    <div><small>Team it would take</small><strong>≈ <span data-calc-team>1.5</span> specialists</strong><span>Hours ÷ 1,920 working hours a year</span></div>
+  <div class="wrap hct-tool" data-calc-scope>
+    <form class="hct-quiz" data-calc onsubmit="return false" aria-labelledby="hct-quiz-title" data-year-au="" data-year-ca="">
+      <h2 id="hct-quiz-title" class="h3">Your agency in three numbers</h2>
+      <p class="hct-quiz-sub">Rough numbers are fine. Your result updates as you type.</p>
+
+      <div class="hct-q">
+        <span class="hct-num" aria-hidden="true">1</span>
+        <div>
+          <label class="hct-q-label" for="q-managers">How many strata managers work in your agency?</label>
+          <span class="hct-field"><input id="q-managers" type="number" name="managers" min="1" max="500" value="6" inputmode="numeric"><span>managers</span></span>
+        </div>
       </div>
-  <p class="calc-close">That time could go back to your clients and towards taking on more buildings.</p>
-  </div>
-  </form>
-    <div class="hct-next">
-      <div class="hct-panel">
-        <h2 class="h4">Talk it through with us</h2>
-        <p>We'll look at your numbers, your platforms and the roles that would take this work on.</p>
-        <a class="btn btn-primary" href="/modern-ss/contact">Book a 30-minute discovery call <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+
+      <div class="hct-q">
+        <span class="hct-num" aria-hidden="true">2</span>
+        <div>
+          <label class="hct-q-label" for="q-hours">On a typical day, how many hours does each manager spend on routine admin?</label>
+          <p class="hct-hint" id="q-hours-hint">Reconciliations, invoices, data updates, archiving and routine emails. Most managers tell us 1 to 3 hours.</p>
+          <span class="hct-field"><input id="q-hours" type="number" name="hours" min="0" max="10" step="0.5" value="2" inputmode="decimal" aria-describedby="q-hours-hint"><span>hours a day</span></span>
+        </div>
       </div>
-      <form class="hct-panel hct-mail" method="post" action="/modern-ss/hidden-capacity-test#email-result" id="email-result" data-calc-mail>
+
+      <div class="hct-q">
+        <span class="hct-num" aria-hidden="true">3</span>
+        <div>
+          <label class="hct-q-label" for="q-cost">What does an hour of a manager's time cost you? <small>Optional</small></label>
+          <p class="hct-hint" id="q-cost-hint">Salary plus on-costs, divided by hours worked. Leave it blank if you're not sure.</p>
+          <div class="hct-cost-row">
+            <div class="hct-currency" role="radiogroup" aria-label="Currency">
+              <label><input type="radio" name="currency" value="AUD" checked><span>A$ Australia</span></label>
+              <label><input type="radio" name="currency" value="CAD"><span>C$ Canada</span></label>
+            </div>
+            <span class="hct-field"><span data-calc-symbol>A$</span><input id="q-cost" type="number" name="cost" min="0" max="1000" step="1" placeholder="60" inputmode="decimal" aria-describedby="q-cost-hint"><span>an hour</span></span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-lg btn-block calc-run" data-calc-run>Show my result <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+
+    <aside class="hct-answer" data-calc-result aria-live="polite" aria-label="Your result">
+      <p class="hct-answer-label">Your result</p>
+      <p class="hct-big"><span data-calc-hours>2,880</span> hours a year</p>
+      <p class="hct-answer-text">That is how long your managers spend on routine admin: about <strong><span data-calc-weeks>72</span> full working weeks</strong> of manager time.</p>
+      <p class="hct-answer-text" data-calc-money hidden>At <span data-calc-rate></span> an hour, that time costs you <strong data-calc-cost></strong> a year.</p>
+      <div class="hct-team"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 016 5"/></svg><p>It is the work of about <strong><span data-calc-team>1.5</span> full-time specialists</strong>. An offshore team can take it on, so your managers get those hours back.</p></div>
+            <a class="btn btn-light btn-block" href="/modern-ss/contact#book">Book a free 30-minute call <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+
+      <form class="hct-mail" method="post" action="/modern-ss/hidden-capacity-test#email-result" id="email-result" data-calc-mail>
         <input type="hidden" name="_csrf" value=""><input type="hidden" name="form" value="capacity">
         <input type="hidden" name="result_hours" value="2880"><input type="hidden" name="result_inputs" value="">
         <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
-        <h2 class="h4"><label for="hct-email">Email me my result</label></h2>
-                  <p>We'll send the numbers above so you can share them with your team.</p>
-                    <div class="hct-mail-row"><input id="hct-email" type="email" name="email" required autocomplete="email" placeholder="you@agency.com.au"><button class="btn btn-outline" type="submit">Send</button></div>
+                  <label for="hct-email">Or email this result to yourself</label>
+                    <div class="hct-mail-row"><input id="hct-email" type="email" name="email" required autocomplete="email" placeholder="you@agency.com.au"><button class="btn btn-ghost-light" type="submit">Send</button></div>
               </form>
-      <div class="hct-panel">
-        <h2 class="h4">How we work this out</h2>
-        <p>Managers × daily routine hours × 5 days × 48 working weeks a year, allowing four weeks for leave and public holidays. Team size divides the hours by 1,920 working hours a year.</p>
-      </div>
-    </div>
+
+      <details class="hct-how">
+        <summary>How we work this out</summary>
+        <p>Managers × hours a day × 5 days × 48 working weeks (four weeks are left out for leave and public holidays). One full-time specialist works about 1,920 hours a year, so the team size is the hours divided by 1,920.</p>
+      </details>
+    </aside>
   </div>
 </section>
 
@@ -325,8 +332,8 @@
     <a href="/modern-ss/privacy">Privacy Policy</a>
   </div>
 </footer>
-<script src="/modern-ss/assets/js/site.js?v=1795749581" defer></script>
-<script src="/modern-ss/plugins/capacity-calculator/calculator.js?v=1795749244" defer></script>
+<script src="/modern-ss/assets/js/site.js?v=1795750292" defer></script>
+<script src="/modern-ss/plugins/capacity-calculator/calculator.js?v=1795750292" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>

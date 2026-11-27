@@ -4,7 +4,9 @@
   var fmt = function (n, d) { return n.toLocaleString('en-AU', { maximumFractionDigits: d || 0 }); };
 
   document.querySelectorAll('[data-calc]').forEach(function (form) {
-    var el = function (sel) { return form.querySelector(sel); };
+    // On the full page the answer card sits beside the questions, inside [data-calc-scope]
+    var scope = form.closest('[data-calc-scope]') || form;
+    var el = function (sel) { return scope.querySelector(sel); };
     var num = function (n, min, max, d) {
       var f = form.elements[n]; if (!f) return d;
       var v = parseFloat(f.value); return isNaN(v) ? d : Math.min(max, Math.max(min, v));
@@ -44,7 +46,7 @@
     var run = el('[data-calc-run]');
     if (run) run.addEventListener('click', function () {
       update();
-      var result = el('.calc-result');
+      var result = el('[data-calc-result]') || el('.calc-result');
       result.classList.remove('is-updated'); void result.offsetWidth; result.classList.add('is-updated');
       var r = result.getBoundingClientRect();
       if (r.top < 80 || r.bottom > window.innerHeight) result.scrollIntoView({ behavior: 'smooth', block: 'center' });
