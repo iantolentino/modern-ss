@@ -262,7 +262,7 @@ function settings_sections(): array {
         'review' => ['Offer, trust & proof', array_merge([
             'review.hide_placeholders' => ['Unconfirmed items (marked *)', 'select', ['options' => ['' => 'Show with an amber * (internal preview)', '1' => 'Hide until confirmed (before showing anyone)'],
                 'help' => 'Any value containing * is a placeholder from the competitive review. Remove the * once a fact is confirmed.']],
-            'facts.since' => ['Year founded', 'text', ['half' => true, 'help' => 'Live site says 2019; the review asks to confirm (2017?).']],
+            'facts.since' => ['Year founded', 'text', ['half' => true, 'help' => 'Confirmed: 2019.']],
             'facts.location' => ['Where the team works', 'text', ['half' => true]],
             'facts.stats_method' => ['How the stats are measured', 'textarea', ['rows' => 2]],
             'offer.from_month' => ['From-price per role, per month (AU)', 'text', ['half' => true]],

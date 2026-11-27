@@ -88,3 +88,13 @@ Phone interactions all work: the menu opens, closes and scrolls, tabs switch, sl
 - [x] **E7. News on tablets:** two cards, then one alone on the next row. Use the swipeable row up to 960.
 - [x] **E8. Role photos (your request):** replace the zoomed-out portraits on the role cards with stock photos that show each role at work. Keep the company portraits on the role pages themselves.
   **Done:** Ten Unsplash work scenes (Unsplash License, free for commercial use) in `assets/media/roles/scene/`, about 400 KB in total. Credits and how to swap one are in `docs/photo-credits.md`. Any role without a scene falls back to its team portrait.
+
+## F. Founding year, homepage width, chat assistant (same day)
+- [x] **F1. Founding year:** 2019, confirmed by you. The site already showed "Since 2019"; the admin help text now says it is confirmed.
+- [x] **F2. Homepage a little more centred on wide screens:** the content is capped at 1,640px on the homepage only. At 1895px it sits about 220px in from each edge; at 1440px and below nothing changes. Backgrounds still run full width.
+- [x] **F3. Chat assistant** (`plugins/chat-assistant/`): a "Chat with us" button on every page, and the top-bar "Live chat" opens it too.
+  - Tapping a question shows it as your message, a typing indicator, then the written answer with buttons such as Pricing, Take the test or Book a call.
+  - Answers come from the FAQs in the admin (edit them there), plus five built from site facts: what we do, roles, cost, the test, Canada. "Talk to a person" lists book a call, both phone numbers and the email.
+  - Typed questions are matched to the closest preset question by keywords. 14 test phrases all matched correctly, and anything with no good match offers a person.
+  - **Later, AI:** replace `answerFor()` in `chat.js` with a call to a server-side endpoint that holds the API key. Never put the key in the browser.
+  - Phones: a round button above the sticky call bar; the chat opens as a sheet covering most of the screen.

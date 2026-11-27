@@ -178,7 +178,7 @@ function layout_head(array $meta, string $active = ''): void {
     <ul class="top-links">
       <?php $phone = $ca ? ($c['ca_phone'] ?? '') : ($c['au_phone'] ?? ''); if ($phone): ?><li><a href="tel:<?= e(preg_replace('/[^\d+]/', '', $phone)) ?>"><?= icon('phone') ?> <?= e($phone) ?></a></li><?php endif; ?>
       <?php if (!empty($c['email'])): ?><li class="top-email"><a href="mailto:<?= e($c['email']) ?>"><?= icon('mail') ?> <?= e($c['email']) ?></a></li><?php endif; ?>
-      <?php if (!empty($links['live_chat'])): ?><li><a href="<?= e($links['live_chat']) ?>"><?= icon('chat') ?> Live chat</a></li><?php elseif (!ph_hidden()): ?><li class="top-ph"><?= icon('chat') ?> Live chat<?= ph('*') ?></li><?php endif; ?>
+      <?php if (!empty($links['live_chat'])): ?><li><a href="<?= e($links['live_chat']) ?>"><?= icon('chat') ?> Live chat</a></li><?php elseif (plugin_enabled('chat-assistant')): ?><li><button type="button" class="top-chat" data-chat-open><?= icon('chat') ?> Live chat</button></li><?php elseif (!ph_hidden()): ?><li class="top-ph"><?= icon('chat') ?> Live chat<?= ph('*') ?></li><?php endif; ?>
       <?php if (!empty($links['client_login'])): ?><li><a href="<?= e($links['client_login']) ?>"><?= icon('lock') ?> Client login</a></li><?php elseif (!ph_hidden()): ?><li class="top-ph"><?= icon('lock') ?> Client login<?= ph('*') ?></li><?php endif; ?>
     </ul>
   </div>
@@ -278,6 +278,7 @@ function layout_foot(): void {
     <a href="<?= e(url('privacy')) ?>">Privacy Policy</a>
   </div>
 </footer>
+<?php if (plugin_enabled('chat-assistant')) require PLUGINS_DIR . '/chat-assistant/widget.php'; ?>
 <script src="<?= e(url('assets/js/site.js')) ?>?v=<?= @filemtime(ROOT_DIR . '/assets/js/site.js') ?>" defer></script>
 <?php plugin_scripts(); // plugins/*/plugin.php: capacity calculator, GSAP motion ?>
 </body>

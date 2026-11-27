@@ -54,7 +54,7 @@ Target: this modern site (`htdocs/strata-modern`). The live WordPress site is no
   **Done:** The modern copy was already clean. Strata Bee still has no person named: **[B]**.
 - [~] **1.7 Stats:** add a short "how we measure this" note for 500+ placements and 98% retention. (DECK s26) **PH** for the wording of the method.
   **Done:** "how measured" link under the proof bar, text from the admin (Offer, trust & proof).
-- [B] **1.8 Founding year:** the site says 2019 (LIVE), the deck says "since 2017 (confirm)". Keep 2019 and flag it. **[B] confirm.**
+- [x] **1.8 Founding year:** 2019, confirmed by you on 27 November 2026. The site already shows "Since 2019" with no placeholder mark.
   **Done:** Shown as "Since 2019*" and editable in the admin (Year founded).
 - [B] **1.9 Executive bios:** 3 of 4 are blank. **[B] supply bios** (fields exist in the admin).
 - [B] **1.10 Australian address:** only a PO Box. **[B] street address**, or keep the PO Box.
@@ -160,7 +160,7 @@ Target: this modern site (`htdocs/strata-modern`). The live WordPress site is no
   - AU / CA switch
   - phone for the current country
   - email
-  - live chat* (**PH**, no provider yet)
+  - live chat: opens the on-site chat assistant (preset answers now, AI later)
   - client login* (**PH**)
 - [x] **7.3 Navigation:** Roles ▾ · Hidden Capacity Test · Pricing · Case studies · Academy · Insights · About.
   **Done:** Careers, Our team, Trust Centre and Canada sit under About.
