@@ -31,41 +31,35 @@
     // GSAP takes over from the CSS keyframe/transition fallbacks
     root.classList.add('gsap');
 
-    /* ---------- Home hero: the signature moment ----------
-       The building is revealed floor by floor (blue storeys slide away bottom to top) while the
-       headline rises in. Everything is visible by default; this only runs once, on load. */
-    var hero = $('.fh-hero');
+    /* ---------- Home hero: one timeline ---------- */
+    var hero = $('.hero');
     if (hero) {
-      var facade = $('[data-facade]', hero);
-      var floors = [];
-      if (facade) {
-        var count = 9;
-        for (var f = 0; f < count; f++) {
-          var band = document.createElement('span');
-          band.className = 'fh-facade-floor';
-          band.setAttribute('aria-hidden', 'true');
-          band.style.top = (f * 100 / count) + '%';
-          band.style.height = (100 / count + 0.4) + '%';
-          facade.appendChild(band);
-          floors.push(band);
-        }
-        facade.classList.add('is-floors');
-      }
+      var heroTl = gsap.timeline({ defaults: { duration: 1, ease: 'power4.out' } });
+      heroTl.addLabel('copy', 0.1);
 
-      var heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-      SplitText.create('.fh-hero h1', {
+      SplitText.create('.hero h1', {
         type: 'lines, words', mask: 'lines', autoSplit: true,
         onSplit: function (self) {
-          return gsap.from(self.words, { yPercent: 110, duration: 0.9, stagger: 0.04, ease: 'expo.out', delay: 0.1 });
+          return gsap.from(self.words, { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.05, delay: 0.2 });
         }
       });
-      heroTl.from($$('.fh-hero-sub, .fh-hero-actions, .fh-trust', hero), { autoAlpha: 0, y: 16, duration: 0.7, stagger: 0.08 }, 0.35);
-      if (floors.length) {
-        heroTl.to(floors.slice().reverse(), { scaleX: 0, duration: 0.7, stagger: 0.06, ease: 'expo.inOut',
-          onComplete: function () { floors.forEach(function (b) { b.remove(); }); } }, 0.15)
-          .from($('img', facade), { scale: 1.08, duration: 1.4 }, 0.15);
-      }
-      heroTl.from('.fh-calc', { autoAlpha: 0, y: 12, duration: 0.6 }, 0.9);
+
+      heroTl.from(['.rotator', '.hero-sub', '.hero-actions', '.hero-trust'], { autoAlpha: 0, y: 24, stagger: 0.1 }, 'copy+=0.45')
+        .addLabel('photos', 0.2)
+        .fromTo('.hv-card', { clipPath: 'inset(100% 0% 0% 0% round 26px)' }, { clipPath: 'inset(0% 0% 0% 0% round 26px)', duration: 1.3, ease: 'expo.out', stagger: 0.15 }, 'photos')
+        .from('.hv-card img', { scale: 1.25, duration: 1.6, ease: 'expo.out', stagger: 0.15 }, 'photos')
+        .from('.float-chip', { autoAlpha: 0, y: 12, scale: 0.95, ease: 'expo.out', duration: 0.6, stagger: 0.08 }, 'photos+=0.9');
+
+      // Chips drift gently once they have landed
+      $$('.float-chip').forEach(function (chip, i) {
+        gsap.to(chip, { y: -8, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: 1, delay: 1.8 + i * 0.25 });
+      });
+
+      // Depth on scroll: photos move at different speeds
+      gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1 } })
+        .to('.hv-main', { yPercent: -8, ease: 'none' }, 0)
+        .to('.hv-a', { yPercent: -22, ease: 'none' }, 0)
+        .to('.hv-b', { yPercent: -36, ease: 'none' }, 0);
     }
 
     /* ---------- Inner page heroes ---------- */
@@ -137,10 +131,10 @@
     }
 
     /* ---------- Membership logos and CTA badge ---------- */
-    var cta = $('.cta-photo .cta-badge');
+    var cta = $('.cta-mark');
     if (cta) {
       gsap.from(cta, {
-        autoAlpha: 0, y: 16, duration: 0.6, ease: 'expo.out',
+        autoAlpha: 0, scale: 0.9, rotation: -8, duration: 0.8, ease: 'expo.out',
         scrollTrigger: { trigger: '.cta-inner', start: 'top 85%', once: true }
       });
     }
