@@ -1,5 +1,10 @@
 <a class="role-card reveal" href="<?= e(url('solutions/' . $s['slug'])) ?>" data-cat="<?= e($s['category']) ?>">
+  <?php $scene = 'assets/media/roles/scene/' . $s['slug'] . '.webp'; // a work scene for the role (stock); the role page keeps the team portrait ?>
+  <?php if (is_file(ROOT_DIR . '/' . $scene)): ?>
+  <div class="role-img role-img--scene"><img src="<?= e(media($scene)) ?>" alt="" loading="lazy" width="960" height="800"></div>
+  <?php else: ?>
   <div class="role-img" style="--img: url('<?= e(media($s['image'])) ?>')"><img src="<?= e(media($s['image'])) ?>" alt="<?= e($s['title']) ?>" loading="lazy" width="300" height="380"></div>
+  <?php endif; ?>
   <div class="role-body">
     <h3><?= e($s['title']) ?></h3>
     <?php if (!empty($s['highlights'])): ?>

@@ -75,3 +75,16 @@ From your review as a visitor, a full re-read of the competitive review deck (in
 - [x] **D2.** Commit, push, republish the preview.
 - [x] **D3.** Ask: copy the two live videos into the project instead of streaming them from stratastaffglobal.com? The hero video is 1.6 MB; the client video is 165 MB, which is too big for the repo.
   **Done (your answer: copy it):** The hero video (1.6 MB) and its poster (117 KB) are now in `assets/media/site/`, and the homepage uses them. The preview builder now also copies video files and `poster` images. The 165 MB client video still streams from the live site.
+
+## E. Round 6b: "not working properly on mobile, not properly responsive" (same day)
+Tested as a visitor: menu, dropdowns, tabs, sliders, calculator, video, FAQ and full-page scroll at 375. Widths 320, 360, 600, 768 and 1024 across 15 pages, plus screenshots at 768 and 1024.
+Phone interactions all work: the menu opens, closes and scrolls, tabs switch, sliders swipe, the calculator updates, the video plays, the FAQ toggles, and nothing stays invisible after scrolling. The problems are at tablet and small-laptop widths:
+- [x] **E1. Hero needs more room below** (your request: at least 20px). The test card and the "5 → 21" chip run into the bottom edge.
+- [x] **E2. At 1024 the "5 → 21" chip covers "See my full result".** Place the chip under the card instead of over it.
+- [x] **E3. At 961 to 1200 the logo is squashed by the crowded menu.** Keep the logo at full size, and tighten the menu spacing at those widths.
+- [x] **E4. At 1024 the wide dropdown menus run past the right edge of the screen.** Keep them inside the window.
+- [x] **E5. Proof bar at 768 to 1100:** the member logos are cut off at the right edge. Put the members on their own full-width row under the stats.
+- [x] **E6. Roles section at tablet width:** the arrows drop onto their own line under the tabs. Keep them on the tab row.
+- [x] **E7. News on tablets:** two cards, then one alone on the next row. Use the swipeable row up to 960.
+- [x] **E8. Role photos (your request):** replace the zoomed-out portraits on the role cards with stock photos that show each role at work. Keep the company portraits on the role pages themselves.
+  **Done:** Ten Unsplash work scenes (Unsplash License, free for commercial use) in `assets/media/roles/scene/`, about 400 KB in total. Credits and how to swap one are in `docs/photo-credits.md`. Any role without a scene falls back to its team portrait.
