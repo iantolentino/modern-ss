@@ -28,7 +28,7 @@ $since = (string) ($cs['since'] ?? '2023');
     <?php if (!empty($cs['video_url'])): ?>
       <a class="story-card case-video" href="<?= e($cs['video_url']) ?>" target="_blank" rel="noopener"><?= icon('arrow') ?><strong><?= $quote ? e($quote['name']) . ', on scaling with Strata Staff' : 'Watch the video' ?></strong><span>Video testimonial</span></a>
     <?php elseif ($quote): ?>
-      <figure class="story-card case-video"><?= avatar($quote, 'story-avatar') ?><strong><?= e($quote['name']) ?></strong><span><?= e(quote_byline($quote)) ?></span></figure>
+      <figure class="story-card case-video"><span class="case-video-play" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span><?= avatar($quote, 'story-avatar') ?><strong><?= e($quote['name']) ?>, on scaling with Strata Staff</strong><span><?= e(quote_byline($quote)) ?><?php if (ph('*') !== ''): ?> · video coming soon<?= ph('*') ?><?php endif; ?></span></figure>
     <?php endif; ?>
   </div>
 </section>

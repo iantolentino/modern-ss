@@ -84,8 +84,14 @@ $price = confirmed(role_price($item));
 <?php if ($others): ?>
 <section class="section section-tint">
   <div class="wrap">
-    <div class="section-head row reveal"><h2>Related roles</h2><a class="text-link" href="<?= e(url('solutions')) ?>">All solutions <?= icon('arrow') ?></a></div>
-    <div class="roles"><?php foreach ($others as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?></div>
+    <div class="section-head row reveal"><h2>Related roles</h2>
+      <div class="hs-nav">
+        <button type="button" class="round-btn" data-hs-prev aria-controls="roles-related" aria-label="Previous roles"><?= str_replace('<svg', '<svg style="transform:rotate(180deg)"', icon('arrow')) ?></button>
+        <button type="button" class="round-btn" data-hs-next aria-controls="roles-related" aria-label="Next roles"><?= icon('arrow') ?></button>
+      </div>
+    </div>
+    <div class="roles roles-track" id="roles-related" data-hs-track><?php foreach ($others as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?></div>
+    <p class="related-all"><a class="text-link" href="<?= e(url('solutions')) ?>">All solutions <?= icon('arrow') ?></a></p>
   </div>
 </section>
 <?php endif; ?>

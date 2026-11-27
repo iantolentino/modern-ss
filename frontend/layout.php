@@ -238,7 +238,7 @@ function layout_foot(): void {
       <p>Tell us about your agency and the work piling up. We'll show you where an offshore team fits. No obligation.</p>
     </div>
     <div class="cta-actions">
-      <a class="btn btn-light" href="<?= e(url('contact')) ?>">Book a 30-minute discovery call <?= icon('arrow') ?></a>
+      <a class="btn btn-light" href="<?= e(url('contact')) ?>"><span class="lbl-full">Book a 30-minute discovery call</span><span class="lbl-short">Book a discovery call</span> <?= icon('arrow') ?></a>
       <?php if (!empty($c['scorecard_url'])): ?><a class="btn btn-ghost-light" href="<?= e($c['scorecard_url']) ?>">Take the capacity test</a><?php endif; ?>
     </div>
   </div></div>

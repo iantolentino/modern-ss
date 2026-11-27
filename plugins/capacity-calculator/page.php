@@ -74,6 +74,7 @@ $c = setting('contact', []);
       <p class="hct-answer-text">That is how long your managers spend on routine admin: about <strong><span data-calc-weeks>72</span> full working weeks</strong> of manager time.</p>
       <p class="hct-answer-text" data-calc-money hidden>At <span data-calc-rate></span> an hour, that time costs you <strong data-calc-cost></strong> a year.</p>
       <div class="hct-team"><?= icon('users') ?><p>It is the work of about <strong><span data-calc-team>1.5</span> full-time specialists</strong>. An offshore team can take it on, so your managers get those hours back.</p></div>
+      <p class="hct-close">That time could go back to your clients and towards taking on more buildings.</p>
       <?php if ($yearAu !== ''): ?><p class="hct-answer-text">A dedicated offshore team costs from <strong data-calc-indicative><?= $yearAu ?></strong> a year, all-inclusive.</p><?php endif; ?>
       <a class="btn btn-light btn-block" href="<?= e(url('contact')) ?>#book">Book a free 30-minute call <?= icon('arrow') ?></a>
 

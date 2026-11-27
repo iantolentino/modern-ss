@@ -41,6 +41,7 @@ $v = function ($k) use ($old) { return e($old[$k] ?? ''); };
       <span class="tag tag-light"><?= icon('brief') ?><?= e($job['type']) ?></span>
       <?php if (!empty($job['schedule'])): ?><span class="tag tag-light"><?= icon('clock') ?><?= e($job['schedule']) ?></span><?php endif; ?>
     </div>
+    <?php if ($open): ?><a class="btn btn-primary job-apply-jump" href="#apply">Apply now <?= icon('arrow') ?></a><?php endif; ?>
   </div>
 </section>
 <section class="section">

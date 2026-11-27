@@ -1,5 +1,5 @@
 <a class="role-card reveal" href="<?= e(url('solutions/' . $s['slug'])) ?>" data-cat="<?= e($s['category']) ?>">
-  <div class="role-img"><img src="<?= e(media($s['image'])) ?>" alt="<?= e($s['title']) ?>" loading="lazy" width="300" height="380"></div>
+  <div class="role-img" style="--img: url('<?= e(media($s['image'])) ?>')"><img src="<?= e(media($s['image'])) ?>" alt="<?= e($s['title']) ?>" loading="lazy" width="300" height="380"></div>
   <div class="role-body">
     <h3><?= e($s['title']) ?></h3>
     <?php if (!empty($s['highlights'])): ?>

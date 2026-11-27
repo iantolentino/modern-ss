@@ -40,9 +40,12 @@ $title = (string) ($hero['title'] ?? '');
 $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
 ?>
 <section class="hero hero-test">
+  <?php $heroVideo = setting('hero.video') ?: 'https://stratastaffglobal.com/wp-content/uploads/2026/11/ssg-hero-video-720.mp4'; ?>
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1" poster="https://stratastaffglobal.com/wp-content/uploads/2026/11/ssg-hero-video-poster.jpg"><source src="<?= e($heroVideo) ?>" type="video/mp4"></video>
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
+      <p class="hero-eyebrow"><?= icon('users') ?> Strata-trained offshore teams for Australian and Canadian agencies</p>
       <h1><?= e($split[0]) ?><?php if (isset($split[1])): ?><span class="hero-accent"><?= e($split[1]) ?></span><?php endif; ?></h1>
       <p class="hero-sub"><?= e($hero['subtitle'] ?? '') ?></p>
       <div class="hero-actions">
@@ -58,6 +61,8 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     <div class="hero-test-visual" id="hidden-capacity-test">
       <?php if (plugin_enabled('capacity-calculator')): ?>
         <div class="hero-test-card"><?php $calcId = 'calc-home'; $calcFull = false; require PLUGINS_DIR . '/capacity-calculator/widget.php'; ?></div>
+        <?php if (!empty($stats[1])): ?><p class="hero-float hero-float-a"><strong><?= e($stats[1]['value'] . $stats[1]['suffix']) ?></strong> staff retention</p><?php endif; ?>
+        <a class="hero-float hero-float-b" href="<?= e(url('case-studies/strata-choice')) ?>"><strong><?= e($story['from'] ?? '5') ?> → <?= e($story['to'] ?? '21') ?></strong> team members · Strata Choice</a>
       <?php endif; ?>
     </div>
   </div>
@@ -67,7 +72,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
   <div class="wrap proof-bar-inner">
     <dl class="proof-stats">
       <?php foreach ($stats as $i => $s): if (stripos($s['label'], 'tasks') !== false) continue; ?>
-        <div><dt><?= e($s['label']) ?><?php if ($i === 1): ?> · <a href="#stats-method">how measured</a><?php endif; ?></dt><dd><span data-count="<?= e($s['value']) ?>"><?= e($s['value']) ?></span><?= e($s['suffix']) ?></dd></div>
+        <div><dt><?= e($s['label']) ?></dt><dd><span data-count="<?= e($s['value']) ?>"><?= e($s['value']) ?></span><?= e($s['suffix']) ?></dd></div>
         <?php if ($i === 1): ?><div><dt>In strata offshoring</dt><dd>Since <?= ph(setting('facts.since')) ?></dd></div><?php endif; ?>
       <?php endforeach; ?>
     </dl>
@@ -77,7 +82,6 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     </div>
     <?php endif; ?>
   </div>
-  <?php if (ph(setting('facts.stats_method')) !== ''): ?><p class="wrap proof-method" id="stats-method"><?= ph(setting('facts.stats_method')) ?></p><?php endif; ?>
 </section>
 
 <?php if ($platforms): ?>
@@ -102,8 +106,8 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     </div>
     <div class="roles-bar">
       <div class="tabs" role="tablist" aria-label="Role category">
-        <button role="tab" aria-selected="true" data-filter="strata">Strata Services · <?= $countCat('strata') ?> roles</button>
-        <button role="tab" aria-selected="false" data-filter="pm">Strata Staff Plus · property management · <?= $countCat('pm') ?> roles</button>
+        <button role="tab" aria-selected="true" data-filter="strata"><span class="lbl-full">Strata Services · <?= $countCat('strata') ?> roles</span><span class="lbl-short">Strata · <?= $countCat('strata') ?> roles</span></button>
+        <button role="tab" aria-selected="false" data-filter="pm"><span class="lbl-full">Strata Staff Plus · property management · <?= $countCat('pm') ?> roles</span><span class="lbl-short">Property mgmt · <?= $countCat('pm') ?> roles</span></button>
       </div>
       <div class="hs-nav">
         <button type="button" class="round-btn" data-hs-prev aria-controls="roles-home" aria-label="Previous roles"><?= str_replace('<svg', '<svg style="transform:rotate(180deg)"', icon('arrow')) ?></button>
@@ -127,8 +131,14 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     <div class="voices">
       <?php if ($lead): ?>
       <figure class="voice-lead reveal">
+        <span class="stars" role="img" aria-label="Five stars">★★★★★</span>
         <blockquote><p><?= e(sentences($lead['quote'], 220)) ?></p></blockquote>
         <figcaption><?= avatar($lead, 'voice-avatar') ?><span><strong><?= e($lead['name']) ?></strong><small><?= e(quote_byline($lead)) ?></small></span></figcaption>
+        <?php if ($firms): ?>
+        <div class="endorsed"><span>Also endorsed by leaders at</span>
+          <ul><?php foreach ($firms as $f): if ($f === ($lead['company'] ?? '')) continue; ?><li><?= e($f) ?></li><?php endforeach; ?></ul>
+        </div>
+        <?php endif; ?>
       </figure>
       <?php endif; ?>
       <?php if ($featured): ?>
@@ -139,6 +149,14 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
         <span class="voice-story-link"><?= !empty($story['video_url']) ? 'Watch the video' : 'Read the client story' ?> <?= icon('arrow') ?></span>
       </a>
       <?php endif; ?>
+      <?php $clientVideo = setting('client_video') ?: 'https://stratastaffglobal.com/wp-content/uploads/2025/05/HORNER-FINAL.mp4'; ?>
+      <div class="voice-video reveal">
+        <button type="button" class="voice-video-btn" data-video="<?= e($clientVideo) ?>" aria-label="Play the client video: Awesome Journey, premium client partner">
+          <span class="voice-video-play"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+          <strong>Awesome Journey</strong>
+          <span>Premium client partner · client video</span>
+        </button>
+      </div>
       <?php $second = $sliderQuotes[1] ?? null; if ($second): ?>
       <figure class="voice-quote reveal">
         <blockquote><p><?= e(sentences($second['quote'], 160)) ?></p></blockquote>
@@ -146,11 +164,6 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
       </figure>
       <?php endif; ?>
     </div>
-    <?php if ($firms): ?>
-    <div class="endorsed reveal"><span>Also endorsed by leaders at</span>
-      <ul><?php foreach ($firms as $f): if ($f === ($lead['company'] ?? '')) continue; ?><li><?= e($f) ?></li><?php endforeach; ?></ul>
-    </div>
-    <?php endif; ?>
   </div>
 </section>
 <?php endif; ?>
@@ -222,15 +235,17 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
       <a class="btn btn-primary" href="<?= e(url('solutions')) ?>">See all solutions <?= icon('arrow') ?></a>
     </div>
     <ul class="chips chips-light reveal" aria-label="Strata tasks we handle">
-      <?php foreach (['Reconciliation', 'Payment runs', 'Debt recovery', 'Financial reports', 'Valuations', 'Bank downloads', 'Section 184', 'Section 22', 'Invoicing', 'Levy queries', 'Strata roll', 'Insurance claims', 'Drafting letters', 'Data updates', 'Archiving', 'Asbestos', 'AFSS', 'Work orders', 'By-law notices', 'Compliance', 'AGM', 'EGM'] as $t): ?>
-        <li><?= icon('check') ?><?= e($t) ?></li>
+      <?php $tasks = ['Reconciliation', 'Payment runs', 'Debt recovery', 'Financial reports', 'Valuations', 'Bank downloads', 'Section 184', 'Section 22', 'Invoicing', 'Levy queries', 'Strata roll', 'Insurance claims', 'Drafting letters', 'Data updates', 'Archiving', 'Asbestos', 'AFSS', 'Work orders', 'By-law notices', 'Compliance', 'AGM', 'EGM']; ?>
+      <?php foreach ($tasks as $ti => $t): ?>
+        <li<?= $ti >= 10 ? ' class="chip-extra"' : '' ?>><?= icon('check') ?><?= e($t) ?></li>
       <?php endforeach; ?>
     </ul>
+    <button type="button" class="btn btn-outline btn-sm chips-more" data-chips-more>Show all <?= count($tasks) ?> tasks</button>
   </div>
 </section>
 
 <?php if ($posts): ?>
-<section class="section">
+<section class="section home-posts">
   <div class="wrap">
     <div class="section-head row reveal">
       <div><h2>News from Strata Staff</h2></div>
