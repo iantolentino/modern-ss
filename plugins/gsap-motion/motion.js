@@ -47,7 +47,7 @@
         }
       });
 
-      heroTl.from($$('.hero-sub, .hero-actions, .hero-facts', hero), { autoAlpha: 0, y: 24, stagger: 0.1 }, 'copy+=0.45')
+      heroTl.from($$('.hero-eyebrow, .hero-sub, .hero-actions, .hero-facts, .hero-float', hero), { autoAlpha: 0, y: 24, stagger: 0.1 }, 'copy+=0.45')
         .addLabel('photos', 0.2);
       // The staff photo wipes open, then the Hidden Capacity Test card rises over it
       if ($('.hero-test-photo', hero)) {

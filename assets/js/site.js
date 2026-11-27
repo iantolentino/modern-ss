@@ -157,6 +157,8 @@
     var sync = function () {
       prev.disabled = track.scrollLeft < 4;
       next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      // Nothing to slide (everything already fits): hide the arrows
+      prev.parentElement.style.visibility = track.scrollWidth <= track.clientWidth + 4 ? 'hidden' : '';
     };
     prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: reduce ? 'auto' : 'smooth' }); });
     next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: reduce ? 'auto' : 'smooth' }); });
@@ -197,6 +199,21 @@
     };
     form.addEventListener('change', show);
     show();
+  });
+
+  // Client video: the 165 MB file only loads when the visitor presses play
+  document.querySelectorAll('[data-video]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = document.createElement('video');
+      v.src = b.getAttribute('data-video'); v.controls = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute('aria-label', b.getAttribute('aria-label').replace(/^Play /, ''));
+      b.replaceWith(v); v.focus();
+    });
+  });
+
+  // Task chips: phones show ten, this button shows the rest
+  document.querySelectorAll('[data-chips-more]').forEach(function (b) {
+    b.addEventListener('click', function () { b.previousElementSibling.classList.add('is-open'); b.remove(); });
   });
 
   // Filter tabs (roles, jobs)
