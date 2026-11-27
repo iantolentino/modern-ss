@@ -168,7 +168,7 @@ function layout_head(array $meta, string $active = ''): void {
 </head>
 <body class="<?= e($meta['body_class'] ?? '') ?>">
 <a class="skip" href="#main">Skip to content</a>
-<?php $ca = ($meta['locale'] ?? '') === 'en_CA'; $links = setting('links', []); ?>
+<?php $ca = ($meta['locale'] ?? '') === 'en_CA'; $GLOBALS['ssg_ca'] = $ca; $links = setting('links', []); ?>
 <div class="top-bar">
   <div class="wrap top-bar-inner">
     <nav class="country" aria-label="Country">
@@ -235,7 +235,7 @@ function layout_foot(): void {
     <div class="cta-mark" aria-hidden="true" style="--mark: url(<?= e(url('assets/media/brand/strata-staff-mark-white.png')) ?>)"><span class="cta-badge"><img src="<?= e(url('assets/media/brand/strata-staff-mark.png')) ?>" alt="" width="88" height="88" loading="lazy"></span></div>
     <div>
       <h2>Schedule a free discovery call</h2>
-      <p>Tell us about your agency and the work piling up. We'll show you where an offshore team fits. No obligation.</p>
+      <p>Tell us about your <?= !empty($GLOBALS['ssg_ca']) ? 'strata management company' : 'agency' ?> and the work piling up. We'll show you where an offshore team fits. No obligation.</p>
     </div>
     <div class="cta-actions">
       <a class="btn btn-light" href="<?= e(url('contact')) ?>"><span class="lbl-full">Book a 30-minute discovery call</span><span class="lbl-short">Book a discovery call</span> <?= icon('arrow') ?></a>

@@ -98,3 +98,14 @@ Phone interactions all work: the menu opens, closes and scrolls, tabs switch, sl
   - Typed questions are matched to the closest preset question by keywords. 14 test phrases all matched correctly, and anything with no good match offers a person.
   - **Later, AI:** replace `answerFor()` in `chat.js` with a call to a server-side endpoint that holds the API key. Never put the key in the browser.
   - Phones: a round button above the sticky call bar; the chat opens as a sheet covering most of the screen.
+
+## G. Canada page: layout and Canadian wording (same day)
+Checked at 1440 and 375, and read against Canadian English and BC strata terms.
+- [x] **G1. Hero:** add the eyebrow pill from deck slide 24 ("Strata Staff Canada · Vancouver"), matching the homepage.
+- [x] **G2. "pacific-time" lower-cased:** a code bug (`lcfirst`). It must read "Pacific time".
+- [x] **G3. Canadian spelling and terms:** "enquiries" becomes "inquiries"; spell out "Civil Resolution Tribunal (CRT)" once; "strata management companies", not "agencies".
+- [x] **G4. "Take the test in C$" opens the test in A$:** open it with Canada · C$ selected.
+- [x] **G5. Office section:** the right-aligned address wraps raggedly, and the CCI card has big gaps and a repeated "Member · Canada" line. Use clean contact rows with icons, and a tidy membership card.
+- [x] **G6. The page ends abruptly after one section:** add "Why BC strata management companies work with us", built only from facts already on the site (strata training covering Canadian legislation, CCI BC membership, the test in C$, a Vancouver office).
+- [x] **G7. Phones:** office details stack (label above value) instead of being squeezed side by side.
+- [x] **G8. Call-to-action band on the Canada page:** say "strata management company" instead of "agency".

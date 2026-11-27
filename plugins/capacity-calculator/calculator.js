@@ -3,7 +3,11 @@
   'use strict';
   var fmt = function (n, d) { return n.toLocaleString('en-AU', { maximumFractionDigits: d || 0 }); };
 
+  // Links from the Canada page add ?currency=CAD so the test opens in Canadian dollars
+  var startCad = /[?&]currency=CAD\b/i.test(location.search);
+
   document.querySelectorAll('[data-calc]').forEach(function (form) {
+    if (startCad && form.querySelector('input[name=currency][value=CAD]')) form.querySelector('input[name=currency][value=CAD]').checked = true;
     // On the full page the answer card sits beside the questions, inside [data-calc-scope]
     var scope = form.closest('[data-calc-scope]') || form;
     var el = function (sel) { return scope.querySelector(sel); };
