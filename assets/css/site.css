@@ -1308,3 +1308,18 @@ html, body { overflow-x: clip; } /* slide-in and zoom animations start off to th
 .role-card .role-img--scene { aspect-ratio: 6 / 5; background: var(--tint); }
 .role-card .role-img--scene::before { display: none; }
 .role-card .role-img--scene img { width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: center; -webkit-mask-image: none; mask-image: none; }
+
+/* Footer on phones: one column; Company links in two columns; each office on its own row so addresses and the email stay readable */
+@media (max-width: 600px) {
+  .footer-grid, .site-footer .footer-grid { grid-template-columns: 1fr; gap: 0; padding-bottom: 8px; }
+  .footer-brand, .footer-grid > div:nth-child(2) { grid-column: auto; grid-row: auto; }
+  .footer-brand { padding-bottom: 24px; }
+  .footer-grid > div:not(.footer-brand) { padding: 22px 0; border-top: 1px solid rgba(255, 255, 255, .1); }
+  .footer-grid > div:nth-child(2) ul { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .footer-grid > div:nth-child(2) li { margin: 0; }
+  .footer-grid > div:nth-child(2) li a { display: block; padding: 7px 0; }
+  .site-footer h3 { margin-bottom: 12px; }
+  .site-footer p, .site-footer a { overflow-wrap: normal; }
+  .site-footer p:last-child { margin-bottom: 0; }
+  .footer-bottom { justify-content: space-between; align-items: center; padding-top: 18px; }
+}
