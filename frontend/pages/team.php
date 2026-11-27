@@ -10,7 +10,7 @@ layout_head([
     'path' => 'team',
     'schema' => [breadcrumb_schema($crumbs)],
 ], 'team');
-page_hero('Our people', 'Our awesome team', 'The management and leadership team supporting our strata agency partners, from task-level detail to capacity and performance reviews.', $crumbs);
+page_hero('Our people', 'Our team', 'The management and leadership team supporting our strata agency partners, from task-level detail to capacity and performance reviews.', $crumbs);
 ?>
 <?php if ($leaders): ?>
 <section class="section" id="executives">

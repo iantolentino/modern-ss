@@ -47,7 +47,7 @@ return [
             'photo' => ['Photo', 'image', ['help' => 'Portrait photo. Cropped to a 4:5 card automatically.', 'max' => 1000]],
             'name' => ['Full name', 'text', ['required' => true, 'half' => true]],
             'title' => ['Job title', 'text', ['required' => true, 'half' => true]],
-            'group' => ['Show under', 'select', ['options' => ['leadership' => 'Executives', 'team' => 'Our Awesome Team'], 'half' => true]],
+            'group' => ['Show under', 'select', ['options' => ['leadership' => 'Executives', 'team' => 'Our Team'], 'half' => true]],
             'department' => ['Department', 'text', ['half' => true, 'list' => ['People & Culture', 'Training & Development', 'Accounting & Finance', 'Legal & Facilities', 'Executive Services', 'Sales & Business Development', 'IT & Network Support', 'Systems & Multimedia', 'Client Success'], 'help' => 'Used for the filter on the team page.']],
             'bio' => ['Short bio (optional)', 'textarea', ['rows' => 3, 'help' => 'Shown for executives.']],
             'linkedin' => ['LinkedIn URL', 'url', ['half' => true]],

@@ -61,3 +61,12 @@ Your review of the competitive-review build (commit `f260ec4`), as a checklist.
 - [x] **25. Proof bar on the first screen:** the hero is shorter (less padding, test fields stacked), so the proof bar shows without scrolling on a 1895×947 screen.
 - [x] **26. Hero photo:** it was a thin strip half covered by the test card. Now a tall photo beside the card, so the team's faces show.
 - [x] **27. Role photos zoomed out:** the crop is taller (6:5 instead of 16:11), so more of each person shows.
+
+## Round 5 (same day)
+- [x] **28. Retention stat:** label on one line so 98% lines up with the other stats.
+- [x] **29. Members:** the "Members" label is gone; all five logos fit in its place (they slide on smaller screens).
+- [x] **30. Hero photo:** no wide company photo exists (all are square or portrait), so the hero shows the test card alone. The team photo moved to "From first call to a working offshore team", where it shows whole.
+- [x] **31. Inner page heroes:** one size on every page (same heading size, padding and minimum height), so the test page is no longer smaller than About.
+- [x] **32. Hero background:** the drifting ring is replaced by the Strata Staff mark, faint but visible, on every inner page hero.
+- [x] **33. Deck recheck:** one missed item from slide 12: "Our Awesome Team" renamed to "Our Team". Every other deck item is done, marked as a placeholder, or waiting on the business (see competitive-review-todo.md).
+- [ ] **34. Suggestion:** a wide (16:9) real photo of the team in the office would let the homepage hero carry a photo again without cropping faces.

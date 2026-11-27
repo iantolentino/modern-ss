@@ -34,7 +34,6 @@ layout_head([
     'path' => '',
     'schema' => $faqs ? [$siteSchema, $faqSchema] : [$siteSchema],
     'body_class' => 'is-home',
-    'preload' => media($hero['image'] ?? ''),
 ]);
 // "Grow your portfolio without growing your payroll." : the second half is set in the accent colour
 $title = (string) ($hero['title'] ?? '');
@@ -57,7 +56,6 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
       </ul>
     </div>
     <div class="hero-test-visual" id="hidden-capacity-test">
-      <div class="hero-test-photo"><img src="<?= e(media($hero['image'] ?? '')) ?>" alt="Strata Staff team members working together" width="560" height="560" fetchpriority="high"></div>
       <?php if (plugin_enabled('capacity-calculator')): ?>
         <div class="hero-test-card"><?php $calcId = 'calc-home'; $calcFull = false; require PLUGINS_DIR . '/capacity-calculator/widget.php'; ?></div>
       <?php endif; ?>
@@ -75,8 +73,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     </dl>
     <?php if ($members): ?>
     <div class="proof-members">
-      <span>Members</span>
-      <div class="members-viewport"><ul class="members-track" data-members><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul></div>
+      <div class="members-viewport" role="group" aria-label="Memberships"><ul class="members-track" data-members><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul></div>
     </div>
     <?php endif; ?>
   </div>
@@ -198,7 +195,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
 <section class="section">
   <div class="wrap split">
     <div class="split-img reveal">
-      <img src="<?= e(media('assets/media/site/tailored-offshore-capacity-solutions.webp')) ?>" alt="A Strata Staff team member working on a laptop" width="560" height="560" loading="lazy">
+      <img src="<?= e(media($hero['image'] ?? 'assets/media/site/the-strata-staff-difference.webp')) ?>" alt="Strata Staff team members working together" width="560" height="560" loading="lazy">
       <div class="img-badge"><span class="big">Since <?= ph(setting('facts.since')) ?></span> serving strata agencies</div>
     </div>
     <div class="reveal">
