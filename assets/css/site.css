@@ -112,7 +112,7 @@ p { margin: 0 0 1em; }
   radial-gradient(700px 500px at 10% 100%, rgba(9, 75, 193, .36), transparent 60%),
   linear-gradient(180deg, #061a40, #071f4d); }
 .hero-glow::before { content: ''; position: absolute; width: 520px; height: 520px; left: 40%; top: -180px; border-radius: 50%; background: radial-gradient(circle, rgba(9, 75, 193, .25), transparent 65%); animation: drift 14s ease-in-out infinite alternate; }
-.hero-glow::after { content: ''; position: absolute; width: 640px; height: 680px; right: -160px; bottom: -260px; background: #fff; opacity: .035; -webkit-mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; }
+.hero-glow::after { content: ''; position: absolute; width: 640px; height: 680px; right: -160px; bottom: -260px; background: #fff; opacity: .06; -webkit-mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; }
 @keyframes drift { to { transform: translate(-120px, 80px) scale(1.15); } }
 .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
 .hero h1 { color: #fff; max-width: 15ch; }
@@ -345,10 +345,10 @@ a.member:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); bord
 .footer-bottom { display: flex; justify-content: space-between; gap: 16px; padding-top: 24px; font-size: .88rem; flex-wrap: wrap; }
 
 /* Inner page hero */
-.page-hero { background: var(--navy); color: #c4d0e6; padding: clamp(48px, 6vw, 88px) 0; position: relative; overflow: hidden; isolation: isolate; }
+.page-hero { background: var(--navy); color: #c4d0e6; padding: clamp(48px, 5vw, 76px) 0; position: relative; overflow: hidden; isolation: isolate; }
 .page-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(600px 360px at 90% 0%, rgba(58, 165, 151, .22), transparent 60%), radial-gradient(600px 400px at 0% 100%, rgba(9, 75, 193, .3), transparent 60%); }
-.page-hero::after { content: ''; position: absolute; z-index: -1; width: 420px; height: 420px; right: -120px; bottom: -220px; border-radius: 50%; border: 60px solid rgba(255, 255, 255, .03); animation: drift 18s ease-in-out infinite alternate; }
-.page-hero h1 { color: #fff; max-width: 22ch; font-size: clamp(2.1rem, 1.2rem + 3vw, 3.5rem); }
+.page-hero::after { content: ''; position: absolute; z-index: -1; width: min(46vw, 560px); aspect-ratio: 640 / 680; right: max(-40px, -3vw); top: 50%; transform: translateY(-46%); background: #fff; opacity: .07; -webkit-mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; mask: url(../media/brand/strata-staff-mark-white.png) center / contain no-repeat; }
+.page-hero h1 { color: #fff; max-width: 22ch; font-size: clamp(2rem, 1.3rem + 2.2vw, 3rem); }
 .page-hero .lede { color: #b8c6e0; max-width: 62ch; }
 
 .page-hero .wrap:not(.hero-media-grid) > *, .hero-media-grid > div:first-child > * { animation: heroIn .7s var(--ease) both; }
@@ -699,8 +699,6 @@ input, textarea { caret-color: var(--blue); }
 .hero-facts li { display: inline-flex; align-items: center; gap: 7px; }
 .hero-facts .i { color: var(--green-light); }
 .hero-test-visual { position: relative; display: grid; grid-template-columns: 1fr; align-items: end; min-height: 600px; scroll-margin-top: 90px; }
-.hero-test-photo { position: absolute; top: 0; right: 0; width: 100%; height: 50%; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); background: linear-gradient(160deg, #1b3a7a, #0e3f6e); }
-.hero-test-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
 .hero-test-card { position: relative; z-index: 2; width: calc(100% - 48px); margin: 0 auto; }
 
 /* Proof bar under the hero: real figures and memberships */
@@ -788,7 +786,6 @@ input, textarea { caret-color: var(--blue); }
 }
 @media (max-width: 960px) {
   .hero-test-visual { min-height: 0; margin-top: 8px; }
-  .hero-test-photo { display: none; }
   .hero-test-card { width: 100%; }
   .proof-grid { grid-template-columns: 1fr; }
   .proof-stats > div { padding: 4px 18px; }
@@ -985,10 +982,8 @@ input, textarea { caret-color: var(--blue); }
 }
 
 /* Hidden Capacity Test page: compact intro so the whole test is in view, a Calculate button, three tidy panels */
-.hct-hero { padding: clamp(32px, 4vw, 52px) 0 clamp(28px, 3.5vw, 44px); }
 .hct-hero h1 { margin-bottom: 10px; }
 .hct-hero .lede { margin: 0; max-width: 92ch; }
-.hct-hero h1 { font-size: clamp(2rem, 1.3rem + 2.2vw, 3rem); }
 .calc-full .calc-fields { grid-template-columns: 1fr 1fr; gap: 12px 14px; }
 .calc-full .calc-fields label:last-child { grid-column: 1 / -1; }
 .calc-full .calc-in { gap: 14px; }
@@ -1113,18 +1108,15 @@ p, li { text-wrap: pretty; }
   #roles .roles-track { grid-template-columns: none; grid-auto-columns: 82%; }
 }
 
-/* Round 4: shorter hero so the proof bar is on the first screen; the photo is no longer covered by the test card */
+/* Round 4-5: shorter hero, test card on its own (the team photo moved to the steps section) */
+.hero-test .hero-test-visual { min-height: 0; align-items: center; }
+.hero-test .hero-test-card { width: 100%; margin: 0; }
 .hero.hero-test { padding: clamp(36px, 3.5vw, 48px) 0; }
-.hero-test .hero-test-visual { display: flex; flex-direction: row; align-items: stretch; gap: 16px; min-height: 0; }
-.hero-test .hero-test-photo { position: relative; inset: auto; order: 2; flex: 0 0 40%; width: auto; height: auto; min-height: 100%; }
-.hero-test .hero-test-photo img { position: absolute; inset: 0; object-position: 58% 30%; }
-.hero-test .hero-test-card { order: 1; flex: 1; min-width: 0; width: auto; margin: 0; }
-.hero-test .hero-test-card .calc-fields.compact { grid-template-columns: 1fr; }
-.hero-test .calc-intro { display: none; }
-
-.hero-test .hero-test-card .calc-result strong { font-size: clamp(1.4rem, .9rem + 1vw, 1.9rem); }
-@media (min-width: 961px) and (max-width: 1500px) {
-  .hero-test .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 40px; }
-  .hero-test .hero-test-photo { flex-basis: 36%; }
-  .hero-test .hero-test-photo img { object-position: 62% 30%; }
-}
+.proof-stats dt { max-width: none; white-space: nowrap; }
+.members-viewport { width: min(100%, calc(5 * 96px + 4 * 16px)); }
+@media (max-width: 600px) { .proof-stats dt { white-space: normal; } .proof-stats > div { padding: 0; border-left: 0; } }
+/* Inner page heroes: one height everywhere, content centred */
+.page-hero { display: flex; align-items: center; min-height: clamp(260px, 22vw, 340px); }
+.page-hero > .wrap { width: 100%; }
+.page-hero h1 { max-width: 30ch; }
+.page-hero .lede { max-width: 80ch; }
