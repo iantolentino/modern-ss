@@ -21,8 +21,14 @@ page_hero('Solutions', 'Offshore specialists for strata and property management'
     if (!$rows) continue; ?>
 <section class="section<?= $key === 'pm' ? ' section-tint' : '' ?>" id="<?= $key === 'pm' ? 'property-management' : 'strata-management' ?>">
   <div class="wrap">
-    <div class="section-head reveal"><p class="meta-line"><?= e($g[0]) ?></p><h2><?= e($g[1]) ?></h2><p class="lede"><?= e($g[2]) ?></p></div>
-    <div class="roles"><?php foreach ($rows as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?></div>
+    <div class="section-head row reveal">
+      <div><h2><?= e($g[1]) ?></h2><p class="lede"><?= e($g[2]) ?></p></div>
+      <div class="hs-nav">
+        <button type="button" class="round-btn" data-hs-prev aria-controls="roles-<?= e($key) ?>" aria-label="Previous roles"><?= str_replace('<svg', '<svg style="transform:rotate(180deg)"', icon('arrow')) ?></button>
+        <button type="button" class="round-btn" data-hs-next aria-controls="roles-<?= e($key) ?>" aria-label="Next roles"><?= icon('arrow') ?></button>
+      </div>
+    </div>
+    <div class="roles roles-track" id="roles-<?= e($key) ?>" data-hs-track><?php foreach ($rows as $s) require FRONTEND_DIR . '/partials/role-card.php'; ?></div>
   </div>
 </section>
 <?php endforeach; ?>

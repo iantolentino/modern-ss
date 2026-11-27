@@ -37,13 +37,13 @@ $included = array_filter(array_map('ph', lines((string) ($offer['included'] ?? '
         <div class="price-row" role="row">
           <span role="cell"><strong><?= e($s['title']) ?></strong></span>
           <span role="cell" class="price-tasks"><?= e(implode(' · ', array_slice(lines((string) ($s['highlights'] ?? '')), 0, 3))) ?></span>
-          <span role="cell" class="price-amount"><?= ph(role_price($s)) ?: 'On request' ?></span>
+          <span role="cell" class="price-amount"><?= confirmed(role_price($s)) ?: 'On request' ?></span>
           <span role="cell"><a class="text-link" href="<?= e(url('solutions/' . $s['slug'])) ?>">View role <?= icon('arrow') ?></a></span>
         </div>
       <?php endforeach; ?>
     </div>
     <?php endforeach; ?>
-    <p class="small muted pricing-note">Prices are indicative; your quote depends on the role, level and hours. Canadian pricing is in CAD<?= ph($offer['from_month_ca'] ?? '') !== '' ? ', from ' . ph($offer['from_month_ca']) . ' a month' : '' ?>.</p>
+    <p class="small muted pricing-note">Prices are indicative; your quote depends on the role, level and hours. Canadian pricing is in CAD<?= confirmed($offer['from_month_ca'] ?? '') !== '' ? ', from ' . confirmed($offer['from_month_ca']) . ' a month' : '' ?>.</p>
   </div>
 </section>
 <?php layout_foot();

@@ -18,8 +18,6 @@ layout_head([
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><span aria-current="page">Canada</span></li></ol></nav>
-      <p class="hero-place"><?= icon('pin') ?> Strata Staff Canada · Vancouver</p>
       <h1>Grow your portfolio <span class="hero-accent">without growing your payroll.</span></h1>
       <p class="hero-sub">Strata-trained offshore teams for BC strata management companies: Form B and Form F requests, depreciation-report admin, CRT paperwork and owner enquiries<?= ph($ca['hours'] ?? '') !== '' ? ', with ' . lcfirst(ph($ca['hours'])) : '' ?>.</p>
       <div class="hero-actions">
@@ -28,7 +26,7 @@ layout_head([
       </div>
       <ul class="hero-facts">
         <?php if ($cci): ?><li><?= icon('check') ?> Member, CCI BC Chapter</li><?php endif; ?>
-        <?php if (ph($ca['pricing'] ?? '') !== ''): ?><li><?= icon('check') ?> <?= ph($ca['pricing']) ?><?= ph($offer['from_month_ca'] ?? '') !== '' ? ', from ' . ph($offer['from_month_ca']) . '/month' : '' ?></li><?php endif; ?>
+        <?php if (ph($ca['pricing'] ?? '') !== ''): ?><li><?= icon('check') ?> <?= ph($ca['pricing']) ?><?= confirmed($offer['from_month_ca'] ?? '') !== '' ? ', from ' . confirmed($offer['from_month_ca']) . '/month' : '' ?></li><?php endif; ?>
         <?php if (ph($ca['stories'] ?? '') !== ''): ?><li><?= icon('check') ?> <?= ph($ca['stories']) ?></li><?php endif; ?>
       </ul>
     </div>

@@ -25,7 +25,7 @@ page_hero('Learning', 'Course outline per role', 'Every Strata Staff specialist 
     ?>
 <section class="section<?= $cat === 'pm' ? ' section-tint' : '' ?>">
   <div class="wrap">
-    <div class="section-head reveal"><p class="meta-line"><?= $cat === 'pm' ? 'Strata Staff Plus' : 'Strata Services' ?></p><h2><?= e($heading) ?></h2></div>
+    <div class="section-head reveal"><h2><?= e($heading) ?></h2></div>
     <div class="outline-grid">
       <?php foreach ($rows as $s): ?>
         <article class="outline-card reveal">

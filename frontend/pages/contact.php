@@ -2,6 +2,7 @@
 start_session(); // must precede output so the CSRF cookie is sent
 $c = setting('contact', []);
 require BACKEND_DIR . '/forms/contact.php'; // validates, stores and emails the enquiry
+require BACKEND_DIR . '/forms/booking.php'; // discovery-call requests
 
 $crumbs = [['', 'Home'], ['contact', 'Contact']];
 layout_head([
@@ -55,16 +56,44 @@ $roles = array_column(items('services'), 'title');
     </div>
   </div>
 </section>
-<?php if (!empty($c['booking_url']) && preg_match('#^https://outlook\.office365\.com/book/#', $c['booking_url'])): ?>
 <section class="section section-tint" id="book">
-  <div class="wrap">
-    <div class="section-head reveal">
+  <div class="wrap book-grid">
+    <div class="book-intro reveal">
       <h2>Book a 30-minute discovery call</h2>
-      <p class="lede">Pick a time that suits. We'll talk through your workload, your platforms and where an offshore team fits.</p>
+      <p class="lede">Grab some time with our solutions team. We'll talk through your workload, your platforms and where an offshore team fits.</p>
+      <ul class="check-list">
+        <li><?= icon('clock') ?><span>30 minutes, online</span></li>
+        <li><?= icon('calendar') ?><span>Weekdays, 12:00 to 4:00 PM Philippine time</span></li>
+        <li><?= icon('mail') ?><span>We confirm your time by email</span></li>
+      </ul>
     </div>
-    <div class="booking-frame"><iframe src="<?= e($c['booking_url']) ?>" title="Book a 30-minute discovery call" loading="lazy"></iframe></div>
-    <p class="small muted">Booking not loading? <a href="<?= e($c['booking_url']) ?>" target="_blank" rel="noopener">Open the booking page</a>.</p>
+    <div class="side-card form-card reveal">
+      <?php if ($bookSent): ?>
+        <div class="success"><?= icon('check') ?><h3 class="h4">Request received.</h3><p>We'll confirm your discovery call time by email shortly.</p></div>
+      <?php else: ?>
+      <?php if ($bookErrors): ?><div class="form-errors" role="alert"><?php foreach ($bookErrors as $er): ?><p><?= e($er) ?></p><?php endforeach; ?></div><?php endif; ?>
+      <form method="post" action="#book" class="form book-form" data-booking>
+        <?= csrf_field() ?><input type="hidden" name="form" value="booking">
+        <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label>Date<input type="date" name="date" required min="<?= e((new DateTime('today', new DateTimeZone('Asia/Manila')))->format('Y-m-d')) ?>" value="<?= e($bookOld['date'] ?? '') ?>" data-book-date></label>
+        <fieldset class="book-times"><legend>Time <small>(Philippine time, UTC+8)</small></legend>
+          <div class="book-slots">
+            <?php foreach ($bookSlots as $s): ?>
+              <label class="slot"><input type="radio" name="time" value="<?= e($s) ?>" required<?= ($bookOld['time'] ?? '') === $s ? ' checked' : '' ?>><span><?= e(date('g:i A', strtotime($s))) ?></span></label>
+            <?php endforeach; ?>
+          </div>
+          <small class="book-local" data-book-local hidden></small>
+        </fieldset>
+        <label>First and last name<input name="name" required autocomplete="name" value="<?= e($bookOld['name'] ?? '') ?>"></label>
+        <div class="row2">
+          <label>Email<input type="email" name="email" required autocomplete="email" value="<?= e($bookOld['email'] ?? '') ?>"></label>
+          <label>Phone number<input type="tel" name="phone" required autocomplete="tel" value="<?= e($bookOld['phone'] ?? '') ?>"></label>
+        </div>
+        <label>Any special requests <small>(optional)</small><textarea name="notes" rows="3"><?= e($bookOld['notes'] ?? '') ?></textarea></label>
+        <button class="btn btn-primary btn-block" type="submit">Book my call <?= icon('arrow') ?></button>
+      </form>
+      <?php endif; ?>
+    </div>
   </div>
 </section>
-<?php endif; ?>
 <?php layout_foot();

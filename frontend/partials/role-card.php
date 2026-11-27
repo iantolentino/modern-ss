@@ -8,7 +8,7 @@
       <p><?= e($s['summary']) ?></p>
     <?php endif; ?>
     <div class="role-foot">
-      <?php $price = ph(role_price($s)); if ($price !== ''): ?><span class="role-price">From <strong><?= $price ?></strong>/mo</span><?php endif; ?>
+      <?php $price = confirmed(role_price($s)); if ($price !== ''): ?><span class="role-price">From <strong><?= $price ?></strong>/mo</span><?php endif; ?>
       <span class="role-link">View role <?= icon('arrow') ?></span>
     </div>
   </div>

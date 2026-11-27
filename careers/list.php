@@ -13,7 +13,6 @@ layout_head([
 <section class="page-hero has-media">
   <div class="wrap hero-media-grid">
     <div>
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><span aria-current="page">Careers</span></li></ol></nav>
       <h1><?= e($cr['headline'] ?? 'Join our team') ?></h1>
       <p class="lede"><?= e($cr['intro'] ?? '') ?></p>
       <a class="btn btn-primary btn-lg" href="#openings"><?= count($jobs) ?> open <?= count($jobs) === 1 ? 'role' : 'roles' ?> <?= icon('arrow') ?></a>

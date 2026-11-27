@@ -2,8 +2,7 @@
 start_session(); // the "Email me my result" form needs its CSRF cookie before output
 require BACKEND_DIR . '/forms/capacity.php';
 $crumbs = [['', 'Home'], ['hidden-capacity-test', 'Hidden Capacity Test']];
-$quote = null;
-foreach (items('testimonials') as $t) if (stripos($t['quote'], 'focus on what we need to do onshore') !== false) $quote = $t;
+$quotes = items('testimonials');
 $roles = items('services', function ($s) { return $s['category'] === 'strata'; });
 $app = [
     '@context' => 'https://schema.org', '@type' => 'WebApplication',
@@ -22,10 +21,8 @@ $c = setting('contact', []);
 ?>
 <section class="page-hero hct-hero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><span aria-current="page">Hidden Capacity Test</span></li></ol></nav>
     <h1>The Hidden Capacity Test</h1>
     <p class="lede">How many hours are your managers spending on work that doesn't need their experience, and what is it costing you? Enter a few numbers and see what it adds up to.</p>
-    <p class="calc-note"><?= icon('clock') ?> Two numbers · Result in seconds · No sign-up</p>
   </div>
 </section>
 
@@ -33,23 +30,29 @@ $c = setting('contact', []);
   <div class="wrap">
     <?php $calcId = 'calc-main'; $calcFull = true; require PLUGINS_DIR . '/capacity-calculator/widget.php'; ?>
     <div class="hct-next">
-      <div class="hct-actions">
-        <a class="btn btn-primary btn-lg" href="<?= e(url('contact')) ?>">Book a 30-minute discovery call <?= icon('arrow') ?></a>
+      <div class="hct-panel">
+        <h2 class="h4">Talk it through with us</h2>
+        <p>We'll look at your numbers, your platforms and the roles that would take this work on.</p>
+        <a class="btn btn-primary" href="<?= e(url('contact')) ?>">Book a 30-minute discovery call <?= icon('arrow') ?></a>
       </div>
-      <form class="hct-mail" method="post" action="<?= e(url('hidden-capacity-test')) ?>#email-result" id="email-result" data-calc-mail>
+      <form class="hct-panel hct-mail" method="post" action="<?= e(url('hidden-capacity-test')) ?>#email-result" id="email-result" data-calc-mail>
         <?= csrf_field() ?><input type="hidden" name="form" value="capacity">
         <input type="hidden" name="result_hours" value="2880"><input type="hidden" name="result_inputs" value="">
         <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <h2 class="h4"><label for="hct-email">Email me my result</label></h2>
         <?php if ($mailSent): ?>
           <p class="notice ok" role="status"><?= icon('check') ?> Sent. Check your inbox for your result.</p>
         <?php else: ?>
+          <p>We'll send the numbers above so you can share them with your team.</p>
           <?php if ($mailErrors): ?><p class="notice" role="alert"><?= e(implode(' ', $mailErrors)) ?></p><?php endif; ?>
-          <label for="hct-email"><?= icon('mail') ?> Email me my result</label>
           <div class="hct-mail-row"><input id="hct-email" type="email" name="email" required autocomplete="email" placeholder="you@agency.com.au"><button class="btn btn-outline" type="submit">Send</button></div>
         <?php endif; ?>
       </form>
+      <div class="hct-panel">
+        <h2 class="h4">How we work this out</h2>
+        <p>Managers × daily routine hours × 5 days × 48 working weeks a year, allowing four weeks for leave and public holidays. Team size divides the hours by 1,920 working hours a year.</p>
+      </div>
     </div>
-    <p class="hct-how"><strong>How we work this out:</strong> number of managers × daily routine hours × 5 days × 48 working weeks a year. We allow four weeks for leave and public holidays. Team size divides the hours by 1,920 working hours a year. Change the inputs to match your agency.</p>
   </div>
 </section>
 
@@ -91,11 +94,15 @@ $c = setting('contact', []);
       <h2>Don't hire your next manager just to solve an admin problem</h2>
       <p class="lede">Before adding another onshore position, look at the workload underneath the role. Some of it may be better handled by dedicated offshore capacity.</p>
     </div>
-    <?php if ($quote): ?>
-    <figure class="quote-card quote-feature reveal">
-      <blockquote><p><?= e($quote['quote']) ?></p></blockquote>
-      <figcaption><?= avatar($quote, 'quote-avatar') ?><span><strong><?= e($quote['name']) ?></strong><small><?= e(quote_byline($quote)) ?></small></span></figcaption>
-    </figure>
+    <?php if ($quotes): ?>
+    <div class="quote-rotator reveal" data-rotate aria-live="polite">
+      <?php foreach ($quotes as $i => $q): ?>
+      <figure class="quote-card quote-feature"<?= $i ? ' hidden' : '' ?>>
+        <blockquote><p><?= e(sentences($q['quote'], 320)) ?></p></blockquote>
+        <figcaption><?= avatar($q, 'quote-avatar') ?><span><strong><?= e($q['name']) ?></strong><small><?= e(quote_byline($q)) ?></small></span></figcaption>
+      </figure>
+      <?php endforeach; ?>
+    </div>
     <?php endif; ?>
   </div>
 </section>

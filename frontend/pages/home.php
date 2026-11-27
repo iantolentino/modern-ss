@@ -53,11 +53,11 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
       <ul class="hero-facts">
         <li><?= icon('check') ?> Result in seconds</li>
         <li><?= icon('pin') ?> Teams in <?= e(preg_replace('/^Angeles City, /', '', (string) setting('facts.location'))) ?></li>
-        <?php if (ph($offer['from_month'] ?? '') !== ''): ?><li><?= icon('check') ?> From <?= ph($offer['from_month']) ?>/month</li><?php endif; ?>
+        <?php if (confirmed($offer['from_month'] ?? '') !== ''): ?><li><?= icon('check') ?> From <?= confirmed($offer['from_month']) ?>/month</li><?php endif; ?>
       </ul>
     </div>
     <div class="hero-test-visual" id="hidden-capacity-test">
-      <div class="hero-test-photo"><img src="<?= e(media($hero['image'] ?? '')) ?>" alt="A Strata Staff strata administrative specialist" width="420" height="520" fetchpriority="high"></div>
+      <div class="hero-test-photo"><img src="<?= e(media($hero['image'] ?? '')) ?>" alt="Strata Staff team members working together" width="560" height="560" fetchpriority="high"></div>
       <?php if (plugin_enabled('capacity-calculator')): ?>
         <div class="hero-test-card"><?php $calcId = 'calc-home'; $calcFull = false; require PLUGINS_DIR . '/capacity-calculator/widget.php'; ?></div>
       <?php endif; ?>
@@ -76,7 +76,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
     <?php if ($members): ?>
     <div class="proof-members">
       <span>Members</span>
-      <ul><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul>
+      <div class="members-viewport"><ul class="members-track" data-members><?php foreach ($members as $l): ?><li><?php if (!empty($l['url'])): ?><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener"><?php endif; ?><img src="<?= e(media($l['image'])) ?>" alt="<?= e($l['name']) ?>" height="40" loading="lazy"><?php if (!empty($l['url'])): ?></a><?php endif; ?></li><?php endforeach; ?></ul></div>
     </div>
     <?php endif; ?>
   </div>
@@ -115,40 +115,39 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
 </section>
 
 <?php if ($testimonials): ?>
-<section class="section" id="clients">
+<section class="section voices-section" id="clients">
   <div class="wrap">
     <div class="section-head row reveal">
       <div><h2>What strata agencies say</h2></div>
       <a class="text-link" href="<?= e(url('clients')) ?>">All <?= count($testimonials) ?> client stories <?= icon('arrow') ?></a>
     </div>
-    <div class="proof-grid">
+    <div class="voices">
       <?php if ($lead): ?>
-      <figure class="quote-feature-lg reveal">
+      <figure class="voice-lead reveal">
         <blockquote><p><?= e(sentences($lead['quote'], 220)) ?></p></blockquote>
-        <figcaption><?= avatar($lead, 'quote-avatar') ?><span><strong><?= e($lead['name']) ?></strong><small><?= e(quote_byline($lead)) ?></small></span></figcaption>
-        <?php if ($firms): ?>
-        <div class="endorsed"><small>Also endorsed by leaders at</small>
-          <ul><?php foreach ($firms as $f): if ($f === ($lead['company'] ?? '')) continue; ?><li><?= e($f) ?></li><?php endforeach; ?></ul>
-        </div>
-        <?php endif; ?>
+        <figcaption><?= avatar($lead, 'voice-avatar') ?><span><strong><?= e($lead['name']) ?></strong><small><?= e(quote_byline($lead)) ?></small></span></figcaption>
       </figure>
       <?php endif; ?>
-      <div class="proof-side">
-        <?php if ($featured): ?>
-        <a class="story-card reveal" href="<?= e(url('case-studies/strata-choice')) ?>">
-          <?= avatar($featured, 'story-avatar') ?>
-          <strong>Client story: from <?= e($story['from'] ?? '5') ?> to <?= e($story['to'] ?? '21') ?> team members</strong>
-          <span><?= e($featured['name']) ?>, <?= e(quote_byline($featured)) ?> · <?= !empty($story['video_url']) ? 'Watch the video' : 'Read the story' ?> <?= icon('arrow') ?></span>
-        </a>
-        <?php endif; ?>
-        <?php $second = $sliderQuotes[1] ?? null; if ($second): ?>
-        <figure class="quote-card reveal">
-          <blockquote><p><?= e(sentences($second['quote'], 140)) ?></p></blockquote>
-          <figcaption><?= avatar($second, 'quote-avatar') ?><span><strong><?= e($second['name']) ?></strong><small><?= e(quote_byline($second)) ?></small></span></figcaption>
-        </figure>
-        <?php endif; ?>
-      </div>
+      <?php if ($featured): ?>
+      <a class="voice-story reveal" href="<?= e(url('case-studies/strata-choice')) ?>">
+        <span class="voice-story-num"><?= e($story['from'] ?? '5') ?> <span aria-hidden="true">→</span> <?= e($story['to'] ?? '21') ?></span>
+        <strong>team members since <?= e($story['since'] ?? '2023') ?></strong>
+        <span class="voice-story-by"><?= avatar($featured, 'voice-avatar') ?><span><?= e($featured['name']) ?><small><?= e(quote_byline($featured)) ?></small></span></span>
+        <span class="voice-story-link"><?= !empty($story['video_url']) ? 'Watch the video' : 'Read the client story' ?> <?= icon('arrow') ?></span>
+      </a>
+      <?php endif; ?>
+      <?php $second = $sliderQuotes[1] ?? null; if ($second): ?>
+      <figure class="voice-quote reveal">
+        <blockquote><p><?= e(sentences($second['quote'], 160)) ?></p></blockquote>
+        <figcaption><?= avatar($second, 'voice-avatar') ?><span><strong><?= e($second['name']) ?></strong><small><?= e(quote_byline($second)) ?></small></span></figcaption>
+      </figure>
+      <?php endif; ?>
     </div>
+    <?php if ($firms): ?>
+    <div class="endorsed reveal"><span>Also endorsed by leaders at</span>
+      <ul><?php foreach ($firms as $f): if ($f === ($lead['company'] ?? '')) continue; ?><li><?= e($f) ?></li><?php endforeach; ?></ul>
+    </div>
+    <?php endif; ?>
   </div>
 </section>
 <?php endif; ?>
@@ -193,7 +192,7 @@ $split = preg_split('/(?=\bwithout\b)/i', $title, 2);
 <section class="section">
   <div class="wrap split">
     <div class="split-img reveal">
-      <img src="<?= e(media('assets/media/site/the-strata-staff-difference.webp')) ?>" alt="Strata Staff team members at work" width="560" height="560" loading="lazy">
+      <img src="<?= e(media('assets/media/site/tailored-offshore-capacity-solutions.webp')) ?>" alt="A Strata Staff team member working on a laptop" width="560" height="560" loading="lazy">
       <div class="img-badge"><span class="big">Since <?= ph(setting('facts.since')) ?></span> serving strata agencies</div>
     </div>
     <div class="reveal">

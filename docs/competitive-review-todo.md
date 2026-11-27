@@ -165,7 +165,7 @@ Target: this modern site (`htdocs/strata-modern`). The live WordPress site is no
 - [x] **7.3 Navigation:** Roles ▾ · Hidden Capacity Test · Pricing · Case studies · Academy · Insights · About.
   **Done:** Careers, Our team, Trust Centre and Canada sit under About.
 - [x] **7.4 Embedded booking:** the LIVE Microsoft Bookings page (`outlook.office365.com/book/ScheduleFreeDiscoveryCall@prtna.com/`) on the contact page.
-  **Done:** Embedded on `/contact#book`. Microsoft only allows it inside https pages, so it shows on GitHub Pages and the live domain, not on local http.
+  **Done:** Replaced on 27 Nov by our own booking form with the same fields (see docs/feedback-2026-11-27-todo.md, item 16).
 - [x] **7.5 Mobile:** a sticky "Take the test" / "Book a call" bar. On a phone, the two-field test appears near the top of the page.
 - [~] **7.6 Canada page** (`/canada`):
   **Done:** Built at `/canada` (en-CA locale).

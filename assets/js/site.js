@@ -108,6 +108,96 @@
     });
   }
 
+  // Membership logos: a window of four that steps along by one, like a phone home screen
+  document.querySelectorAll('[data-members]').forEach(function (track) {
+    if (reduce || track.children.length <= 4) return;
+    var paused = false;
+    track.parentElement.addEventListener('mouseenter', function () { paused = true; });
+    track.parentElement.addEventListener('mouseleave', function () { paused = false; });
+    track.addEventListener('focusin', function () { paused = true; });
+    track.addEventListener('focusout', function () { paused = false; });
+    setInterval(function () {
+      if (paused || document.hidden) return;
+      var first = track.firstElementChild;
+      var step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0);
+      track.style.transition = 'transform .6s cubic-bezier(.23, 1, .32, 1)';
+      track.style.transform = 'translateX(' + (-step) + 'px)';
+      track.addEventListener('transitionend', function done() {
+        track.removeEventListener('transitionend', done);
+        track.style.transition = 'none';
+        track.appendChild(first);
+        track.style.transform = 'none';
+      });
+    }, 3200);
+  });
+
+  // Rotating client quotes: one at a time, cross-fading every 7 seconds
+  document.querySelectorAll('[data-rotate]').forEach(function (box) {
+    var items = box.children;
+    if (items.length < 2 || reduce) return;
+    var i = 0, paused = false;
+    box.addEventListener('mouseenter', function () { paused = true; });
+    box.addEventListener('mouseleave', function () { paused = false; });
+    setInterval(function () {
+      if (paused || document.hidden) return;
+      items[i].hidden = true;
+      i = (i + 1) % items.length;
+      items[i].hidden = false;
+      items[i].classList.remove('is-in'); void items[i].offsetWidth; items[i].classList.add('is-in');
+    }, 7000);
+  });
+
+  // Horizontal sliders (Solutions role groups): previous/next move by one card
+  document.querySelectorAll('[data-hs-track]').forEach(function (track) {
+    var head = track.previousElementSibling;
+    var prev = head && head.querySelector('[data-hs-prev]'), next = head && head.querySelector('[data-hs-next]');
+    if (!prev || !next) return;
+    var step = function () { var c = track.firstElementChild; return c ? c.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : 300; };
+    var sync = function () {
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    };
+    prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: reduce ? 'auto' : 'smooth' }); });
+    next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: reduce ? 'auto' : 'smooth' }); });
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  });
+
+  // "Show all" buttons reveal the rest of a list
+  document.querySelectorAll('[data-show-all]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var more = document.getElementById(b.getAttribute('data-show-all'));
+      if (!more) return;
+      more.hidden = false;
+      more.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in', 'revealed'); el.style.opacity = 1; el.style.visibility = 'visible'; el.style.transform = 'none'; });
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+      b.parentElement.remove();
+    });
+  });
+
+  // Booking form: weekdays only, and the chosen Philippine-time slot shown in the visitor's own time zone
+  document.querySelectorAll('[data-booking]').forEach(function (form) {
+    var date = form.querySelector('[data-book-date]');
+    if (date) date.addEventListener('change', function () {
+      var d = new Date(date.value + 'T12:00:00+08:00').getUTCDay();
+      date.setCustomValidity(d === 0 || d === 6 ? 'Please choose a weekday.' : '');
+    });
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    var local = form.querySelector('[data-book-local]');
+    if (/Manila/.test(tz) || new Date().getTimezoneOffset() === -480 || !local) return; // already on UTC+8
+    var show = function () {
+      var picked = form.querySelector('input[name=time]:checked');
+      if (!picked) return;
+      var day = (date && date.value) || new Date().toISOString().slice(0, 10);
+      var when = new Date(day + 'T' + picked.value + ':00+08:00');
+      local.textContent = 'That is ' + when.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }) + ' where you are.';
+      local.hidden = false;
+    };
+    form.addEventListener('change', show);
+    show();
+  });
+
   // Filter tabs (roles, jobs)
   document.querySelectorAll('.tabs').forEach(function (tabs) {
     var section = tabs.closest('section');

@@ -6,8 +6,8 @@
  */
 $calcFull = $calcFull ?? false;
 $o = setting('offer', []);
-$yearAu = ph($o['from_year'] ?? '');
-$yearCa = ph($o['from_year_ca'] ?? '');
+$yearAu = confirmed($o['from_year'] ?? '');
+$yearCa = confirmed($o['from_year_ca'] ?? '');
 ?>
 <form class="calc-card<?= $calcFull ? ' calc-full' : '' ?>" data-calc onsubmit="return false" aria-labelledby="<?= e($calcId) ?>-title"
       data-year-au="<?= e($yearAu) ?>" data-year-ca="<?= e($yearCa) ?>">
@@ -35,6 +35,7 @@ $yearCa = ph($o['from_year_ca'] ?? '');
   </div>
   <?php if ($calcFull): ?>
   <p class="calc-help">Think reconciliations, invoice processing, data updates, archiving and routine correspondence.</p>
+  <button type="button" class="btn btn-primary btn-lg calc-run" data-calc-run><?= icon('clock') ?> Calculate</button>
   </div>
   <div class="calc-out">
   <?php endif; ?>

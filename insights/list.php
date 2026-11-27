@@ -33,7 +33,11 @@ $featured = ($cat === '' && $posts) ? array_shift($posts) : null;
       </article>
     <?php endif; ?>
     <?php if ($posts): ?>
-      <div class="post-grid"><?php foreach ($posts as $p) require ROOT_DIR . '/insights/post-card.php'; ?></div>
+      <?php $visible = $featured ? 3 : 4; ?>
+      <div class="post-grid" id="post-grid"><?php foreach ($posts as $pi => $p): ?><?php if ($pi === $visible): ?></div><div class="post-grid post-more" id="post-more" hidden><?php endif; ?><?php require ROOT_DIR . '/insights/post-card.php'; ?><?php endforeach; ?></div>
+      <?php if (count($posts) > $visible): ?>
+      <p class="show-all"><button type="button" class="btn btn-outline" data-show-all="post-more" aria-controls="post-more" aria-expanded="false">Show all <?= count($posts) + ($featured ? 1 : 0) ?> articles</button></p>
+      <?php endif; ?>
     <?php elseif (!$featured): ?>
       <div class="empty"><h3>No articles yet</h3><p>Check back soon.</p></div>
     <?php endif; ?>

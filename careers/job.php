@@ -34,8 +34,6 @@ $v = function ($k) use ($old) { return e($old[$k] ?? ''); };
 ?>
 <section class="page-hero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('careers')) ?>">Careers</a></li><li><span aria-current="page"><?= e($job['title']) ?></span></li></ol></nav>
-    <p class="meta-line"><?= e($job['department'] ?? 'Careers') ?></p>
     <h1><?= e($job['title']) ?></h1>
     <p class="lede"><?= e($job['summary'] ?? '') ?></p>
     <div class="job-tags">

@@ -40,6 +40,15 @@
     };
     form.addEventListener('input', update);
     form.addEventListener('change', update);
+    // "Calculate" re-runs the sum and draws the eye to the result (brings it into view on small screens)
+    var run = el('[data-calc-run]');
+    if (run) run.addEventListener('click', function () {
+      update();
+      var result = el('.calc-result');
+      result.classList.remove('is-updated'); void result.offsetWidth; result.classList.add('is-updated');
+      var r = result.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > window.innerHeight) result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
     update();
   });
 })();

@@ -19,14 +19,11 @@ $contactUrl = url('contact?role=' . rawurlencode($item['title']));
 $offer = setting('offer', []);
 $platformNames = array_column(items('logos', function ($l) { return ($l['group'] ?? '') === 'platform' && !empty($l['image']); }), 'name');
 $included = array_filter(array_map('ph', lines((string) ($offer['included'] ?? ''))));
-$price = ph(role_price($item));
+$price = confirmed(role_price($item));
 ?>
 <section class="page-hero">
   <div class="wrap hero-media-grid">
     <div>
-      <nav class="crumbs" aria-label="Breadcrumb"><ol>
-        <li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('solutions')) ?>">Solutions</a></li><li><span aria-current="page"><?= e($item['title']) ?></span></li>
-      </ol></nav>
       <h1><?= e($item['title']) ?></h1>
       <p class="lede"><?= e(trim((string) ($item['lead'] ?? '')) !== '' ? $item['lead'] : $item['summary']) ?></p>
       <ul class="role-facts">

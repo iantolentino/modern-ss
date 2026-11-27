@@ -13,6 +13,9 @@
   // (anchor links like team#team, or a fast scroll) still fires them.
   // Scrubbed triggers below set their own end.
   ScrollTrigger.defaults({ end: 'max' });
+  // Animations tied to a trigger use toggleActions 'play none none none' rather than once: true.
+  // once kills the trigger at its end ('max', the page bottom) and takes a still-running animation
+  // with it, which left images stuck half revealed when a visitor reached the bottom quickly.
 
   var root = document.documentElement;
   var $ = function (s, ctx) { return (ctx || document).querySelector(s); };
@@ -99,8 +102,8 @@
     };
 
     /* ---------- Feature images: wipe open with a slow zoom ---------- */
-    $$('.split-img img, .photo-pair img, .timeline-img').forEach(function (img) {
-      gsap.timeline({ scrollTrigger: { trigger: img, start: 'top 85%', once: true } })
+    $$('.split-img img, .photo-pair img').forEach(function (img) {
+      gsap.timeline({ scrollTrigger: { trigger: img, start: 'top 85%', toggleActions: 'play none none none' } })
         .fromTo(img, { clipPath: 'inset(0% 0% 100% 0% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: 1.4, ease: 'expo.out', clearProps: 'clipPath' })
         .from(img, { scale: 1.18, duration: 1.8, ease: 'expo.out' }, 0);
     });
@@ -120,7 +123,7 @@
       gsap.from($$('li', chips), {
         autoAlpha: 0, y: 10, scale: 0.95, duration: 0.45, ease: 'expo.out',
         stagger: { each: 0.035, from: 'random' }, clearProps: 'transform',
-        scrollTrigger: { trigger: chips, start: 'top 85%', once: true }
+        scrollTrigger: { trigger: chips, start: 'top 85%', toggleActions: 'play none none none' }
       });
     }
 
@@ -129,7 +132,7 @@
     if (cta) {
       gsap.from(cta, {
         autoAlpha: 0, scale: 0.9, rotation: -8, duration: 0.8, ease: 'expo.out',
-        scrollTrigger: { trigger: '.cta-inner', start: 'top 85%', once: true }
+        scrollTrigger: { trigger: '.cta-inner', start: 'top 85%', toggleActions: 'play none none none' }
       });
     }
 

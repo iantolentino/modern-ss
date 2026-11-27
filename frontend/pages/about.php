@@ -28,7 +28,7 @@ page_hero('About us', 'Strata offshoring, built by people who know strata', 'Str
 <section class="section section-tint" id="journey">
   <div class="wrap">
     <div class="section-head reveal"><h2>2019 to today</h2></div>
-    <img class="timeline-img reveal" src="<?= e(media($m . 'strata-staff-timeline-2019-2025.webp')) ?>" alt="Strata Staff timeline from 2019 to 2025" width="1400" height="693" loading="lazy">
+    <img class="timeline-img" src="<?= e(media($m . 'strata-staff-timeline-2019-2025.webp')) ?>" alt="Strata Staff timeline from 2019 to 2025" width="1420" height="703" loading="lazy">
   </div>
 </section>
 

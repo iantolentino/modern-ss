@@ -32,7 +32,7 @@ function ensure_seeded(): void {
             'title'    => 'Grow your portfolio without growing your payroll.',
             'subtitle' => "Your managers are spending hours each week on work that doesn't need their experience. Find out how many, and what it costs, with the Hidden Capacity Test.",
             'note'     => 'No obligation. See where your team can unlock capacity.',
-            'image'    => $m . 'roles/strata-administrative-specialist.webp',
+            'image'    => $m . 'site/the-strata-staff-difference.webp',
             'image_2'  => $m . 'roles/strata-accountant.webp',
             'image_3'  => $m . 'roles/strata-executive-assistant.webp',
         ],

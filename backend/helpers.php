@@ -127,6 +127,12 @@ function is_ph($v): bool {
     return is_string($v) && strpos($v, '*') !== false;
 }
 
+/** Escaped value only when it is confirmed (set, and not a * placeholder); otherwise ''. Used for prices. */
+function confirmed($v): string {
+    $v = trim((string) $v);
+    return ($v === '' || is_ph($v)) ? '' : e($v);
+}
+
 /** True when unconfirmed placeholders should not appear on the site (admin: Offer, trust & proof). */
 function ph_hidden(): bool {
     return (string) setting('review.hide_placeholders') === '1';

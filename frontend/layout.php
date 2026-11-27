@@ -288,13 +288,6 @@ function layout_foot(): void {
 function page_hero(string $eyebrow, string $title, string $lede = '', array $crumbs = []): void { ?>
 <section class="page-hero">
   <div class="wrap">
-    <?php if ($crumbs): ?>
-    <nav class="crumbs" aria-label="Breadcrumb"><ol>
-      <?php foreach ($crumbs as $i => $c): ?>
-        <li><?php if ($i < count($crumbs) - 1): ?><a href="<?= e(url($c[0])) ?>"><?= e($c[1]) ?></a><?php else: ?><span aria-current="page"><?= e($c[1]) ?></span><?php endif; ?></li>
-      <?php endforeach; ?>
-    </ol></nav>
-    <?php endif; ?>
     <h1><?= e($title) ?></h1>
     <?php if ($lede): ?><p class="lede"><?= e($lede) ?></p><?php endif; ?>
   </div>

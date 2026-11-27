@@ -9,7 +9,7 @@ $errors = [];
 $sent = false;
 $old = ['role' => isset($_GET['role']) && is_string($_GET['role']) ? mb_substr($_GET['role'], 0, 100) : ''];
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['form'] ?? 'contact') === 'contact') {
     $old = $_POST;
     if (!csrf_check()) $errors[] = 'Your session expired. Please submit the form again.';
     if (!empty($_POST['website'])) $errors[] = 'Submission blocked.';

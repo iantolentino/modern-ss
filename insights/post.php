@@ -23,7 +23,6 @@ $more = array_slice(array_filter(items('insights'), function ($p) use ($post) { 
 <article>
   <header class="page-hero post-hero">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('insights')) ?>">Insights</a></li><li><span aria-current="page"><?= e($post['category'] ?? 'Article') ?></span></li></ol></nav>
       <p class="post-meta light"><span class="tag tag-light"><?= e($post['category'] ?? 'News') ?></span><time datetime="<?= e($post['date']) ?>"><?= e(fdate($post['date'], 'j F Y')) ?></time></p>
       <h1><?= e($post['title']) ?></h1>
       <?php if (!empty($post['excerpt'])): ?><p class="lede"><?= e($post['excerpt']) ?></p><?php endif; ?>
