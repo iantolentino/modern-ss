@@ -19,7 +19,7 @@ $roles = array_column(items('services'), 'title');
     <div class="contact-info reveal">
       <h2 class="h3">Speak with our solutions team</h2>
       <p>Prefer to talk now? Call the office nearest you or book a time that suits.</p>
-      <?php if (!empty($c['booking_url'])): ?><a class="btn btn-primary" href="<?= e($c['booking_url']) ?>" target="_blank" rel="noopener"><?= icon('calendar') ?> Schedule a free discovery call</a><?php endif; ?>
+      <?php if (!empty($c['booking_url'])): ?><a class="btn btn-primary" href="#book"><?= icon('calendar') ?> Book a 30-minute discovery call</a><?php endif; ?>
       <div class="office"><h3>Australia</h3><p><?= icon('pin') ?> <?= e($c['au_address'] ?? '') ?></p><p><a href="tel:<?= e(preg_replace('/[^\d+]/', '', $c['au_phone'] ?? '')) ?>"><?= icon('phone') ?> <?= e($c['au_phone'] ?? '') ?></a></p></div>
       <div class="office"><h3>Canada</h3><p><?= icon('pin') ?> <?= e($c['ca_address'] ?? '') ?></p><p><a href="tel:<?= e(preg_replace('/[^\d+]/', '', $c['ca_phone'] ?? '')) ?>"><?= icon('phone') ?> <?= e($c['ca_phone'] ?? '') ?></a></p></div>
       <div class="office"><h3>Email</h3><p><a href="mailto:<?= e($c['email'] ?? '') ?>"><?= icon('mail') ?> <?= e($c['email'] ?? '') ?></a></p></div>
@@ -55,4 +55,16 @@ $roles = array_column(items('services'), 'title');
     </div>
   </div>
 </section>
+<?php if (!empty($c['booking_url']) && preg_match('#^https://outlook\.office365\.com/book/#', $c['booking_url'])): ?>
+<section class="section section-tint" id="book">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Book a 30-minute discovery call</h2>
+      <p class="lede">Pick a time that suits. We'll talk through your workload, your platforms and where an offshore team fits.</p>
+    </div>
+    <div class="booking-frame"><iframe src="<?= e($c['booking_url']) ?>" title="Book a 30-minute discovery call" loading="lazy"></iframe></div>
+    <p class="small muted">Booking not loading? <a href="<?= e($c['booking_url']) ?>" target="_blank" rel="noopener">Open the booking page</a>.</p>
+  </div>
+</section>
+<?php endif; ?>
 <?php layout_foot();

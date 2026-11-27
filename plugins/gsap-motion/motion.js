@@ -44,22 +44,16 @@
         }
       });
 
-      heroTl.from(['.rotator', '.hero-sub', '.hero-actions', '.hero-trust'], { autoAlpha: 0, y: 24, stagger: 0.1 }, 'copy+=0.45')
-        .addLabel('photos', 0.2)
-        .fromTo('.hv-card', { clipPath: 'inset(100% 0% 0% 0% round 26px)' }, { clipPath: 'inset(0% 0% 0% 0% round 26px)', duration: 1.3, ease: 'expo.out', stagger: 0.15 }, 'photos')
-        .from('.hv-card img', { scale: 1.25, duration: 1.6, ease: 'expo.out', stagger: 0.15 }, 'photos')
-        .from('.float-chip', { autoAlpha: 0, y: 12, scale: 0.95, ease: 'expo.out', duration: 0.6, stagger: 0.08 }, 'photos+=0.9');
-
-      // Chips drift gently once they have landed
-      $$('.float-chip').forEach(function (chip, i) {
-        gsap.to(chip, { y: -8, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: 1, delay: 1.8 + i * 0.25 });
-      });
-
-      // Depth on scroll: photos move at different speeds
-      gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1 } })
-        .to('.hv-main', { yPercent: -8, ease: 'none' }, 0)
-        .to('.hv-a', { yPercent: -22, ease: 'none' }, 0)
-        .to('.hv-b', { yPercent: -36, ease: 'none' }, 0);
+      heroTl.from($$('.hero-sub, .hero-actions, .hero-facts', hero), { autoAlpha: 0, y: 24, stagger: 0.1 }, 'copy+=0.45')
+        .addLabel('photos', 0.2);
+      // The staff photo wipes open, then the Hidden Capacity Test card rises over it
+      if ($('.hero-test-photo', hero)) {
+        heroTl.fromTo('.hero-test-photo', { clipPath: 'inset(100% 0% 0% 0% round 26px)' }, { clipPath: 'inset(0% 0% 0% 0% round 26px)', duration: 1.3, ease: 'expo.out', clearProps: 'clipPath' }, 'photos')
+          .from('.hero-test-photo img', { scale: 1.2, duration: 1.6, ease: 'expo.out' }, 'photos');
+      }
+      if ($('.hero-test-card', hero)) {
+        heroTl.from('.hero-test-card', { autoAlpha: 0, y: 24, duration: 0.8, ease: 'expo.out' }, 'photos+=0.6');
+      }
     }
 
     /* ---------- Inner page heroes ---------- */

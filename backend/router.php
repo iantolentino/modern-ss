@@ -33,9 +33,20 @@ switch ($seg[0] ?? '') {
     case 'contact':   render('frontend/pages/contact');
     case 'privacy':   render('frontend/pages/privacy');
     case 'clients':   render('frontend/pages/clients');
-    case 'capacity-calculator':
+    case 'trust':     render('frontend/pages/trust');
+    case 'pricing':   render('frontend/pages/pricing');
+    case 'canada':    render('frontend/pages/canada');
+    case 'case-studies':
+        if (($seg[1] ?? '') === 'strata-choice') render('frontend/pages/case-strata-choice');
+        if (isset($seg[1])) not_found();
+        render('frontend/pages/case-studies');
+    case 'hidden-capacity-test':
         if (!plugin_enabled('capacity-calculator')) not_found();
         render('plugins/capacity-calculator/page');
+    case 'capacity-calculator':
+        // Renamed to the Hidden Capacity Test (competitive review); old links keep working
+        header('Location: ' . url('hidden-capacity-test'), true, 301);
+        exit;
     case 'learning':
         if (($seg[1] ?? '') === 'course-outline') render('frontend/pages/course-outline');
         if (isset($seg[1])) not_found();
@@ -66,8 +77,8 @@ switch ($seg[0] ?? '') {
         render('backend/admin/index');
     case 'sitemap.xml':
         header('Content-Type: application/xml; charset=utf-8');
-        $urls = [['', '1.0'], ['about', '0.8'], ['solutions', '0.9'], ['learning', '0.6'], ['learning/course-outline', '0.6'], ['clients', '0.6'], ['team', '0.6'], ['careers', '0.8'], ['insights', '0.7'], ['contact', '0.8']];
-        if (plugin_enabled('capacity-calculator')) $urls[] = ['capacity-calculator', '0.7'];
+        $urls = [['', '1.0'], ['about', '0.8'], ['solutions', '0.9'], ['learning', '0.6'], ['learning/course-outline', '0.6'], ['clients', '0.6'], ['team', '0.6'], ['careers', '0.8'], ['insights', '0.7'], ['contact', '0.8'], ['pricing', '0.8'], ['trust', '0.7'], ['canada', '0.8'], ['case-studies', '0.7'], ['case-studies/strata-choice', '0.7']];
+        if (plugin_enabled('capacity-calculator')) $urls[] = ['hidden-capacity-test', '0.8'];
         foreach (items('services') as $i) $urls[] = ['solutions/' . $i['slug'], '0.8'];
         foreach (items('jobs') as $i) $urls[] = ['careers/' . $i['slug'], '0.7', $i['date'] ?? ''];
         foreach (items('insights') as $i) $urls[] = ['insights/' . $i['slug'], '0.6', $i['date'] ?? ''];

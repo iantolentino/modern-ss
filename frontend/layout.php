@@ -9,6 +9,10 @@ function icon(string $name, string $cls = 'i'): string {
         'arrow'    => '<path d="M5 12h14M13 6l6 6-6 6"/>',
         'chev'     => '<path d="M6 9l6 6 6-6"/>',
         'check'    => '<path d="M5 12.5l4.5 4.5L19 7"/>',
+        'chat'     => '<path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/>',
+        'lock'     => '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+        'key'      => '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+        'book'     => '<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M7 9v5c0 1.5 2.2 3 5 3s5-1.5 5-3V9"/><path d="M21 7v6"/>',
         'phone'    => '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/>',
         'mail'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
         'pin'      => '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
@@ -35,12 +39,13 @@ function icon(string $name, string $cls = 'i'): string {
 
 function nav_items(): array {
     return [
-        ['about', 'About'],
-        ['solutions', 'Solutions'],
-        ['learning', 'Learning'],
-        ['team', 'Our Team'],
-        ['careers', 'Careers'],
+        ['solutions', 'Roles'],
+        ...(plugin_enabled('capacity-calculator') ? [['hidden-capacity-test', 'Hidden Capacity Test']] : []),
+        ['pricing', 'Pricing'],
+        ['case-studies', 'Case studies'],
+        ['learning', 'Academy'],
         ['insights', 'Insights'],
+        ['about', 'About'],
     ];
 }
 
@@ -54,13 +59,18 @@ function nav_menus(): array {
         'about' => [
             ['About Strata Staff', [
                 ['about', 'Our story', 'Strata offshoring since 2019'],
-                ['about#journey', 'Enjoying the journey', 'Our timeline and core values'],
+                ['about#journey', 'Our journey', 'Our timeline and core values'],
                 ['clients', 'Our clients have spoken', 'What strata agencies say'],
             ]],
             ['Our people', [
                 ['team#executives', 'Executives', 'The leadership team'],
-                ['team#team', 'Our awesome team', 'Managers, trainers and team leaders'],
-                ...(plugin_enabled('capacity-calculator') ? [['capacity-calculator', 'Capacity calculator', 'Find the hidden capacity in your team']] : []),
+                ['team#team', 'Our team', 'Managers, trainers and team leaders'],
+                ['careers', 'Careers', 'Join our team in Pampanga'],
+            ]],
+            ['Working with us', [
+                ['trust', 'Trust Centre', 'Data, access, accountability, continuity'],
+                ['canada', 'Strata Staff Canada', 'For BC strata management companies'],
+                ['contact', 'Contact', 'Book a 30-minute discovery call'],
             ]],
         ],
         'solutions' => [
@@ -125,8 +135,9 @@ function layout_head(array $meta, string $active = ''): void {
     $logo = media(setting('logo'));
     $fav = media(setting('favicon'), $logo);
     $schema = array_merge([org_schema()], $meta['schema'] ?? []);
+        $c = setting('contact', []);
     ?><!doctype html>
-<html lang="en-AU">
+<html lang="<?= e(str_replace('_', '-', $meta['locale'] ?? 'en_AU')) ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -145,7 +156,7 @@ function layout_head(array $meta, string $active = ''): void {
 <meta name="theme-color" content="#061a40">
 <?php if ($fav): ?><link rel="icon" href="<?= e($fav) ?>"><?php endif; ?>
 <?php if (!empty($meta['preload'])): ?><link rel="preload" as="image" href="<?= e($meta['preload']) ?>" fetchpriority="high"><?php endif; ?>
-<meta property="og:locale" content="en_AU">
+<meta property="og:locale" content="<?= e($meta['locale'] ?? 'en_AU') ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -157,6 +168,21 @@ function layout_head(array $meta, string $active = ''): void {
 </head>
 <body class="<?= e($meta['body_class'] ?? '') ?>">
 <a class="skip" href="#main">Skip to content</a>
+<?php $ca = ($meta['locale'] ?? '') === 'en_CA'; $links = setting('links', []); ?>
+<div class="top-bar">
+  <div class="wrap top-bar-inner">
+    <nav class="country" aria-label="Country">
+      <a href="<?= e(url()) ?>"<?= $ca ? '' : ' aria-current="true"' ?>>AU <span>Australia</span></a>
+      <a href="<?= e(url('canada')) ?>"<?= $ca ? ' aria-current="true"' : '' ?>>CA <span>Canada</span></a>
+    </nav>
+    <ul class="top-links">
+      <?php $phone = $ca ? ($c['ca_phone'] ?? '') : ($c['au_phone'] ?? ''); if ($phone): ?><li><a href="tel:<?= e(preg_replace('/[^\d+]/', '', $phone)) ?>"><?= icon('phone') ?> <?= e($phone) ?></a></li><?php endif; ?>
+      <?php if (!empty($c['email'])): ?><li class="top-email"><a href="mailto:<?= e($c['email']) ?>"><?= icon('mail') ?> <?= e($c['email']) ?></a></li><?php endif; ?>
+      <?php if (!empty($links['live_chat'])): ?><li><a href="<?= e($links['live_chat']) ?>"><?= icon('chat') ?> Live chat</a></li><?php elseif (!ph_hidden()): ?><li class="top-ph"><?= icon('chat') ?> Live chat<?= ph('*') ?></li><?php endif; ?>
+      <?php if (!empty($links['client_login'])): ?><li><a href="<?= e($links['client_login']) ?>"><?= icon('lock') ?> Client login</a></li><?php elseif (!ph_hidden()): ?><li class="top-ph"><?= icon('lock') ?> Client login<?= ph('*') ?></li><?php endif; ?>
+    </ul>
+  </div>
+</div>
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="<?= e(url()) ?>" aria-label="<?= e($name) ?> home">
@@ -185,7 +211,7 @@ function layout_head(array $meta, string $active = ''): void {
           </li>
         <?php endforeach; ?>
       </ul>
-      <a class="btn btn-sm nav-cta" href="<?= e(url('contact')) ?>">Talk to us <?= icon('arrow') ?></a>
+      <a class="btn btn-sm nav-cta" href="<?= e(url('contact')) ?>">Book a call <?= icon('arrow') ?></a>
     </nav>
     <button class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Open menu"><?= icon('menu') ?></button>
   </div>
@@ -200,6 +226,10 @@ function layout_foot(): void {
     $name = setting('site_name');
     ?>
 </main>
+<nav class="mobile-cta" aria-label="Quick actions">
+  <?php if (plugin_enabled('capacity-calculator')): ?><a class="btn btn-primary" href="<?= e(url('hidden-capacity-test')) ?>"><?= icon('clock') ?> Take the test</a><?php endif; ?>
+  <a class="btn btn-outline" href="<?= e(url('contact')) ?>">Book a call</a>
+</nav>
 <section class="cta-band">
   <div class="wrap"><div class="cta-inner reveal">
     <div class="cta-mark" aria-hidden="true" style="--mark: url(<?= e(url('assets/media/brand/strata-staff-mark-white.png')) ?>)"><span class="cta-badge"><img src="<?= e(url('assets/media/brand/strata-staff-mark.png')) ?>" alt="" width="88" height="88" loading="lazy"></span></div>
@@ -208,7 +238,7 @@ function layout_foot(): void {
       <p>Tell us about your agency and the work piling up. We'll show you where an offshore team fits. No obligation.</p>
     </div>
     <div class="cta-actions">
-      <a class="btn btn-light" href="<?= e(url('contact')) ?>">Book a discovery call <?= icon('arrow') ?></a>
+      <a class="btn btn-light" href="<?= e(url('contact')) ?>">Book a 30-minute discovery call <?= icon('arrow') ?></a>
       <?php if (!empty($c['scorecard_url'])): ?><a class="btn btn-ghost-light" href="<?= e($c['scorecard_url']) ?>">Take the capacity test</a><?php endif; ?>
     </div>
   </div></div>
@@ -270,6 +300,17 @@ function page_hero(string $eyebrow, string $title, string $lede = '', array $cru
   </div>
 </section>
 <?php }
+
+/** A role's from-price per month: its own value if set, else the general one (Offer, trust & proof). */
+function role_price(array $s): string {
+    return trim((string) ($s['from_price'] ?? '')) !== '' ? (string) $s['from_price'] : (string) setting('offer.from_month');
+}
+
+/** "Agency, title" for a testimonial: the agency leads, so a quote reads as a client's, not an association's. */
+function quote_byline(array $t): string {
+    $company = ($t['company'] ?? '') !== ($t['name'] ?? '') ? ($t['company'] ?? '') : '';
+    return implode(', ', array_filter([$company, $t['title'] ?? '']));
+}
 
 function avatar(array $p, string $class = 'avatar'): string {
     $src = media($p['photo'] ?? '');

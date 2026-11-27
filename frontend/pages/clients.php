@@ -21,7 +21,7 @@ page_hero('Our clients have spoken', 'What strata agencies say about us', 'Strat
           <blockquote><p><?= e($t['quote']) ?></p></blockquote>
           <figcaption>
             <?= avatar($t, 'quote-avatar') ?>
-            <span><strong><?= e($t['name']) ?></strong><small><?= e(implode(', ', array_filter([$t['title'] ?? '', ($t['company'] ?? '') !== ($t['name'] ?? '') ? ($t['company'] ?? '') : '']))) ?></small></span>
+            <span><strong><?= e($t['name']) ?></strong><small><?= e(quote_byline($t)) ?></small></span>
           </figcaption>
         </figure>
       <?php endforeach; ?>

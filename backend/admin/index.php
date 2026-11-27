@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($view === 'settings' && $op === 'save') {
         $s = load('settings');
         foreach (settings_sections() as $sec) {
-            foreach (collect_fields($sec['fields'], $_POST) as $k => $v) set_path($s, $k, $v);
+            foreach (collect_fields($sec[1], $_POST) as $k => $v) set_path($s, $k, $v);
         }
         save('settings', $s);
         go('view=settings&tab=' . rawurlencode((string) ($_POST['tab'] ?? '')), 'Settings saved.');
@@ -344,7 +344,7 @@ if ($view === 'dashboard') {
     }
 
 } elseif ($view === 'settings') {
-    settings_view(load('settings'), (string) ($_GET['tab'] ?? 'branding'));
+    settings_view(settings(), (string) ($_GET['tab'] ?? 'branding'));
 
 } elseif ($view === 'applications') {
     $apps = array_reverse(load('applications'));

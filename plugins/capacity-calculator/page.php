@@ -1,31 +1,55 @@
 <?php
-$crumbs = [['', 'Home'], ['about', 'About'], ['capacity-calculator', 'Capacity calculator']];
+start_session(); // the "Email me my result" form needs its CSRF cookie before output
+require BACKEND_DIR . '/forms/capacity.php';
+$crumbs = [['', 'Home'], ['hidden-capacity-test', 'Hidden Capacity Test']];
 $quote = null;
 foreach (items('testimonials') as $t) if (stripos($t['quote'], 'focus on what we need to do onshore') !== false) $quote = $t;
 $roles = items('services', function ($s) { return $s['category'] === 'strata'; });
 $app = [
     '@context' => 'https://schema.org', '@type' => 'WebApplication',
-    'name' => 'Strata Capacity Calculator', 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Any',
-    'url' => abs_url('capacity-calculator'), 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'AUD'],
-    'description' => 'Estimate how many strata manager hours a year are tied up in admin and back-office work.',
+    'name' => 'Hidden Capacity Test', 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Any',
+    'url' => abs_url('hidden-capacity-test'), 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'AUD'],
+    'description' => 'Work out how many strata manager hours a year go on routine work, what that costs, and the offshore team it would take.',
     'provider' => ['@id' => abs_url('#org')],
 ];
 layout_head([
-    'title' => 'Strata Capacity Calculator | Strata Staff Global',
-    'description' => 'How much manager time is tied up in admin? Estimate the back-office hours your strata managers could get back in under 30 seconds.',
-    'path' => 'capacity-calculator',
+    'title' => 'Hidden Capacity Test for Strata Agencies | Strata Staff Global',
+    'description' => 'How many hours are your strata managers spending on routine work, and what does it cost? Two numbers, result in seconds, no sign-up.',
+    'path' => 'hidden-capacity-test',
     'schema' => [breadcrumb_schema($crumbs), $app],
-], 'about');
+], 'hidden-capacity-test');
+$c = setting('contact', []);
 ?>
-<section class="page-hero">
-  <div class="wrap calc-hero">
-    <div>
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><a href="<?= e(url('about')) ?>">About</a></li><li><span aria-current="page">Capacity calculator</span></li></ol></nav>
-      <h1>How much time could you give back to your strata managers?</h1>
-      <p class="lede">Your managers are valuable. If they spend hours every week on administration, routine accounting and customer enquiries, you're paying manager-level salaries for work that can often be delegated.</p>
-      <p class="calc-note"><?= icon('clock') ?> Takes less than 30 seconds · No obligation</p>
-    </div>
+<section class="page-hero hct-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="<?= e(url()) ?>">Home</a></li><li><span aria-current="page">Hidden Capacity Test</span></li></ol></nav>
+    <h1>The Hidden Capacity Test</h1>
+    <p class="lede">How many hours are your managers spending on work that doesn't need their experience, and what is it costing you? Enter a few numbers and see what it adds up to.</p>
+    <p class="calc-note"><?= icon('clock') ?> Two numbers · Result in seconds · No sign-up</p>
+  </div>
+</section>
+
+<section class="section hct-section">
+  <div class="wrap">
     <?php $calcId = 'calc-main'; $calcFull = true; require PLUGINS_DIR . '/capacity-calculator/widget.php'; ?>
+    <div class="hct-next">
+      <div class="hct-actions">
+        <a class="btn btn-primary btn-lg" href="<?= e(url('contact')) ?>">Book a 30-minute discovery call <?= icon('arrow') ?></a>
+      </div>
+      <form class="hct-mail" method="post" action="<?= e(url('hidden-capacity-test')) ?>#email-result" id="email-result" data-calc-mail>
+        <?= csrf_field() ?><input type="hidden" name="form" value="capacity">
+        <input type="hidden" name="result_hours" value="2880"><input type="hidden" name="result_inputs" value="">
+        <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <?php if ($mailSent): ?>
+          <p class="notice ok" role="status"><?= icon('check') ?> Sent. Check your inbox for your result.</p>
+        <?php else: ?>
+          <?php if ($mailErrors): ?><p class="notice" role="alert"><?= e(implode(' ', $mailErrors)) ?></p><?php endif; ?>
+          <label for="hct-email"><?= icon('mail') ?> Email me my result</label>
+          <div class="hct-mail-row"><input id="hct-email" type="email" name="email" required autocomplete="email" placeholder="you@agency.com.au"><button class="btn btn-outline" type="submit">Send</button></div>
+        <?php endif; ?>
+      </form>
+    </div>
+    <p class="hct-how"><strong>How we work this out:</strong> number of managers × daily routine hours × 5 days × 48 working weeks a year. We allow four weeks for leave and public holidays. Team size divides the hours by 1,920 working hours a year. Change the inputs to match your agency.</p>
   </div>
 </section>
 
@@ -70,7 +94,7 @@ layout_head([
     <?php if ($quote): ?>
     <figure class="quote-card quote-feature reveal">
       <blockquote><p><?= e($quote['quote']) ?></p></blockquote>
-      <figcaption><?= avatar($quote, 'quote-avatar') ?><span><strong><?= e($quote['name']) ?></strong><small><?= e($quote['title']) ?>, <?= e($quote['company']) ?></small></span></figcaption>
+      <figcaption><?= avatar($quote, 'quote-avatar') ?><span><strong><?= e($quote['name']) ?></strong><small><?= e(quote_byline($quote)) ?></small></span></figcaption>
     </figure>
     <?php endif; ?>
   </div>

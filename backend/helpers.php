@@ -111,6 +111,37 @@ function md_toc(string $text): array {
     return $toc;
 }
 
+/** Whole sentences of a text up to about $len characters (at least the first sentence). */
+function sentences(string $text, int $len = 260): string {
+    $parts = preg_split('/(?<=[.!?])\s+/', trim(preg_replace('/\s+/', ' ', $text)));
+    $out = '';
+    foreach ($parts as $s) {
+        if ($out !== '' && mb_strlen($out . ' ' . $s) > $len) break;
+        $out = $out === '' ? $s : $out . ' ' . $s;
+    }
+    return $out;
+}
+
+/** True when a value is an unconfirmed placeholder (marked with *). */
+function is_ph($v): bool {
+    return is_string($v) && strpos($v, '*') !== false;
+}
+
+/** True when unconfirmed placeholders should not appear on the site (admin: Offer, trust & proof). */
+function ph_hidden(): bool {
+    return (string) setting('review.hide_placeholders') === '1';
+}
+
+/**
+ * Escaped text with its placeholder marker shown as an amber * (internal preview),
+ * or '' when the text is a placeholder and placeholders are hidden.
+ */
+function ph($v): string {
+    $v = (string) $v;
+    if (is_ph($v) && ph_hidden()) return '';
+    return str_replace('*', '<sup class="ph" title="Placeholder: confirm before launch">*</sup>', e($v));
+}
+
 function plain(string $text, int $len = 160): string {
     $t = trim(preg_replace('/\s+/', ' ', preg_replace('/[#*>\[\]]|\(https?:[^)]+\)/', '', $text)));
     if (mb_strlen($t) <= $len) return $t;

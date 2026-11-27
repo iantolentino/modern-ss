@@ -42,5 +42,6 @@ require BACKEND_DIR . '/security.php';
 require BACKEND_DIR . '/mail.php';
 require BACKEND_DIR . '/plugins.php';
 require DATABASE_DIR . '/store.php';
+require DATABASE_DIR . '/defaults.php';
 require DATABASE_DIR . '/seed.php';
 ensure_seeded();

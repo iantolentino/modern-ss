@@ -29,8 +29,8 @@ function ensure_seeded(): void {
         ],
         'hero' => [
             'eyebrow'  => 'Serving strata agencies in Australia & Canada since 2019',
-            'title'    => 'Build Your Strata Staff Global Offshore Team',
-            'subtitle' => 'Strata-trained professionals who expand your capacity, streamline daily operations, and help your business grow with confidence.',
+            'title'    => 'Grow your portfolio without growing your payroll.',
+            'subtitle' => "Your managers are spending hours each week on work that doesn't need their experience. Find out how many, and what it costs, with the Hidden Capacity Test.",
             'note'     => 'No obligation. See where your team can unlock capacity.',
             'image'    => $m . 'roles/strata-administrative-specialist.webp',
             'image_2'  => $m . 'roles/strata-accountant.webp',
@@ -45,7 +45,7 @@ function ensure_seeded(): void {
         'contact' => [
             'email'      => 'solutions@stratastaffglobal.com',
             'careers_email' => 'careers@stratastaffglobal.com',
-            'booking_url' => 'https://stratastaffglobal.com/learn-more/',
+            'booking_url' => 'https://outlook.office365.com/book/ScheduleFreeDiscoveryCall@prtna.com/',
             'scorecard_url' => 'https://stratastaffglobal.com/scorecard/',
             'au_address' => 'PO Box 109, Ivanhoe, Victoria 3079, Australia',
             'au_phone'   => '+61 3 9133 3255',
@@ -72,7 +72,7 @@ function ensure_seeded(): void {
         ['Strata Vault', 'platform', 'platforms/strata-vault.webp', ''], ['PIQ', 'platform', 'platforms/piq.webp', ''],
         ['Smata', 'platform', 'platforms/smata.webp', ''], ['MR5', 'platform', 'platforms/mr5.webp', ''],
         ['Strack', 'platform', 'platforms/strack.webp', ''], ['iDMax', 'platform', 'platforms/idmax.webp', ''],
-        ['AIM', 'platform', 'platforms/aim.webp', ''], ['Bing', 'platform', 'platforms/bing.webp', ''],
+        ['AIM', 'platform', 'platforms/aim.webp', ''],
         ['Buildium', 'platform', 'platforms/buildium.webp', ''],
         // Industry association memberships, as shown on stratastaffglobal.com
         ['Strata Community Association NSW', 'membership', 'members/sca-nsw-member.webp', 'https://nsw.strata.community/', 'Corporate member · Australia'],
@@ -155,6 +155,11 @@ function ensure_seeded(): void {
             'order' => $i + 1, 'status' => 'published',
         ];
     }
+    // Short task chips and lead lines from the competitive review (Nov 2026)
+    $highlights = ['strata-administration-specialist' => "Levy notices\nOwner correspondence\nWork orders", 'strata-accountant' => "Trust accounting\nLevy runs\nSection 184 certificates", 'strata-customer-care' => "Owner and tenant calls\nBy-law enquiries\nBookings", 'strata-executive-assistant' => "Inbox and diary\nAGM/EGM logistics\nCommittee packs", 'strata-compliance-specialist' => "AFSS and WHS registers\nValuations\nAudit prep", 'strata-insurance-specialist' => "Renewals and quotes\nClaims lodgement\nCertificates", 'property-management-administrative-specialist' => "Invoice processing\nTenant relations\nLease renewals", 'property-management-executive-assistant' => "Inbox and calendars\nCorrespondence\nMaintenance coordination", 'property-management-accountant' => "Financial reporting\nBudgeting and forecasting\nAccounts payable and receivable", 'property-management-customer-care' => "Maintenance coordination\nMove-in and move-out\nLease administration"];
+    $leads = ['strata-accountant' => "Trust accounting, levy runs and Section 184 certificates, handled by an accountant trained in strata rather than general bookkeeping."];
+    foreach ($rows as &$r) { $r['highlights'] = $highlights[$r['slug']] ?? ''; $r['lead'] = $leads[$r['slug']] ?? ''; $r['from_price'] = ''; }
+    unset($r);
     save('services', $rows);
 
     // [name, title, group, photo, department, bio]
@@ -300,7 +305,7 @@ function ensure_seeded(): void {
     $faqs = [
         ['Where is the Strata Staff team based?', 'Our team works from our Marisol Office in Angeles City, Pampanga, Philippines. Strata Staff started in a small office in Mabalacat, Pampanga in April 2019. Client offices are in Ivanhoe, Victoria and Vancouver, British Columbia.'],
         ['Are your staff trained in strata?', 'Yes. Our staff are trained specifically in strata operations and are familiar with Australian and Canadian strata legislation. New staff go through our Foundation Training Program, and every role has its own course outline through the Strata Staff Academy.'],
-        ['Which strata software can your team use?', 'Our staff are familiar with 13+ platforms, including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ, Smata, MR5 and Buildium.'],
+        ['Which strata software can your team use?', 'Our staff are trained on 12 strata platforms, including StrataMax, Urbanise, Stratafy, MRI, Strata Vault, PIQ, Smata, MR5 and Buildium.'],
         ['How do we get started?', 'Book a free 30-minute discovery call. We design an offshore capacity plan around your roles and platforms, then select, vet and train your staff before they join your workflows.'],
         ['Can you cover different time zones?', 'Yes. We provide 24/7 offshore capacity for our client partners in Australia and Canada, including permanent nightshift teams.'],
         ['Can we visit our offshore team?', 'Yes. Our Marisol Office has a client lounge and meeting rooms, and our team can arrange accommodation, transport and a company vehicle for your visit.'],

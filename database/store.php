@@ -26,7 +26,8 @@ function save(string $name, $data): bool {
 
 function settings(): array {
     static $s = null;
-    if ($s === null) $s = load('settings');
+    // Saved values win over the defaults for settings added after install (database/defaults.php)
+    if ($s === null) $s = array_replace_recursive(settings_defaults(), load('settings'));
     return $s;
 }
 

@@ -259,6 +259,46 @@ function settings_sections(): array {
             'hero.image_3' => ['Third photo', 'image', ['max' => 800]],
         ]],
         'stats' => ['Stats', $stats],
+        'review' => ['Offer, trust & proof', array_merge([
+            'review.hide_placeholders' => ['Unconfirmed items (marked *)', 'select', ['options' => ['' => 'Show with an amber * (internal preview)', '1' => 'Hide until confirmed (before showing anyone)'],
+                'help' => 'Any value containing * is a placeholder from the competitive review. Remove the * once a fact is confirmed.']],
+            'facts.since' => ['Year founded', 'text', ['half' => true, 'help' => 'Live site says 2019; the review asks to confirm (2017?).']],
+            'facts.location' => ['Where the team works', 'text', ['half' => true]],
+            'facts.stats_method' => ['How the stats are measured', 'textarea', ['rows' => 2]],
+            'offer.from_month' => ['From-price per role, per month (AU)', 'text', ['half' => true]],
+            'offer.from_month_ca' => ['From-price per role, per month (CA)', 'text', ['half' => true]],
+            'offer.from_year' => ['Indicative team cost, per year (AU)', 'text', ['half' => true]],
+            'offer.from_year_ca' => ['Indicative team cost, per year (CA)', 'text', ['half' => true]],
+            'offer.included' => ['What every role includes', 'lines', ['help' => 'One per line.']],
+            'offer.shortlist' => ['Shortlist promise', 'text', ['half' => true]],
+            'offer.hours' => ['Working hours', 'text', ['half' => true]],
+            'offer.levels' => ['Levels', 'text', ['half' => true]],
+            'offer.strata_plus' => ['What Strata Staff Plus is (one line)', 'text', []],
+            'trust.headline' => ['Trust section headline', 'text', ['half' => true]],
+            'trust.iso' => ['Certification status', 'text', ['half' => true]],
+        ], (function () {
+            $f = [];
+            for ($i = 0; $i < 4; $i++) {
+                $f["trust.pillars.$i.title"] = ['Trust pillar ' . ($i + 1), 'text', ['half' => true]];
+                $f["trust.pillars.$i.question"] = ['Question it answers', 'text', ['half' => true]];
+                $f["trust.pillars.$i.answer"] = ['Our answer (written by operations)', 'textarea', ['rows' => 2, 'help' => 'Leave empty to show "Details to be confirmed*".']];
+            }
+            return $f;
+        })(), [
+            'links.live_chat' => ['Live chat link', 'url', ['half' => true]],
+            'links.client_login' => ['Client login link', 'url', ['half' => true]],
+            'case_strata_choice.video_url' => ['Strata Choice video (YouTube/Vimeo link)', 'url', ['half' => true]],
+            'case_strata_choice.roles' => ['Strata Choice: roles built', 'lines', ['half' => true]],
+            'case_strata_choice.platforms' => ['Strata Choice: platforms', 'text', ['half' => true]],
+            'case_strata_choice.hours_back' => ['Hours returned per manager per week', 'text', ['half' => true]],
+            'case_strata_choice.response' => ['Faster owner response (%)', 'text', ['half' => true]],
+            'case_strata_choice.challenge' => ['Strata Choice: the challenge', 'textarea', ['rows' => 3]],
+            'case_strata_choice.built' => ['Strata Choice: what we built', 'textarea', ['rows' => 3]],
+            'case_strata_choice.results' => ['Strata Choice: results in the client’s words', 'textarea', ['rows' => 3]],
+            'canada.tasks' => ['Canada: BC tasks we handle', 'lines', []],
+            'canada.hours' => ['Canada: hours', 'text', ['half' => true]],
+            'canada.pricing' => ['Canada: pricing note', 'text', ['half' => true]],
+        ])],
         'careers' => ['Careers page', [
             'careers.headline' => ['Headline', 'text', []],
             'careers.intro' => ['Intro', 'textarea', ['rows' => 3]],
