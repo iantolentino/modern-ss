@@ -6,7 +6,7 @@ Standalone PHP 8 site with a built-in content portal. No database and no WordPre
 - **Admin portal:** `/admin/`
 - **SEO:** a unique title, description and canonical URL on every page. Open Graph and Twitter cards. JSON-LD for Organization, WebSite, FAQPage, BreadcrumbList, Service, JobPosting (Google for Jobs) and NewsArticle. Dynamic `/sitemap.xml` and `/robots.txt`. Clean URLs, one H1 per page, lazy-loaded images. 
 
-## Local
+## Local 
  
 http://localhost/strata-modern/
 
